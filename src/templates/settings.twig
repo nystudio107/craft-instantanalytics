@@ -1,0 +1,25 @@
+{#
+/**
+ * Instant Analytics plugin for Craft CMS 3.x
+ *
+ * Instant Analytics Settings.twig
+ *
+ * @author    nystudio107
+ * @copyright Copyright (c) 2017 nystudio107
+ * @link      https://nystudio107.com
+ * @package   InstantAnalytics
+ * @since     1.0.0
+ */
+#}
+
+{% import "_includes/forms" as forms %}
+
+{% do view.registerAssetBundle("nystudio107\\instantanalytics\\assetbundles\\instantanalytics\\InstantAnalyticsAsset") %}
+
+{{ forms.textField({
+    label: 'Some Field',
+    instructions: 'Enter some setting here.',
+    id: 'someField',
+    name: 'someField',
+    value: settings['someField']})
+}}

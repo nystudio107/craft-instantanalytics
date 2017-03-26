@@ -1,0 +1,46 @@
+{
+    "name": "nystudio107/craft3-instantanalytics",
+    "description": "Instant Analytics brings full Google Analytics support to your Twig templates and automatic Craft Commerce integration with Google Enhanced Ecommerce.",
+    "type": "craft-plugin",
+    "version": "1.0.0",
+    "keywords": [
+        "craft",
+        "cms",
+        "craftcms",
+        "craft-plugin",
+        "instant analytics"
+    ],
+    "support": {
+        "docs": "https://github.com/nystudio107/craft3-instantanalytics/blob/master/README.md",
+        "issues": "https://github.com/nystudio107/craft3-instantanalytics/issues"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "nystudio107",
+            "homepage": "https://nystudio107.com"
+        }
+    ],
+    "require": {
+        "craftcms/cms": "~3.0.0-beta.1",
+        "theiconic/php-ga-measurement-protocol": "^2.5.1",
+        "jaybizzle/crawler-detect" :"^1.2.37"
+    },
+    "autoload": {
+        "psr-4": {
+          "nystudio107\\instantanalytics\\": "src/"
+        }
+    },
+    "extra": {
+        "name": "Instant Analytics",
+        "handle": "instantAnalytics",
+        "schemaVersion": "1.0.0",
+        "hasCpSettings": true,
+        "hasCpSection": false,
+        "changelogUrl": "https://raw.githubusercontent.com/nystudio107/craft3-instantanalytics/master/CHANGELOG.md",
+        "components": {
+            "ia": "nystudio107\\instantanalytics\\services\\IA"
+        },
+        "class": "nystudio107\\instantanalytics\\InstantAnalytics"
+    }
+}
