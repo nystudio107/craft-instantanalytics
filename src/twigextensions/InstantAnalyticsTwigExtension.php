@@ -110,7 +110,7 @@ class InstantAnalyticsTwigExtension extends \Twig_Extension
      *
      * @return IAnalytics
      */
-    public public function analytics()
+    public function analytics()
     {
         return InstantAnalytics::$plugin->ia->analytics();
     }
