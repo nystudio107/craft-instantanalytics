@@ -3,7 +3,6 @@
  * Instant Analytics plugin for Craft CMS 3.x
  *
  * Instant Analytics brings full Google Analytics support to your Twig templates
- * and automatic Craft Commerce integration with Google Enhanced Ecommerce.
  *
  * @link      https://nystudio107.com
  * @copyright Copyright (c) 2017 nystudio107
@@ -12,11 +11,16 @@
 namespace nystudio107\instantanalytics\twigextensions;
 
 use nystudio107\instantanalytics\InstantAnalytics;
-use nystudio107\instantanalytics\helpers\IAnalytics;
 
 use Craft;
 
 /**
+ * Twig can be extended in many ways; you can add extra tags, filters, tests, operators,
+ * global variables, and functions. You can even extend the parser itself with
+ * node visitors.
+ *
+ * http://twig.sensiolabs.org/doc/advanced.html
+ *
  * @author    nystudio107
  * @package   InstantAnalytics
  * @since     1.0.0
@@ -27,7 +31,9 @@ class InstantAnalyticsTwigExtension extends \Twig_Extension
     // =========================================================================
 
     /**
-     * @inheritdoc
+     * Returns the name of the extension.
+     *
+     * @return string The extension name
      */
     public function getName()
     {
@@ -35,135 +41,43 @@ class InstantAnalyticsTwigExtension extends \Twig_Extension
     }
 
     /**
-     * @inheritdoc
-     */
-    public function getGlobals()
-    {
-        $result = [];
-        if (Craft::$app->getRequest()->getIsSiteRequest()
-            && !Craft::$app->getRequest()->getIsConsoleRequest()
-        ) {
-            // Return our Analytics object as a Twig global
-            $currentTemplate = $this->getCurrentTemplatePath();
-            $result = InstantAnalytics::$plugin->ia->getGlobals($currentTemplate);
-        }
-
-        return $result;
-    }
-
-    /**
-     * @inheritdoc
+     * Returns an array of Twig filters, used in Twig templates via:
+     *
+     *      {{ 'something' | someFilter }}
+     *
+     * @return array
      */
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('pageViewAnalytics', [$this, 'pageViewAnalytics']),
-            new \Twig_SimpleFilter('eventAnalytics', [$this, 'eventAnalytics']),
-            new \Twig_SimpleFilter('pageViewTrackingUrl', [$this, 'pageViewTrackingUrl']),
-            new \Twig_SimpleFilter('eventTrackingUrl', [$this, 'eventTrackingUrl']),
+            new \Twig_SimpleFilter('someFilter', [$this, 'someInternalFunction']),
         ];
     }
 
     /**
-     * @inheritdoc
+     * Returns an array of Twig functions, used in Twig templates via:
+     *
+     *      {% set this = someFunction('something') %}
+     *
+    * @return array
      */
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('pageViewAnalytics', [$this, 'pageViewAnalytics']),
-            new \Twig_SimpleFunction('eventAnalytics', [$this, 'eventAnalytics']),
-            new \Twig_SimpleFunction('pageViewTrackingUrl', [$this, 'pageViewTrackingUrl']),
-            new \Twig_SimpleFunction('eventTrackingUrl', [$this, 'eventTrackingUrl']),
+            new \Twig_SimpleFunction('someFilter', [$this, 'someInternalFunction']),
         ];
     }
 
     /**
-     * Get a PageView analytics object
+     * Our function called via Twig; it can do anything you want
      *
-     * @param string  $url   the URL to track
-     * @param string  $title the page title
+     * @param null $text
      *
-     * @return IAnalytics
+     * @return string
      */
-    public function pageViewAnalytics($url = "", $title = "")
+    public function someInternalFunction($text = null)
     {
-        return InstantAnalytics::$plugin->ia->pageViewAnalytics($url, $title);
-    }
-
-    /**
-     * Get an Event analytics object
-     *
-     * @param  string $eventCategory the event category
-     * @param  string $eventAction   the event action
-     * @param  string $eventLabel    the event label
-     * @param  int    $eventValue    the event value
-     *
-     * @return IAnalytics
-     */
-    public function eventAnalytics($eventCategory = "", $eventAction = "", $eventLabel = "", $eventValue = 0)
-    {
-        return InstantAnalytics::$plugin->ia->eventAnalytics($eventCategory, $eventAction, $eventLabel, $eventValue);
-    }
-
-    /**
-     * Return an Analytics object
-     *
-     * @return IAnalytics
-     */
-    public public function analytics()
-    {
-        return InstantAnalytics::$plugin->ia->analytics();
-    }
-
-    /**
-     * Get a PageView tracking URL
-     *
-     * @param string  $url   the URL to track
-     * @param string  $title the page title
-     *
-     * @return string the tracking URL
-     */
-    public function pageViewTrackingUrl($url, $title)
-    {
-        return InstantAnalytics::$plugin->ia->pageViewTrackingUrl($url, $title);
-    }
-
-    /**
-     * Get an Event tracking URL
-     *
-     * @param  string $url           the URL to track
-     * @param  string $eventCategory the event category
-     * @param  string $eventAction   the event action
-     * @param  string $eventLabel    the event label
-     * @param  int    $eventValue    the event value
-     *
-     * @return string the tracking URL
-     */
-    public function eventTrackingUrl($url, $eventCategory = "", $eventAction = "", $eventLabel = "", $eventValue = 0)
-    {
-        return InstantAnalytics::$plugin->ia->eventTrackingUrl($url, $eventCategory, $eventAction, $eventLabel, $eventValue);
-    }
-
-    /**
-     * Get the current template path
-     *
-     * @return string the template path
-     */
-    private function getCurrentTemplatePath()
-    {
-        $result = "";
-        $currentTemplate = Craft::$app->getView()->getRenderingTemplate();
-        $templatesPath = Craft::$app->getPath()->getSiteTemplatesPath();
-
-        $path_parts = pathinfo($currentTemplate);
-
-        if ($path_parts && isset($path_parts['dirname']) && isset($path_parts['filename'])) {
-            $result = $path_parts['dirname'] . "/" . $path_parts['filename'];
-
-            if (substr($result, 0, strlen($templatesPath)) == $templatesPath) {
-                $result = substr($result, strlen($templatesPath));
-            }
-        }
+        $result = $text . " in the way";
 
         return $result;
     }

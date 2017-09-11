@@ -1,19 +1,26 @@
 # Instant Analytics plugin for Craft CMS 3.x
 
-Instant Analytics brings full Google Analytics support to your Twig templates and automatic Craft Commerce integration with Google Enhanced Ecommerce.
+Instant Analytics brings full Google Analytics support to your Twig templates
 
-## This plugin is in development; don't use it yet
+![Screenshot](resources/img/plugin-logo.png)
 
-No, really.
+## Requirements
+
+This plugin requires Craft CMS 3.0.0-beta.23 or later.
 
 ## Installation
 
-To install Instant Analytics, follow these steps:
+To install the plugin, follow these instructions.
 
-1. Install with Composer via `composer require nystudio107/craft3-instantanalytics`
-2. Install plugin in the Craft Control Panel under Settings > Plugins
+1. Open your terminal and go to your Craft project:
 
-Instant Analytics works on Craft 3.x.
+        cd /path/to/project
+
+2. Then tell Composer to load the plugin:
+
+        composer require nystudio107/instant-analytics
+
+3. In the Control Panel, go to Settings → Plugins and click the “Install” button for Instant Analytics.
 
 ## Instant Analytics Overview
 
