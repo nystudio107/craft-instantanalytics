@@ -23,7 +23,6 @@
  */
 
 return [
-    
     /**
      * The default Google Analytics tracking ID
      */
@@ -54,14 +53,12 @@ return [
      *
      * @var bool
      */
-    public $autoSendRemoveFromCart = true;
+    'autoSendRemoveFromCart' => true,
 
     /**
      * Whether purchase complete events should be automatically sent
-     *
-     * @var bool
      */
-    public $autoSendPurchaseComplete = true;
+    'autoSendPurchaseComplete' => true,
 
     /**
      * Controls whether Instant Analytics will send analytics data.
