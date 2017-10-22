@@ -49,12 +49,12 @@ class InstantAnalytics extends Plugin
     public static $plugin;
 
     /**
-     * @var bool
+     * @var Plugin|null
      */
     public static $commercePlugin;
 
     /**
-     * @var bool
+     * @var Plugin|null
      */
     public static $seomaticPlugin;
 
@@ -62,6 +62,11 @@ class InstantAnalytics extends Plugin
      * @var string
      */
     public static $currentTemplate = '';
+
+    /**
+     * @var bool
+     */
+    public static $pageViewSent = false;
 
     // Public Methods
     // =========================================================================
@@ -75,19 +80,14 @@ class InstantAnalytics extends Plugin
         self::$plugin = $this;
         $view = Craft::$app->getView();
         $request = Craft::$app->getRequest();
-
         // Add in our Twig extensions
         $view->twig->addExtension(new InstantAnalyticsTwigExtension());
-
         // Install our template hook
         $view->hook('iaSendPageView', [$this, 'iaSendPageView']);
-
         // Determine if Craft Commerce is installed & enabled
         self::$commercePlugin = Craft::$app->getPlugins()->getPlugin('commerce');
-
         // Determine if SEOmatic is installed & enabled
         self::$seomaticPlugin = Craft::$app->getPlugins()->getPlugin('seomatic');
-
         // Register our variables
         Event::on(
             CraftVariable::class,
@@ -109,7 +109,14 @@ class InstantAnalytics extends Plugin
                     self::$currentTemplate = $event->template;
                 }
             );
-
+            // Remember the name of the currently rendering template
+            Event::on(
+                View::class,
+                View::EVENT_AFTER_RENDER_PAGE_TEMPLATE,
+                function (TemplateEvent $event) {
+                    $this->sendPageView();
+                }
+            );
             // Register our site routes
             Event::on(
                 UrlManager::class,
@@ -121,7 +128,6 @@ class InstantAnalytics extends Plugin
                         'instant-analytics/track-event-view-url';
                 }
             );
-
             // Do something after we're installed
             Event::on(
                 Plugins::class,
@@ -132,7 +138,6 @@ class InstantAnalytics extends Plugin
                     }
                 }
             );
-
             // Commerce-specific hooks
             if (self::$commercePlugin) {
                 // TODO: pending Commerce for Craft 3
@@ -225,6 +230,17 @@ class InstantAnalytics extends Plugin
     // Private Methods
     // =========================================================================
 
+    private function sendPageView()
+    {
+        if (!self::$pageViewSent) {
+            self::$pageViewSent = true;
+            /** @var IAnalytics $analytics */
+            $analytics = InstantAnalytics::$plugin->ia->getGlobals(self::$currentTemplate);
+            // Send the page view
+            $analytics->sendPageView();
+        }
+    }
+
     /**
      * Send a page view with the pre-loaded IAnalytics object
      *
@@ -236,21 +252,15 @@ class InstantAnalytics extends Plugin
     {
         $request = Craft::$app->getRequest();
         if ($request->getIsSiteRequest() && !$request->getIsConsoleRequest()) {
-            if (isset($context['instantAnalytics'])) {
-                // Get the Analytics object from the Twig context
-                /** @var IAnalytics $analytics */
-                $analytics = $context['instantAnalytics'];
-                // If SEOmatic is installed, set the page title from it
-                if (self::$seomaticPlugin && isset($context['seomaticMeta'])) {
-                    // TODO: fix for SEOmatic
-                    /*
-                    $seomaticMeta = $context['seomaticMeta'];
-                    $analytics->setDocumentTitle($seomaticMeta['seoTitle']);
-                    */
-                }
-                // Send the page view
-                $analytics->sendPageView();
+            // If SEOmatic is installed, set the page title from it
+            if (self::$seomaticPlugin && isset($context['seomaticMeta'])) {
+                // TODO: fix for SEOmatic
+                /*
+                $seomaticMeta = $context['seomaticMeta'];
+                $analytics->setDocumentTitle($seomaticMeta['seoTitle']);
+                */
             }
+            $this->sendPageView();
         }
 
         return '';

@@ -49,7 +49,6 @@ class IA extends Component
      */
     public function getGlobals($title)
     {
-
         if ($this->cachedAnalytics) {
             $analytics = $this->cachedAnalytics;
         } else {
@@ -150,15 +149,13 @@ class IA extends Component
      */
     public function analytics()
     {
-        $result = null;
         $analytics = $this->getAnalyticsObj();
-        $result = $analytics;
         Craft::info(
             "Created genertic analytics object",
             __METHOD__
         );
 
-        return $result;
+        return $analytics;
     }
 
     /**
