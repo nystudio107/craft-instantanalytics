@@ -121,7 +121,7 @@ class Settings extends Model
      *
      * @var bool
      */
-    public $logExcludedAnalytics = false;
+    public $logExcludedAnalytics = true;
 
     /**
      * Contains an array of Craft user group handles to exclude from Analytics

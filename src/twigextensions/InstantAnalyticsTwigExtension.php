@@ -45,12 +45,15 @@ class InstantAnalyticsTwigExtension extends \Twig_Extension implements \Twig_Ext
     public function getGlobals()
     {
         $globals = [];
-        $request = Craft::$app->getRequest();
-        if ($request->getIsSiteRequest() && !$request->getIsConsoleRequest()) {
-            // Return our Analytics object as a Twig global
-            $globals = [
-                'instantAnalytics' => InstantAnalytics::$plugin->ia->getGlobals(InstantAnalytics::$currentTemplate),
-            ];
+        $view = Craft::$app->getView();
+        if ($view->getIsRenderingPageTemplate()) {
+            $request = Craft::$app->getRequest();
+            if ($request->getIsSiteRequest() && !$request->getIsConsoleRequest()) {
+                // Return our Analytics object as a Twig global
+                $globals = [
+                    'instantAnalytics' => InstantAnalytics::$plugin->ia->getGlobals(InstantAnalytics::$currentTemplate),
+                ];
+            }
         }
 
         return $globals;

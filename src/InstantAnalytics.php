@@ -237,7 +237,14 @@ class InstantAnalytics extends Plugin
             /** @var IAnalytics $analytics */
             $analytics = InstantAnalytics::$plugin->ia->getGlobals(self::$currentTemplate);
             // Send the page view
-            $analytics->sendPageView();
+            if ($analytics) {
+                $analytics->sendPageView();
+            } else {
+                Craft::error(
+                    "Analytics not sent because googleAnalyticsTracking is not set",
+                    __METHOD__
+                );
+            }
         }
     }
 

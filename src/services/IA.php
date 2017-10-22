@@ -151,7 +151,7 @@ class IA extends Component
     {
         $analytics = $this->getAnalyticsObj();
         Craft::info(
-            "Created genertic analytics object",
+            "Created generic analytics object",
             __METHOD__
         );
 

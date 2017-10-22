@@ -85,7 +85,7 @@ return [
      * storage/logs/web.log
      * These are always logged if `devMode` is on
      */
-    'logExcludedAnalytics' => false,
+    'logExcludedAnalytics' => true,
 
     /**
      * Contains an array of Craft user group handles to exclude from Analytics tracking.  If there's a match
