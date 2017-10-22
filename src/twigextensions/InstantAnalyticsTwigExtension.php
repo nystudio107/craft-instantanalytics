@@ -11,13 +11,14 @@
 namespace nystudio107\instantanalytics\twigextensions;
 
 use nystudio107\instantanalytics\InstantAnalytics;
+use nystudio107\instantanalytics\helpers\IAnalytics;
 
 use Craft;
 
 /**
- * Twig can be extended in many ways; you can add extra tags, filters, tests, operators,
- * global variables, and functions. You can even extend the parser itself with
- * node visitors.
+ * Twig can be extended in many ways; you can add extra tags, filters, tests,
+ * operators, global variables, and functions. You can even extend the parser
+ * itself with node visitors.
  *
  * http://twig.sensiolabs.org/doc/advanced.html
  *
@@ -25,15 +26,13 @@ use Craft;
  * @package   InstantAnalytics
  * @since     1.0.0
  */
-class InstantAnalyticsTwigExtension extends \Twig_Extension
+class InstantAnalyticsTwigExtension extends \Twig_Extension implements \Twig_Extension_GlobalsInterface
 {
     // Public Methods
     // =========================================================================
 
     /**
-     * Returns the name of the extension.
-     *
-     * @return string The extension name
+     * @inheritdoc
      */
     public function getName()
     {
@@ -41,44 +40,110 @@ class InstantAnalyticsTwigExtension extends \Twig_Extension
     }
 
     /**
-     * Returns an array of Twig filters, used in Twig templates via:
-     *
-     *      {{ 'something' | someFilter }}
-     *
-     * @return array
+     * @@inheritdoc
+     */
+    public function getGlobals()
+    {
+        $globals = [];
+        $request = Craft::$app->getRequest();
+        if ($request->getIsSiteRequest() && !$request->getIsConsoleRequest()) {
+            // Return our Analytics object as a Twig global
+            $globals = [
+                'instantAnalytics' => InstantAnalytics::$plugin->ia->getGlobals(InstantAnalytics::$currentTemplate),
+            ];
+        }
+
+        return $globals;
+    }
+
+    /**
+     * @inheritdoc
      */
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('someFilter', [$this, 'someInternalFunction']),
+            new \Twig_SimpleFilter('pageViewAnalytics', [$this, 'pageViewAnalytics']),
+            new \Twig_SimpleFilter('eventAnalytics', [$this, 'eventAnalytics']),
+            new \Twig_SimpleFilter('pageViewTrackingUrl', [$this, 'pageViewTrackingUrl']),
+            new \Twig_SimpleFilter('eventTrackingUrl', [$this, 'eventTrackingUrl']),
         ];
     }
 
     /**
-     * Returns an array of Twig functions, used in Twig templates via:
-     *
-     *      {% set this = someFunction('something') %}
-     *
-    * @return array
+     * @inheritdoc
      */
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('someFilter', [$this, 'someInternalFunction']),
+            new \Twig_SimpleFunction('pageViewAnalytics', [$this, 'pageViewAnalytics']),
+            new \Twig_SimpleFunction('eventAnalytics', [$this, 'eventAnalytics']),
+            new \Twig_SimpleFunction('pageViewTrackingUrl', [$this, 'pageViewTrackingUrl']),
+            new \Twig_SimpleFunction('eventTrackingUrl', [$this, 'eventTrackingUrl']),
         ];
     }
 
     /**
-     * Our function called via Twig; it can do anything you want
+     * Get a PageView analytics object
      *
-     * @param null $text
+     * @param string $url
+     * @param string $title
      *
-     * @return string
+     * @return IAnalytics object
      */
-    public function someInternalFunction($text = null)
+    public function pageViewAnalytics($url = "", $title = "")
     {
-        $result = $text . " in the way";
+        return InstantAnalytics::$plugin->ia->pageViewAnalytics($url, $title);
+    }
 
-        return $result;
+    /**
+     * Get an Event analytics object
+     *
+     * @param string $eventCategory
+     * @param string $eventAction
+     * @param string $eventLabel
+     * @param int    $eventValue
+     *
+     * @return null|IAnalytics
+     */
+    public function eventAnalytics($eventCategory = "", $eventAction = "", $eventLabel = "", $eventValue = 0)
+    {
+        return InstantAnalytics::$plugin->ia->eventAnalytics($eventCategory, $eventAction, $eventLabel, $eventValue);
+    }
+
+    /**
+     * Return an Analytics object
+     */
+    public function analytics()
+    {
+        return InstantAnalytics::$plugin->ia->analytics();
+    }
+
+    /**
+     * Get a PageView tracking URL
+     *
+     * @param  string $url   the URL to track
+     * @param  string $title the page title
+     *
+     * @return string the tracking URL
+     */
+    public function pageViewTrackingUrl($url, $title)
+    {
+        return InstantAnalytics::$plugin->ia->pageViewTrackingUrl($url, $title);
+    }
+
+    /**
+     * Get an Event tracking URL
+     *
+     * @param  string $url           the URL to track
+     * @param  string $eventCategory the event category
+     * @param  string $eventAction   the event action
+     * @param  string $eventLabel    the event label
+     * @param  int    $eventValue    the event value
+     *
+     * @return string the tracking URL
+     */
+    public function eventTrackingUrl($url, $eventCategory = "", $eventAction = "", $eventLabel = "", $eventValue = 0)
+    {
+        return InstantAnalytics::$plugin->ia->eventTrackingUrl($url, $eventCategory, $eventAction, $eventLabel, $eventValue);
     }
 }

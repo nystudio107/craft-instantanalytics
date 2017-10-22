@@ -11,7 +11,7 @@
  * @since     1.0.0
  */
 
-namespace Craft;
+namespace nystudio107\instantanalytics\helpers;
 
 use \TheIconic\Tracking\GoogleAnalytics\Analytics;
 

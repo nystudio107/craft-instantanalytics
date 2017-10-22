@@ -10,6 +10,7 @@
 
 namespace nystudio107\instantanalytics;
 
+use nystudio107\instantanalytics\helpers\IAnalytics;
 use nystudio107\instantanalytics\services\IA as IAService;
 use nystudio107\instantanalytics\variables\InstantAnalyticsVariable;
 use nystudio107\instantanalytics\twigextensions\InstantAnalyticsTwigExtension;
@@ -17,30 +18,24 @@ use nystudio107\instantanalytics\models\Settings;
 
 use Craft;
 use craft\base\Plugin;
-use craft\services\Plugins;
 use craft\events\PluginEvent;
-use craft\web\UrlManager;
-use craft\web\twig\variables\CraftVariable;
 use craft\events\RegisterUrlRulesEvent;
+use craft\events\TemplateEvent;
+use craft\helpers\UrlHelper;
+use craft\services\Plugins;
+use craft\web\twig\variables\CraftVariable;
+use craft\web\UrlManager;
+use craft\web\View;
 
 use yii\base\Event;
 
 /**
- * Craft plugins are very much like little applications in and of themselves. We’ve made
- * it as simple as we can, but the training wheels are off. A little prior knowledge is
- * going to be required to write a plugin.
- *
- * For the purposes of the plugin docs, we’re going to assume that you know PHP and SQL,
- * as well as some semi-advanced concepts like object-oriented programming and PHP namespaces.
- *
- * https://craftcms.com/docs/plugins/introduction
- *
  * @author    nystudio107
  * @package   InstantAnalytics
  * @since     1.0.0
  *
- * @property  IAService $iA
- * @property  Settings $settings
+ * @property  IAService $ia
+ * @property  Settings  $settings
  * @method    Settings getSettings()
  */
 class InstantAnalytics extends Plugin
@@ -49,52 +44,49 @@ class InstantAnalytics extends Plugin
     // =========================================================================
 
     /**
-     * Static property that is an instance of this plugin class so that it can be accessed via
-     * InstantAnalytics::$plugin
-     *
      * @var InstantAnalytics
      */
     public static $plugin;
+
+    /**
+     * @var bool
+     */
+    public static $commerce;
+
+    /**
+     * @var bool
+     */
+    public static $seomatic;
+
+    /**
+     * @var string
+     */
+    public static $currentTemplate = '';
 
     // Public Methods
     // =========================================================================
 
     /**
-     * Set our $plugin static property to this class so that it can be accessed via
-     * InstantAnalytics::$plugin
-     *
-     * Called after the plugin class is instantiated; do any one-time initialization
-     * here such as hooks and events.
-     *
-     * If you have a '/vendor/autoload.php' file, it will be loaded for you automatically;
-     * you do not need to load it in your init() method.
-     *
+     * @inheritdoc
      */
     public function init()
     {
         parent::init();
         self::$plugin = $this;
+        $view = Craft::$app->getView();
+        $request = Craft::$app->getRequest();
 
         // Add in our Twig extensions
-        Craft::$app->view->twig->addExtension(new InstantAnalyticsTwigExtension());
+        $view->twig->addExtension(new InstantAnalyticsTwigExtension());
 
-        // Register our site routes
-        Event::on(
-            UrlManager::class,
-            UrlManager::EVENT_REGISTER_SITE_URL_RULES,
-            function (RegisterUrlRulesEvent $event) {
-                $event->rules['siteActionTrigger1'] = 'instant-analytics/i-a';
-            }
-        );
+        // Install our template hook
+        $view->hook('iaSendPageView', [$this, 'iaSendPageView']);
 
-        // Register our CP routes
-        Event::on(
-            UrlManager::class,
-            UrlManager::EVENT_REGISTER_CP_URL_RULES,
-            function (RegisterUrlRulesEvent $event) {
-                $event->rules['cpActionTrigger1'] = 'instant-analytics/i-a/do-something';
-            }
-        );
+        // Determine if Craft Commerce is installed & enabled
+        self::$commerce = Craft::$app->getPlugins()->getPlugin('commerce');
+
+        // Determine if SEOmatic is installed & enabled
+        self::$commerce = Craft::$app->getPlugins()->getPlugin('seomatic');
 
         // Register our variables
         Event::on(
@@ -107,35 +99,42 @@ class InstantAnalytics extends Plugin
             }
         );
 
-        // Do something after we're installed
-        Event::on(
-            Plugins::class,
-            Plugins::EVENT_AFTER_INSTALL_PLUGIN,
-            function (PluginEvent $event) {
-                if ($event->plugin === $this) {
-                    // We were just installed
+        // We're only interested in site requests that are not console requests
+        if (($request->isSiteRequest) && (!$request->isConsoleRequest)) {
+            // Remember the name of the currently rendering template
+            Event::on(
+                View::class,
+                View::EVENT_BEFORE_RENDER_PAGE_TEMPLATE,
+                function (TemplateEvent $event) {
+                    self::$currentTemplate = $event->template;
                 }
-            }
-        );
+            );
 
-/**
- * Logging in Craft involves using one of the following methods:
- *
- * Craft::trace(): record a message to trace how a piece of code runs. This is mainly for development use.
- * Craft::info(): record a message that conveys some useful information.
- * Craft::warning(): record a warning message that indicates something unexpected has happened.
- * Craft::error(): record a fatal error that should be investigated as soon as possible.
- *
- * Unless `devMode` is on, only Craft::warning() & Craft::error() will log to `craft/storage/logs/web.log`
- *
- * It's recommended that you pass in the magic constant `__METHOD__` as the second parameter, which sets
- * the category to the method (prefixed with the fully qualified class name) where the constant appears.
- *
- * To enable the Yii debug toolbar, go to your user account in the AdminCP and check the
- * [] Show the debug toolbar on the front end & [] Show the debug toolbar on the Control Panel
- *
- * http://www.yiiframework.com/doc-2.0/guide-runtime-logging.html
- */
+            // Register our site routes
+            Event::on(
+                UrlManager::class,
+                UrlManager::EVENT_REGISTER_SITE_URL_RULES,
+                function (RegisterUrlRulesEvent $event) {
+                    $event->rules['instantanalytics/pageViewTrack(/(?P<filename>[-\w\.*]+))?'] =
+                        'instant-analytics/track-page-view-url';
+                    $event->rules['instantanalytics/eventTrack(/(?P<filename>[-\w\.*]+))?'] =
+                        'instant-analytics/track-event-view-url';
+                }
+            );
+
+            // Do something after we're installed
+            Event::on(
+                Plugins::class,
+                Plugins::EVENT_AFTER_INSTALL_PLUGIN,
+                function (PluginEvent $event) {
+                    $request = Craft::$app->getRequest();
+                    if ($event->plugin === $this) {
+                        Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('instant-analytics/welcome'))->send();
+                    }
+                }
+            );
+        }
+
         Craft::info(
             Craft::t(
                 'instant-analytics',
@@ -146,13 +145,46 @@ class InstantAnalytics extends Plugin
         );
     }
 
+    /**
+     * @inheritdoc
+     */
+    public function settingsHtml()
+    {
+        $commerceFields = [];
+        // TODO: pending Commerce for Craft 3
+        /*
+                $commerce = craft()->plugins->getPlugin('Commerce');
+                if ($commerce && $commerce->isInstalled && $commerce->isEnabled)
+                {
+                    $productTypes = craft()->commerce_productTypes->getAllProductTypes();
+                    foreach($productTypes as $productType)
+                    {
+                        $productFields = $this->_getPullFieldsFromLayoutId($productType->fieldLayoutId);
+                        $commerceFields = array_merge($commerceFields, $productFields);
+                        if ($productType->hasVariants)
+                        {
+                            $variantFields = $this->_getPullFieldsFromLayoutId($productType->variantFieldLayoutId);
+                            $commerceFields = array_merge($commerceFields, $variantFields);
+                        }
+                    }
+                }
+        */
+
+        // Render the settings template
+        return Craft::$app->getView()->renderTemplate(
+            'instant-analytics/settings',
+            [
+                'settings'       => $this->getSettings(),
+                'commerceFields' => $commerceFields,
+            ]
+        );
+    }
+
     // Protected Methods
     // =========================================================================
 
     /**
-     * Creates and returns the model used to store the plugin’s settings.
-     *
-     * @return \craft\base\Model|null
+     * @inheritdoc
      */
     protected function createSettingsModel()
     {
@@ -160,18 +192,65 @@ class InstantAnalytics extends Plugin
     }
 
     /**
-     * Returns the rendered settings HTML, which will be inserted into the content
-     * block on the settings page.
+     * @param int $layoutId
      *
-     * @return string The rendered settings HTML
+     * @return array
      */
-    protected function settingsHtml(): string
+    private function getPullFieldsFromLayoutId(int $layoutId)
     {
-        return Craft::$app->view->renderTemplate(
-            'instant-analytics/settings',
-            [
-                'settings' => $this->getSettings()
-            ]
-        );
+        $result = ['' => "none"];
+        $fieldLayout = Craft::$app->getFields()->getLayoutById($layoutId);
+        $fieldLayoutFields = $fieldLayout->getFields();
+        foreach ($fieldLayoutFields as $fieldLayoutField) {
+            $field = $fieldLayoutField->field;
+            switch ($field->type) {
+                case "PlainText":
+                case "RichText":
+                case "RedactorI":
+                case "PreparseField_Preparse":
+                case "Categories":
+                    $result[$field->handle] = $field->name;
+                    break;
+
+                case "Tags":
+                    break;
+            }
+        }
+
+        return $result;
+    }
+
+    // Private Methods
+    // =========================================================================
+
+    /**
+     * Send a page view with the pre-loaded IAnalytics object
+     *
+     * @param array &$context
+     *
+     * @return string|null
+     */
+    private function iaSendPageView(array &$context)
+    {
+        $request = Craft::$app->getRequest();
+        if ($request->getIsSiteRequest() && !$request->getIsConsoleRequest()) {
+            if (isset($context['instantAnalytics'])) {
+                // Get the Analytics object from the Twig context
+                /** @var IAnalytics $analytics */
+                $analytics = $context['instantAnalytics'];
+                // If SEOmatic is installed, set the page title from it
+                if (self::$seomatic && isset($context['seomaticMeta'])) {
+                    // TODO: fix for SEOmatic
+                    /*
+                    $seomaticMeta = $context['seomaticMeta'];
+                    $analytics->setDocumentTitle($seomaticMeta['seoTitle']);
+                    */
+                }
+                // Send the page view
+                $analytics->sendPageView();
+            }
+        }
+
+        return '';
     }
 }

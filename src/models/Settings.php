@@ -14,6 +14,7 @@ use nystudio107\instantanalytics\InstantAnalytics;
 
 use Craft;
 use craft\base\Model;
+use craft\validators\ArrayValidator;
 
 /**
  * InstantAnalytics Settings Model
@@ -127,7 +128,7 @@ class Settings extends Model
      * tracking.  If there's a match for any of them, analytics data is not
      * sent.
      *
-     * @var bool
+     * @var array
      */
     public $groupExcludes = [
     ];
@@ -141,7 +142,7 @@ class Settings extends Model
      * http://php.net/manual/en/reserved.variables.server.php RegEx tester:
      * http://regexr.com
      *
-     * @var bool
+     * @var array
      */
     public $serverExcludes = [
         'REMOTE_ADDR' => [
@@ -167,8 +168,36 @@ class Settings extends Model
     public function rules()
     {
         return [
-            ['someAttribute', 'string'],
-            ['someAttribute', 'default', 'value' => 'Some Default'],
+            [
+                [
+                    'stripQueryString',
+                    'autoSendAddToCart',
+                    'autoSendRemoveFromCart',
+                    'autoSendPurchaseComplete',
+                    'sendAnalyticsData',
+                    'sendAnalyticsInDevMode',
+                    'filterBotUserAgents',
+                    'adminExclude',
+                    'logExcludedAnalytics',
+                ],
+                'boolean'
+            ],
+            [
+                [
+                    'googleAnalyticsTracking',
+                    'productCategoryField',
+                    'productBrandField',
+                    'googleAnalyticsTracking',
+                ],
+                'string'
+            ],
+            [
+                [
+                    'groupExcludes',
+                    'serverExcludes',
+                ],
+                ArrayValidator::class
+            ],
         ];
     }
 }
