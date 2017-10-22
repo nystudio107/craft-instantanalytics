@@ -11,16 +11,12 @@
 namespace nystudio107\instantanalytics\variables;
 
 use nystudio107\instantanalytics\InstantAnalytics;
+use nystudio107\instantanalytics\helpers\IAnalytics;
 
 use Craft;
 
 /**
  * Instant Analytics Variable
- *
- * Craft allows plugins to provide their own template variables, accessible from
- * the {{ craft }} global variable (e.g. {{ craft.instantAnalytics }}).
- *
- * https://craftcms.com/docs/plugins/variables
  *
  * @author    nystudio107
  * @package   InstantAnalytics
@@ -32,25 +28,67 @@ class InstantAnalyticsVariable
     // =========================================================================
 
     /**
-     * Whatever you want to output to a Twig template can go into a Variable method.
-     * You can have as many variable functions as you want.  From any Twig template,
-     * call it like this:
+     * Get a PageView analytics object
      *
-     *     {{ craft.instantAnalytics.exampleVariable }}
+     * @param string $url
+     * @param string $title
      *
-     * Or, if your variable requires parameters from Twig:
-     *
-     *     {{ craft.instantAnalytics.exampleVariable(twigValue) }}
-     *
-     * @param null $optional
-     * @return string
+     * @return IAnalytics object
      */
-    public function exampleVariable($optional = null)
+    public function pageViewAnalytics($url = "", $title = "")
     {
-        $result = "And away we go to the Twig template...";
-        if ($optional) {
-            $result = "I'm feeling optional today...";
-        }
-        return $result;
+        return InstantAnalytics::$plugin->ia->pageViewAnalytics($url, $title);
+    }
+
+    /**
+     * Get an Event analytics object
+     *
+     * @param string $eventCategory
+     * @param string $eventAction
+     * @param string $eventLabel
+     * @param int    $eventValue
+     *
+     * @return null|IAnalytics
+     */
+    public function eventAnalytics($eventCategory = "", $eventAction = "", $eventLabel = "", $eventValue = 0)
+    {
+        return InstantAnalytics::$plugin->ia->eventAnalytics($eventCategory, $eventAction, $eventLabel, $eventValue);
+    }
+
+    /**
+     * Return an Analytics object
+     */
+    public function analytics()
+    {
+        return InstantAnalytics::$plugin->ia->analytics();
+    }
+
+    /**
+     * Get a PageView tracking URL
+     *
+     * @param  string $url   the URL to track
+     * @param  string $title the page title
+     *
+     * @return string the tracking URL
+     */
+    public function pageViewTrackingUrl($url, $title)
+    {
+        return InstantAnalytics::$plugin->ia->pageViewTrackingUrl($url, $title);
+    }
+
+    /**
+     * Get an Event tracking URL
+     *
+     * @param  string $url           the URL to track
+     * @param  string $eventCategory the event category
+     * @param  string $eventAction   the event action
+     * @param  string $eventLabel    the event label
+     * @param  int    $eventValue    the event value
+     *
+     * @return string the tracking URL
+     */
+    public function eventTrackingUrl($url, $eventCategory = "", $eventAction = "", $eventLabel = "", $eventValue = 0)
+    {
+        return InstantAnalytics::$plugin->ia->eventTrackingUrl($url, $eventCategory, $eventAction, $eventLabel, $eventValue);
     }
 }

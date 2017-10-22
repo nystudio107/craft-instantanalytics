@@ -51,12 +51,12 @@ class InstantAnalytics extends Plugin
     /**
      * @var bool
      */
-    public static $commerce;
+    public static $commercePlugin;
 
     /**
      * @var bool
      */
-    public static $seomatic;
+    public static $seomaticPlugin;
 
     /**
      * @var string
@@ -83,10 +83,10 @@ class InstantAnalytics extends Plugin
         $view->hook('iaSendPageView', [$this, 'iaSendPageView']);
 
         // Determine if Craft Commerce is installed & enabled
-        self::$commerce = Craft::$app->getPlugins()->getPlugin('commerce');
+        self::$commercePlugin = Craft::$app->getPlugins()->getPlugin('commerce');
 
         // Determine if SEOmatic is installed & enabled
-        self::$commerce = Craft::$app->getPlugins()->getPlugin('seomatic');
+        self::$seomaticPlugin = Craft::$app->getPlugins()->getPlugin('seomatic');
 
         // Register our variables
         Event::on(
@@ -127,12 +127,16 @@ class InstantAnalytics extends Plugin
                 Plugins::class,
                 Plugins::EVENT_AFTER_INSTALL_PLUGIN,
                 function (PluginEvent $event) {
-                    $request = Craft::$app->getRequest();
                     if ($event->plugin === $this) {
                         Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('instant-analytics/welcome'))->send();
                     }
                 }
             );
+
+            // Commerce-specific hooks
+            if (self::$commercePlugin) {
+                // TODO: pending Commerce for Craft 3
+            }
         }
 
         Craft::info(
@@ -151,24 +155,22 @@ class InstantAnalytics extends Plugin
     public function settingsHtml()
     {
         $commerceFields = [];
-        // TODO: pending Commerce for Craft 3
-        /*
-                $commerce = craft()->plugins->getPlugin('Commerce');
-                if ($commerce && $commerce->isInstalled && $commerce->isEnabled)
-                {
-                    $productTypes = craft()->commerce_productTypes->getAllProductTypes();
-                    foreach($productTypes as $productType)
-                    {
-                        $productFields = $this->_getPullFieldsFromLayoutId($productType->fieldLayoutId);
-                        $commerceFields = array_merge($commerceFields, $productFields);
-                        if ($productType->hasVariants)
-                        {
-                            $variantFields = $this->_getPullFieldsFromLayoutId($productType->variantFieldLayoutId);
-                            $commerceFields = array_merge($commerceFields, $variantFields);
-                        }
-                    }
+
+        if (self::$commercePlugin) {
+            // TODO: pending Commerce for Craft 3
+            /*
+            $productTypes = craft()->commerce_productTypes->getAllProductTypes();
+            foreach ($productTypes as $productType) {
+                $productFields = $this->_getPullFieldsFromLayoutId($productType->fieldLayoutId);
+                $commerceFields = array_merge($commerceFields, $productFields);
+                if ($productType->hasVariants) {
+                    $variantFields = $this->_getPullFieldsFromLayoutId($productType->variantFieldLayoutId);
+                    $commerceFields = array_merge($commerceFields, $variantFields);
                 }
-        */
+            }
+            */
+        }
+
 
         // Render the settings template
         return Craft::$app->getView()->renderTemplate(
@@ -239,7 +241,7 @@ class InstantAnalytics extends Plugin
                 /** @var IAnalytics $analytics */
                 $analytics = $context['instantAnalytics'];
                 // If SEOmatic is installed, set the page title from it
-                if (self::$seomatic && isset($context['seomaticMeta'])) {
+                if (self::$seomaticPlugin && isset($context['seomaticMeta'])) {
                     // TODO: fix for SEOmatic
                     /*
                     $seomaticMeta = $context['seomaticMeta'];
