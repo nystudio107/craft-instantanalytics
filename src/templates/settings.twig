@@ -36,6 +36,14 @@
 }}
 
 {{ forms.lightswitchField({
+    label: 'Auto Send PageViews:',
+    instructions: "If this setting is on, a PageView will automatically be sent to Google after a every page is rendered. If it is off, you'll need to send it manually using `{% hook 'iaSendPageView' %}` %}",
+    id: 'autoSendPageView',
+    name: 'autoSendPageView',
+    on: settings['autoSendPageView']})
+}}
+
+{{ forms.lightswitchField({
     label: 'Auto Send "Add To Cart" Events:',
     instructions: "If this setting is on, Google Analytics Enhanced Ecommerce events are automatically sent when an item is added to your Craft Commerce cart.",
     id: 'autoSendAddToCart',

@@ -35,8 +35,6 @@ use yii\base\Event;
  * @since     1.0.0
  *
  * @property  IAService $ia
- * @property  Settings  $settings
- * @method    Settings getSettings()
  */
 class InstantAnalytics extends Plugin
 {
@@ -114,7 +112,10 @@ class InstantAnalytics extends Plugin
                 View::class,
                 View::EVENT_AFTER_RENDER_PAGE_TEMPLATE,
                 function (TemplateEvent $event) {
-                    $this->sendPageView();
+                    $settings = InstantAnalytics::$plugin->getSettings();
+                    if ($settings->autoSendPageView) {
+                        $this->sendPageView();
+                    }
                 }
             );
             // Register our site routes

@@ -51,6 +51,13 @@ class Settings extends Model
     public $stripQueryString = true;
 
     /**
+     * Should page views be sent automatically when a page view happens?
+     *
+     * @var bool
+     */
+    public $autoSendPageView = true;
+
+    /**
      * The field in a Commerce Product Variant that should be used for the category
      *
      * @var string
