@@ -84,46 +84,80 @@ class IAnalytics extends Analytics
         }
     }
 
+    // TODO: pending Commerce for Craft 3
     /**
      * Add a product impression to the Analytics object
      *
-     * @param     Commerce_ProductModel or Commerce_VariantModel
-     *                                     $productVariant the Product or
-     *                                     Variant
-     * @param int $index                Where the product appears in the list
+     * @param null   $productVariant
+     * @param int    $index
+     * @param string $listName
+     * @param int    $listIndex
      */
-    public function addCommerceProductImpression($productVariant = null, $index = 0, $listName = "default", $listIndex = 1)
-    {
+    public function addCommerceProductImpression(
+        $productVariant = null,
+        $index = 0,
+        $listName = "default",
+        $listIndex = 1
+    ) {
 
-        if ($productVariant) {
-            craft()->instantAnalytics->addCommerceProductImpression($this, $productVariant, $index, $listName, $listIndex);
+        if (InstantAnalytics::$commercePlugin) {
+            if ($productVariant) {
+                InstantAnalytics::$plugin->commerce->addCommerceProductImpression(
+                    $this,
+                    $productVariant,
+                    $index,
+                    $listName,
+                    $listIndex
+                );
+            }
+        } else {
+            Craft::warning(
+                "Craft Commerce is not installed",
+                __METHOD__
+            );
         }
-    } /* -- addCommerceProductImpression */
+    }
 
+    // TODO: pending Commerce for Craft 3
     /**
      * Add a product detail view to the Analytics object
      *
-     * @param Commerce_ProductModel or Commerce_VariantModel  $productVariant
-     *                                 the Product or Variant
+     * @param null $productVariant
      */
     public function addCommerceProductDetailView($productVariant = null)
     {
-        if ($productVariant) {
-            craft()->instantAnalytics->addCommerceProductDetailView($this, $productVariant);
+        if (InstantAnalytics::$commercePlugin) {
+            if ($productVariant) {
+                InstantAnalytics::$plugin->commerce->addCommerceProductDetailView($this, $productVariant);
+            }
+        } else {
+            Craft::warning(
+                "Craft Commerce is not installed",
+                __METHOD__
+            );
         }
-    } /* -- addCommerceProductDetailView */
+    }
 
+    // TODO: pending Commerce for Craft 3
     /**
      * Add a checkout step to the Analytics object
      *
-     * @param Commerce_ProductModel or Commerce_VariantModel  $productVariant
-     *                                 the Product or Variant
+     * @param null   $orderModel
+     * @param int    $step
+     * @param string $option
      */
     public function addCommerceCheckoutStep($orderModel = null, $step = 1, $option = "")
     {
-        if ($orderModel) {
-            craft()->instantAnalytics->addCommerceCheckoutStep($this, $orderModel, $step, $option);
+        if (InstantAnalytics::$commercePlugin) {
+            if ($orderModel) {
+                InstantAnalytics::$plugin->commerce->addCommerceCheckoutStep($this, $orderModel, $step, $option);
+            }
+        } else {
+            Craft::warning(
+                "Craft Commerce is not installed",
+                __METHOD__
+            );
         }
-    } /* -- addCommerceCheckoutStep */
+    }
 
 }

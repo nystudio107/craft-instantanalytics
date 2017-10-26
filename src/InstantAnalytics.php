@@ -11,6 +11,7 @@
 namespace nystudio107\instantanalytics;
 
 use nystudio107\instantanalytics\helpers\IAnalytics;
+use nystudio107\instantanalytics\services\Commerce as CommerceService;
 use nystudio107\instantanalytics\services\IA as IAService;
 use nystudio107\instantanalytics\variables\InstantAnalyticsVariable;
 use nystudio107\instantanalytics\twigextensions\InstantAnalyticsTwigExtension;
@@ -35,6 +36,7 @@ use yii\base\Event;
  * @since     1.0.0
  *
  * @property  IAService $ia
+ * @property  CommerceService $commerce
  */
 class InstantAnalytics extends Plugin
 {
