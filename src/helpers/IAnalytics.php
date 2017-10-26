@@ -63,6 +63,10 @@ class IAnalytics extends Analytics
         $requestIp = $_SERVER['REMOTE_ADDR'];
         if ($this->shouldSendAnalytics) {
             try {
+                Craft::info(
+                    "Send hit for IAnalytics object: " . print_r($this, true),
+                    __METHOD__
+                );
                 return parent::sendHit($methodName);
             } catch (\Exception $e) {
                 if ($settings->logExcludedAnalytics) {

@@ -99,6 +99,20 @@ class InstantAnalytics extends Plugin
             }
         );
 
+        // Do something after we're installed
+        Event::on(
+            Plugins::class,
+            Plugins::EVENT_AFTER_INSTALL_PLUGIN,
+            function (PluginEvent $event) {
+                if ($event->plugin === $this) {
+                    $request = Craft::$app->getRequest();
+                    if (($request->isCpRequest) && (!$request->isConsoleRequest)) {
+                        Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('instant-analytics/welcome'))->send();
+                    }
+                }
+            }
+        );
+
         // We're only interested in site requests that are not console requests
         if (($request->isSiteRequest) && (!$request->isConsoleRequest)) {
             // Remember the name of the currently rendering template
@@ -125,20 +139,10 @@ class InstantAnalytics extends Plugin
                 UrlManager::class,
                 UrlManager::EVENT_REGISTER_SITE_URL_RULES,
                 function (RegisterUrlRulesEvent $event) {
-                    $event->rules['instantanalytics/pageViewTrack(/(?P<filename>[-\w\.*]+))?'] =
-                        'instant-analytics/track-page-view-url';
-                    $event->rules['instantanalytics/eventTrack(/(?P<filename>[-\w\.*]+))?'] =
-                        'instant-analytics/track-event-view-url';
-                }
-            );
-            // Do something after we're installed
-            Event::on(
-                Plugins::class,
-                Plugins::EVENT_AFTER_INSTALL_PLUGIN,
-                function (PluginEvent $event) {
-                    if ($event->plugin === $this) {
-                        Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('instant-analytics/welcome'))->send();
-                    }
+                    $event->rules['instantanalytics/pageViewTrack/<filename:[-\w\.*]+>?'] =
+                        'instant-analytics/track/track-page-view-url';
+                    $event->rules['instantanalytics/eventTrack/<filename:[-\w\.*]+>?'] =
+                        'instant-analytics/track/track-event-view-url';
                 }
             );
             // Commerce-specific hooks
@@ -241,7 +245,11 @@ class InstantAnalytics extends Plugin
             $analytics = InstantAnalytics::$plugin->ia->getGlobals(self::$currentTemplate);
             // Send the page view
             if ($analytics) {
-                $analytics->sendPageView();
+                $response = $analytics->sendPageView();
+                Craft::info(
+                    "pageView sent, response: " . print_r($response, true),
+                    __METHOD__
+                );
             } else {
                 Craft::error(
                     "Analytics not sent because googleAnalyticsTracking is not set",

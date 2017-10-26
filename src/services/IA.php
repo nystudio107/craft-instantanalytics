@@ -100,6 +100,10 @@ class IA extends Component
                 $url = UrlHelper::stripQueryString($url);
             }
 
+            // We always want the path to be / rather than empty
+            if ($url == "") {
+                $url = "/";
+            }
             // Prepare the Analytics object, and send the pageview
             $analytics->setDocumentPath($url)
                 ->setDocumentTitle($title);
@@ -173,7 +177,7 @@ class IA extends Component
             'title' => $title,
         ];
         $fileName = pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_BASENAME);
-        $trackingUrl = UrlHelper::siteUrl('instant-analytics/pageViewTrack/' . $fileName, $urlParams);
+        $trackingUrl = UrlHelper::siteUrl('instantanalytics/pageViewTrack/' . $fileName, $urlParams);
         Craft::info(
             "Created pageViewTrackingUrl for " . $trackingUrl,
             __METHOD__
@@ -212,7 +216,7 @@ class IA extends Component
             'eventValue'    => $eventValue,
         ];
         $fileName = pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_BASENAME);
-        $trackingUrl = UrlHelper::siteUrl('instant-analytics/eventTrack/' . $fileName, $urlParams);
+        $trackingUrl = UrlHelper::siteUrl('instant-nalytics/eventTrack/' . $fileName, $urlParams);
         Craft::info(
             "Created eventTrackingUrl for " . $trackingUrl,
             __METHOD__

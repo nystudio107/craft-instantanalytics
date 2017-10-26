@@ -147,6 +147,12 @@ class InstantAnalyticsTwigExtension extends \Twig_Extension implements \Twig_Ext
      */
     public function eventTrackingUrl($url, $eventCategory = "", $eventAction = "", $eventLabel = "", $eventValue = 0)
     {
-        return InstantAnalytics::$plugin->ia->eventTrackingUrl($url, $eventCategory, $eventAction, $eventLabel, $eventValue);
+        return InstantAnalytics::$plugin->ia->eventTrackingUrl(
+            $url,
+            $eventCategory,
+            $eventAction,
+            $eventLabel,
+            $eventValue
+        );
     }
 }

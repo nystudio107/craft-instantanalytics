@@ -6,7 +6,9 @@ Instant Analytics brings full Google Analytics support to your Twig templates
 
 Related: [Instant Analytics for Craft 2.x](https://github.com/nystudio107/instantanalytics)
 
-![Screenshot](resources/img/plugin-logo.png)
+![Screenshot](screenshots/plugin-logo.png)
+
+**N.B.:** Support for Craft Commerce is _not_ in this version. It is pending the release of Commerce 2 beta for Craft 3
 
 ## Requirements
 
@@ -35,6 +37,8 @@ Instant Analytics also lets you track otherwise untrackable assets & events with
 You don't need to include the typical Google Analytics script tag on your pages, instead Instant Analytics will send page views when your front-end templates are rendered via the officially supported [Google Measurement Protocol](https://developers.google.com/analytics/devguides/collection/protocol/v1/).
 
 You can also track asset/media views in Google Analytics, either as PageViews or as Events. This lets you track otherwise untrackable things such as individual RSS feed accesses, images, PDF files, etc.
+
+If you are using Craft Commerce, Instant Analytics will automatically send Google Analytics Enhanced eCommerce data to your Google Analytics account as items are added/removed from your cart, and orders are tracked as well.
 
 Instant Analytics is implemented on the demo site [Brads for Men](https://bradsformen.com)
 
@@ -282,6 +286,6 @@ The sky's the limit in either case, you can do anything from simple PageViews to
 
 Some things to do, and ideas for potential features:
 
-* Support for additional Craft Commerce data such as Refunds
+* Add Craft Commerce support when Commerce 2 beta for Craft 3 becomes available
 
 Brought to you by [nystudio107](http://nystudio107.com)
