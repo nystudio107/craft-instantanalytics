@@ -96,7 +96,7 @@ class IA extends Component
 
             // Strip the query string if that's the global config setting
             $settings = InstantAnalytics::$plugin->getSettings();
-            if (isset($settings) && isset($settings['stripQueryString']) && $settings['stripQueryString']) {
+            if (isset($settings) && isset($settings->stripQueryString) && $settings->stripQueryString) {
                 $url = UrlHelper::stripQueryString($url);
             }
 
@@ -399,9 +399,28 @@ class IA extends Component
                     ->setAsyncRequest(false)
                     ->setClientId($this->gaParseCookie());
 
+                // Set the gclid
                 $gclid = $this->getGclid();
                 if ($gclid) {
                     $analytics->setGoogleAdwordsId($gclid);
+                }
+
+                // Handle UTM parameters
+                $utm_source = $request->getParam('utm_source');
+                if (!empty($utm_source)) {
+                    $analytics->setCampaignSource($utm_source);
+                }
+                $utm_medium = $request->getParam('utm_medium');
+                if (!empty($utm_medium)) {
+                    $analytics->setCampaignMedium($utm_medium);
+                }
+                $utm_campaign = $request->getParam('utm_campaign');
+                if (!empty($utm_campaign)) {
+                    $analytics->setCampaignName($utm_campaign);
+                }
+                $utm_content = $request->getParam('utm_content');
+                if (!empty($utm_content)) {
+                    $analytics->setCampaignContent($utm_content);
                 }
 
                 // If SEOmatic is installed, set the affiliation as well

@@ -54,7 +54,6 @@ class TrackController extends Controller
         $response = Craft::$app->getResponse();
         $response->redirect($url, 200);
     }
-
     /**
      *
      */
