@@ -255,7 +255,7 @@ Twig:
 
 PHP via Plugin:
 
-    $myAnalytics = craft()->instantAnalytics->analytics();
+    $myAnalytics = InstantAnalytics::$plugin->ia->analytics();
 
 In either case, you will be returned an `Analytics` object that is initialized with the following settings for you:
 
@@ -277,7 +277,7 @@ Twig:
 
 PHP via Plugin:
 
-    $myAnalytics = craft()->instantAnalytics->analytics();
+    $myAnalytics = InstantAnalytics::$plugin->ia->analytics();
     $myAnalytics->setDocumentPath('/some/page')
         ->setAffiliation('nystudio107')
         ->sendPageview();
