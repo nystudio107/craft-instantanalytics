@@ -45,7 +45,7 @@
         "hasCpSection": false,
         "changelogUrl": "https://raw.githubusercontent.com/nystudio107/craft3-instantanalytics/master/CHANGELOG.md",
         "components": {
-            "ia": "nystudio107\\instantanalytics\\services\\IA"
+            "ia": "nystudio107\\instantanalytics\\services\\IA",
             "commerce": "nystudio107\\instantanalytics\\services\\Commerce"
         },
         "class": "nystudio107\\instantanalytics\\InstantAnalytics"
