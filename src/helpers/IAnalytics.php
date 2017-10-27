@@ -83,9 +83,9 @@ class IAnalytics extends Analytics
                     __METHOD__
                 );
             }
-
-            return null;
         }
+
+        return null;
     }
 
     // TODO: pending Commerce for Craft 3
@@ -163,5 +163,4 @@ class IAnalytics extends Analytics
             );
         }
     }
-
 }

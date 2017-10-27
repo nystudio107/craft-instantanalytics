@@ -16,13 +16,7 @@ use Craft;
 use craft\base\Component;
 
 /**
- * IA Service
- *
- * All of your plugin’s business logic should go in services, including saving
- * data, retrieving data, etc. They provide APIs that your controllers,
- * template variables, and other plugins can interact with.
- *
- * https://craftcms.com/docs/plugins/services
+ * Commerce Service
  *
  * @author    nystudio107
  * @package   InstantAnalytics
@@ -32,6 +26,8 @@ class Commerce extends Component
 {
     // Public Methods
     // =========================================================================
+
+    // TODO: pending Commerce for Craft 3
 
     /**
      * Extract product data from a Craft Commerce Product or Variant

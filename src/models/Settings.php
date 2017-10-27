@@ -178,6 +178,7 @@ class Settings extends Model
             [
                 [
                     'stripQueryString',
+                    'autoSendPageView',
                     'autoSendAddToCart',
                     'autoSendRemoveFromCart',
                     'autoSendPurchaseComplete',
