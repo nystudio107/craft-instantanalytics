@@ -12,6 +12,7 @@ namespace nystudio107\instantanalytics\services;
 
 use nystudio107\instantanalytics\InstantAnalytics;
 use nystudio107\instantanalytics\helpers\IAnalytics;
+use nystudio107\instantanalytics\models\Settings;
 
 use Jaybizzle\CrawlerDetect\CrawlerDetect;
 
@@ -176,7 +177,9 @@ class IA extends Component
             'url'   => $url,
             'title' => $title,
         ];
-        $fileName = pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_BASENAME);
+        $path = parse_url($url, PHP_URL_PATH);
+        $pathFragments = explode('/', rtrim($path, '/'));
+        $fileName = end($pathFragments);
         $trackingUrl = UrlHelper::siteUrl('instantanalytics/pageViewTrack/' . $fileName, $urlParams);
         Craft::info(
             "Created pageViewTrackingUrl for " . $trackingUrl,
@@ -235,6 +238,7 @@ class IA extends Component
     {
         $result = true;
 
+        /** @var Settings $settings */
         $settings = InstantAnalytics::$plugin->getSettings();
         $request = Craft::$app->getRequest();
         $requestIp = $request->getUserIP();
