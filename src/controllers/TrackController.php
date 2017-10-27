@@ -42,11 +42,13 @@ class TrackController extends Controller
     // =========================================================================
 
     /**
-     * @param string $url
-     * @param string $title
+     *
      */
-    public function actionTrackPageViewUrl(string $url, string $title)
+    public function actionTrackPageViewUrl()
     {
+        $request = Craft::$app->getRequest();
+        $url = $request->getParam('url');
+        $title = $request->getParam('title');
         $analytics = InstantAnalytics::$plugin->ia->pageViewAnalytics($url, $title);
         $analytics->sendPageView();
         $response = Craft::$app->getResponse();
@@ -54,19 +56,16 @@ class TrackController extends Controller
     }
 
     /**
-     * @param string $url
-     * @param string $eventCategory
-     * @param string $eventAction
-     * @param string $eventLabel
-     * @param int    $eventValue
+     *
      */
-    public function actionTrackEventUrl(
-        string $url,
-        string $eventCategory,
-        string $eventAction,
-        string $eventLabel,
-        int $eventValue
-    ) {
+    public function actionTrackEventUrl()
+    {
+        $request = Craft::$app->getRequest();
+        $url = $request->getParam('url');
+        $eventCategory = $request->getParam('eventCategory');
+        $eventAction = $request->getParam('eventAction');
+        $eventLabel = $request->getParam('eventLabel');
+        $eventValue = $request->getParam('eventValue');
         $analytics = InstantAnalytics::$plugin->ia->eventAnalytics(
             $eventCategory,
             $eventAction,
