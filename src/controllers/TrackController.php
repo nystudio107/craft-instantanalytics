@@ -49,8 +49,7 @@ class TrackController extends Controller
     {
         $analytics = InstantAnalytics::$plugin->ia->pageViewAnalytics($url, $title);
         $analytics->sendPageView();
-        $response = Craft::$app->getResponse();
-        $response->redirect($url, 200);
+        $this->redirect($url, 200);
     }
 
     /**
@@ -74,7 +73,6 @@ class TrackController extends Controller
             $eventValue
         );
         $analytics->sendEvent();
-        $response = Craft::$app->getResponse();
-        $response->redirect($url, 200);
+        $this->redirect($url, 200);
     }
 }
