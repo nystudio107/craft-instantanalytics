@@ -2,17 +2,17 @@
 
 Instant Analytics brings full Google Analytics support to your Twig templates
 
+![Screenshot](resources/img/plugin-logo.png)
+
 **Note**: This plugin may become a paid add-on when the Craft Plugin store becomes available.
 
 Related: [Instant Analytics for Craft 2.x](https://github.com/nystudio107/instantanalytics)
-
-![Screenshot](screenshots/plugin-logo.png)
 
 **N.B.:** Support for Craft Commerce is _not_ in this version. It is pending the release of Commerce 2 beta for Craft 3
 
 ## Requirements
 
-This plugin requires Craft CMS 3.0.0-beta.23 or later.
+This plugin requires Craft CMS 3.0.0-RC1 or later.
 
 ## Installation
 

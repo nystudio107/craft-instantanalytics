@@ -81,7 +81,7 @@ class InstantAnalytics extends Plugin
         $view = Craft::$app->getView();
         $request = Craft::$app->getRequest();
         // Add in our Twig extensions
-        $view->twig->addExtension(new InstantAnalyticsTwigExtension());
+        $view->registerTwigExtension(new InstantAnalyticsTwigExtension());
         // Install our template hook
         $view->hook('iaSendPageView', [$this, 'iaSendPageView']);
         // Determine if Craft Commerce is installed & enabled
