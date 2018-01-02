@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.0.2 - 2018.01.02
+### Changed
+* Fixed the `eventTrackingUrl` to work properly
+
 ## 1.0.1 - 2017.12.06
 ### Changed
 * Updated to require craftcms/cms `^3.0.0-RC1`
