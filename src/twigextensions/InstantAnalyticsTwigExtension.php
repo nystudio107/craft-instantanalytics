@@ -14,6 +14,7 @@ use nystudio107\instantanalytics\InstantAnalytics;
 use nystudio107\instantanalytics\helpers\IAnalytics;
 
 use Craft;
+use craft\helpers\Template;
 
 /**
  * Twig can be extended in many ways; you can add extra tags, filters, tests,
@@ -124,35 +125,37 @@ class InstantAnalyticsTwigExtension extends \Twig_Extension implements \Twig_Ext
     /**
      * Get a PageView tracking URL
      *
-     * @param  string $url   the URL to track
-     * @param  string $title the page title
+     * @param $url
+     * @param $title
      *
-     * @return string the tracking URL
+     * @return \Twig_Markup
+     * @throws \yii\base\Exception
      */
     public function pageViewTrackingUrl($url, $title)
     {
-        return InstantAnalytics::$plugin->ia->pageViewTrackingUrl($url, $title);
+        return Template::raw(InstantAnalytics::$plugin->ia->pageViewTrackingUrl($url, $title));
     }
 
     /**
      * Get an Event tracking URL
      *
-     * @param  string $url           the URL to track
-     * @param  string $eventCategory the event category
-     * @param  string $eventAction   the event action
-     * @param  string $eventLabel    the event label
-     * @param  int    $eventValue    the event value
+     * @param        $url
+     * @param string $eventCategory
+     * @param string $eventAction
+     * @param string $eventLabel
+     * @param int    $eventValue
      *
-     * @return string the tracking URL
+     * @return \Twig_Markup
+     * @throws \yii\base\Exception
      */
     public function eventTrackingUrl($url, $eventCategory = "", $eventAction = "", $eventLabel = "", $eventValue = 0)
     {
-        return InstantAnalytics::$plugin->ia->eventTrackingUrl(
+        return Template::raw(InstantAnalytics::$plugin->ia->eventTrackingUrl(
             $url,
             $eventCategory,
             $eventAction,
             $eventLabel,
             $eventValue
-        );
+        ));
     }
 }
