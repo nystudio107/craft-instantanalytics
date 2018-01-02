@@ -166,10 +166,11 @@ class IA extends Component
     /**
      * Get a PageView tracking URL
      *
-     * @param  string $url   the URL to track
-     * @param  string $title the page title
+     * @param $url
+     * @param $title
      *
-     * @return string the tracking URL
+     * @return string
+     * @throws \yii\base\Exception
      */
     public function pageViewTrackingUrl($url, $title)
     {
@@ -192,22 +193,14 @@ class IA extends Component
     /**
      * Get an Event tracking URL
      *
-     * @param  string $url           the URL to track
-     * @param  string $eventCategory the event category
-     * @param  string $eventAction   the event action
-     * @param  string $eventLabel    the event label
-     * @param  string $eventValue    the event value
-     *
-     * @return string the tracking URL
-     */
-    /**
      * @param        $url
      * @param string $eventCategory
      * @param string $eventAction
      * @param string $eventLabel
      * @param int    $eventValue
      *
-     * @return mixed
+     * @return string
+     * @throws \yii\base\Exception
      */
     public function eventTrackingUrl($url, $eventCategory = "", $eventAction = "", $eventLabel = "", $eventValue = 0)
     {
@@ -219,7 +212,7 @@ class IA extends Component
             'eventValue'    => $eventValue,
         ];
         $fileName = pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_BASENAME);
-        $trackingUrl = UrlHelper::siteUrl('instant-nalytics/eventTrack/' . $fileName, $urlParams);
+        $trackingUrl = UrlHelper::siteUrl('instantanalytics/eventTrack/' . $fileName, $urlParams);
         Craft::info(
             "Created eventTrackingUrl for " . $trackingUrl,
             __METHOD__

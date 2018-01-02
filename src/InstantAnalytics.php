@@ -142,7 +142,7 @@ class InstantAnalytics extends Plugin
                     $event->rules['instantanalytics/pageViewTrack/<filename:[-\w\.*]+>?'] =
                         'instant-analytics/track/track-page-view-url';
                     $event->rules['instantanalytics/eventTrack/<filename:[-\w\.*]+>?'] =
-                        'instant-analytics/track/track-event-view-url';
+                        'instant-analytics/track/track-event-url';
                 }
             );
             // Commerce-specific hooks
