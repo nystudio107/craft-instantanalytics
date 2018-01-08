@@ -465,9 +465,8 @@ class IA extends Component
     private function gaParseCookie()
     {
         if (isset($_COOKIE['_ga'])) {
-            list($version, $domainDepth, $cid1, $cid2) = preg_split('[\.]', $_COOKIE["_ga"], 4);
-            $contents = ['version' => $version, 'domainDepth' => $domainDepth, 'cid' => $cid1 . '.' . $cid2];
-            $cid = $contents['cid'];
+            $parts = preg_split('[\.]', $_COOKIE["_ga"], 4);
+            $cid = implode(array_slice($parts, 2), '.');
         } else {
             if (isset($_COOKIE['_ia']) && $_COOKIE['_ia'] != '') {
                 $cid = $_COOKIE['_ia'];
