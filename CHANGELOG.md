@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.0.3 - 2018.01.08
+### Changed
+* Fixed an issue with parsing of the `_ga`_ cookie
+
 ## 1.0.2 - 2018.01.02
 ### Changed
 * Fixed the `eventTrackingUrl` to work properly
