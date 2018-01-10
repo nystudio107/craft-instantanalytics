@@ -21,6 +21,8 @@ use craft\base\Component;
 use craft\elements\User as UserElement;
 use craft\helpers\UrlHelper;
 
+use yii\base\Exception;
+
 /**
  * IA Service
  *
@@ -73,38 +75,7 @@ class IA extends Component
         $result = null;
         $analytics = $this->analytics();
         if ($analytics) {
-            if ($url == "") {
-                $url = Craft::$app->getRequest()->getFullPath();
-            }
-
-            // We want to send just a path to GA for page views
-            if (UrlHelper::isAbsoluteUrl($url)) {
-                $urlParts = parse_url($url);
-                if (isset($urlParts['path'])) {
-                    $url = $urlParts['path'];
-                } else {
-                    $url = "/";
-                }
-                if (isset($urlParts['query'])) {
-                    $url = $url . "?" . $urlParts['query'];
-                }
-            }
-
-            // We don't want to send protocol-relative URLs either
-            if (UrlHelper::isProtocolRelativeUrl($url)) {
-                $url = substr($url, 1);
-            }
-
-            // Strip the query string if that's the global config setting
-            $settings = InstantAnalytics::$plugin->getSettings();
-            if (isset($settings) && isset($settings->stripQueryString) && $settings->stripQueryString) {
-                $url = UrlHelper::stripQueryString($url);
-            }
-
-            // We always want the path to be / rather than empty
-            if ($url == "") {
-                $url = "/";
-            }
+            $url = $this->documentPathFromUrl($url);
             // Prepare the Analytics object, and send the pageview
             $analytics->setDocumentPath($url)
                 ->setDocumentTitle($title);
@@ -133,7 +104,9 @@ class IA extends Component
         $result = null;
         $analytics = $this->analytics();
         if ($analytics) {
-            $analytics->setEventCategory($eventCategory)
+            $url = $this->documentPathFromUrl();
+            $analytics->setDocumentPath($url)
+                ->setEventCategory($eventCategory)
                 ->setEventAction($eventAction)
                 ->setEventLabel($eventLabel)
                 ->setEventValue(intval($eventValue));
@@ -363,6 +336,51 @@ class IA extends Component
     }
 
     /**
+     * Return a sanitized documentPath from a URL
+     *
+     * @param $url
+     *
+     * @return bool|string
+     */
+    protected function documentPathFromUrl($url = '')
+    {
+        if ($url == "") {
+            $url = Craft::$app->getRequest()->getFullPath();
+        }
+
+        // We want to send just a path to GA for page views
+        if (UrlHelper::isAbsoluteUrl($url)) {
+            $urlParts = parse_url($url);
+            if (isset($urlParts['path'])) {
+                $url = $urlParts['path'];
+            } else {
+                $url = "/";
+            }
+            if (isset($urlParts['query'])) {
+                $url = $url."?".$urlParts['query'];
+            }
+        }
+
+        // We don't want to send protocol-relative URLs either
+        if (UrlHelper::isProtocolRelativeUrl($url)) {
+            $url = substr($url, 1);
+        }
+
+        // Strip the query string if that's the global config setting
+        $settings = InstantAnalytics::$plugin->getSettings();
+        if (isset($settings) && isset($settings->stripQueryString) && $settings->stripQueryString) {
+            $url = UrlHelper::stripQueryString($url);
+        }
+
+        // We always want the path to be / rather than empty
+        if ($url == "") {
+            $url = "/";
+        }
+
+        return $url;
+    }
+
+    /**
      * Get the Google Analytics object, primed with the default values
      *
      * @return IAnalytics object
@@ -377,7 +395,14 @@ class IA extends Component
             if ($analytics) {
                 $hostName = $request->getServerName();
                 if (empty($hostName)) {
-                    $hostName = parse_url(UrlHelper::siteUrl(), PHP_URL_HOST);
+                    try {
+                        $hostName = parse_url(UrlHelper::siteUrl(), PHP_URL_HOST);
+                    } catch (Exception $e) {
+                        Craft::error(
+                            $e->getMessage(),
+                            __METHOD__
+                        );
+                    }
                 }
                 $userAgent = $request->getUserAgent();
                 if (empty($userAgent)) {
