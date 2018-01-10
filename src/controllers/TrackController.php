@@ -72,7 +72,8 @@ class TrackController extends Controller
             $eventLabel,
             $eventValue
         );
-        $analytics->sendEvent();
+        $analytics->setDocumentPath($url)
+            ->sendEvent();
         $this->redirect($url, 200);
     }
 }
