@@ -11,7 +11,7 @@
         "instant analytics"
     ],
     "support": {
-        "docs": "https://github.com/nystudio107/craft-instantanalytics/blob/master/README.md",
+        "docs": "https://github.com/nystudio107/craft-instantanalytics/blob/v1/README.md",
         "issues": "https://github.com/nystudio107/craft-instantanalytics/issues"
     },
     "license": "MIT",
@@ -43,7 +43,7 @@
         "schemaVersion": "1.0.0",
         "hasCpSettings": true,
         "hasCpSection": false,
-        "changelogUrl": "https://raw.githubusercontent.com/nystudio107/craft-instantanalytics/master/CHANGELOG.md",
+        "changelogUrl": "https://raw.githubusercontent.com/nystudio107/craft-instantanalytics/v1/CHANGELOG.md",
         "components": {
             "ia": "nystudio107\\instantanalytics\\services\\IA",
             "commerce": "nystudio107\\instantanalytics\\services\\Commerce"
