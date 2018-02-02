@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.0.5 - 2018.02.01
+### Added
+* Renamed the composer package name to `craft-instantanalytics`
+
 ## 1.0.4 - 2018.01.10
 ### Changed
 * Set the documentPath for events, too
