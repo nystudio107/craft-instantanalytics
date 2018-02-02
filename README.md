@@ -24,7 +24,7 @@ To install the plugin, follow these instructions.
 
 2. Then tell Composer to load the plugin:
 
-        composer require nystudio107/craft3-instantanalytics
+        composer require nystudio107/craft-instantanalytics
 
 3. In the Control Panel, go to Settings → Plugins and click the “Install” button for Instant Analytics.
 
