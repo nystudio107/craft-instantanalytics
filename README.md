@@ -1,3 +1,4 @@
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/nystudio107/craft-instantanalytics/badges/quality-score.png?b=v1)](https://scrutinizer-ci.com/g/nystudio107/craft-instantanalytics/?branch=v1)[![Code Coverage](https://scrutinizer-ci.com/g/nystudio107/craft-instantanalytics/badges/coverage.png?b=v1)](https://scrutinizer-ci.com/g/nystudio107/craft-instantanalytics/?branch=v1)
 # Instant Analytics plugin for Craft CMS 3.x
 
 Instant Analytics brings full Google Analytics support to your Twig templates
