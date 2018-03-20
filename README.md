@@ -1,15 +1,16 @@
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/nystudio107/craft-instantanalytics/badges/quality-score.png?b=v1)](https://scrutinizer-ci.com/g/nystudio107/craft-instantanalytics/?branch=v1)[![Code Coverage](https://scrutinizer-ci.com/g/nystudio107/craft-instantanalytics/badges/coverage.png?b=v1)](https://scrutinizer-ci.com/g/nystudio107/craft-instantanalytics/?branch=v1)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/nystudio107/craft-instantanalytics/badges/quality-score.png?b=v1)](https://scrutinizer-ci.com/g/nystudio107/craft-instantanalytics/?branch=v1) [![Code Coverage](https://scrutinizer-ci.com/g/nystudio107/craft-instantanalytics/badges/coverage.png?b=v1)](https://scrutinizer-ci.com/g/nystudio107/craft-instantanalytics/?branch=v1) [![Build Status](https://scrutinizer-ci.com/g/nystudio107/craft-instantanalytics/badges/build.png?b=v1)](https://scrutinizer-ci.com/g/nystudio107/craft-instantanalytics/build-status/v1) [![Code Intelligence Status](https://scrutinizer-ci.com/g/nystudio107/craft-instantanalytics/badges/code-intelligence.svg?b=v1)](https://scrutinizer-ci.com/code-intelligence)
+
 # Instant Analytics plugin for Craft CMS 3.x
 
 Instant Analytics brings full Google Analytics support to your Twig templates
 
 ![Screenshot](resources/img/plugin-logo.png)
 
-**Note**: This plugin may become a paid add-on when the Craft Plugin store becomes available.
+**Note**: _This plugin will cost $59.00 once Craft 3 GA is released._
 
 Related: [Instant Analytics for Craft 2.x](https://github.com/nystudio107/instantanalytics)
 
-**N.B.:** Support for Craft Commerce is _not_ in this version. It is pending the release of Commerce 2 beta for Craft 3
+**N.B.:** Support for Craft Commerce is _not_ in this version. It is pending the release of Commerce 2 beta for Craft CMS 3
 
 ## Requirements
 
@@ -28,6 +29,8 @@ To install the plugin, follow these instructions.
         composer require nystudio107/craft-instantanalytics
 
 3. In the Control Panel, go to Settings → Plugins and click the “Install” button for Instant Analytics.
+
+You can also install Instant Analytics via the **Plugin Store** in the Craft AdminCP.
 
 ## Instant Analytics Overview
 
