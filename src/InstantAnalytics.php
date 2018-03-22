@@ -35,7 +35,7 @@ use yii\base\Event;
  * @package   InstantAnalytics
  * @since     1.0.0
  *
- * @property  IAService $ia
+ * @property  IAService       $ia
  * @property  CommerceService $commerce
  */
 class InstantAnalytics extends Plugin
@@ -169,18 +169,18 @@ class InstantAnalytics extends Plugin
         $commerceFields = [];
 
         if (self::$commercePlugin) {
-            // TODO: pending Commerce for Craft 3
-            /*
-            $productTypes = craft()->commerce_productTypes->getAllProductTypes();
-            foreach ($productTypes as $productType) {
-                $productFields = $this->_getPullFieldsFromLayoutId($productType->fieldLayoutId);
-                $commerceFields = array_merge($commerceFields, $productFields);
-                if ($productType->hasVariants) {
-                    $variantFields = $this->_getPullFieldsFromLayoutId($productType->variantFieldLayoutId);
-                    $commerceFields = array_merge($commerceFields, $variantFields);
-                }
-            }
-            */
+            /**
+             * TODO: pending Commerce for Craft 3
+             * $productTypes = craft()->commerce_productTypes->getAllProductTypes();
+             * foreach ($productTypes as $productType) {
+             * $productFields = $this->_getPullFieldsFromLayoutId($productType->fieldLayoutId);
+             * $commerceFields = array_merge($commerceFields, $productFields);
+             * if ($productType->hasVariants) {
+             * $variantFields = $this->_getPullFieldsFromLayoutId($productType->variantFieldLayoutId);
+             * $commerceFields = array_merge($commerceFields, $variantFields);
+             * }
+             * }
+             */
         }
 
 
@@ -221,7 +221,6 @@ class InstantAnalytics extends Plugin
                 case "PlainText":
                 case "RichText":
                 case "RedactorI":
-                case "PreparseField_Preparse":
                 case "Categories":
                     $result[$field->handle] = $field->name;
                     break;
@@ -247,7 +246,7 @@ class InstantAnalytics extends Plugin
             if ($analytics) {
                 $response = $analytics->sendPageView();
                 Craft::info(
-                    "pageView sent, response: " . print_r($response, true),
+                    "pageView sent, response: ".print_r($response, true),
                     __METHOD__
                 );
             } else {
@@ -272,11 +271,11 @@ class InstantAnalytics extends Plugin
         if ($request->getIsSiteRequest() && !$request->getIsConsoleRequest()) {
             // If SEOmatic is installed, set the page title from it
             if (self::$seomaticPlugin && isset($context['seomaticMeta'])) {
-                // TODO: fix for SEOmatic
-                /*
-                $seomaticMeta = $context['seomaticMeta'];
-                $analytics->setDocumentTitle($seomaticMeta['seoTitle']);
-                */
+                /**
+                 * TODO: fix for SEOmatic
+                 * $seomaticMeta = $context['seomaticMeta'];
+                 * $analytics->setDocumentTitle($seomaticMeta['seoTitle']);
+                 */
             }
             $this->sendPageView();
         }

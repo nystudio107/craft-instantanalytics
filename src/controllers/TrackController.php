@@ -72,7 +72,9 @@ class TrackController extends Controller
             $eventLabel,
             $eventValue
         );
-        $analytics->setDocumentPath($url)
+        // Get the file name
+        $path = parse_url($url, PHP_URL_PATH);
+        $analytics->setDocumentPath($path)
             ->sendEvent();
         $this->redirect($url, 200);
     }
