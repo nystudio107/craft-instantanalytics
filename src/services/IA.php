@@ -81,7 +81,7 @@ class IA extends Component
                 ->setDocumentTitle($title);
             $result = $analytics;
             Craft::info(
-                "Created sendPageView for `" . $url . "` - `" . $title . "`",
+                "Created sendPageView for `".$url."` - `".$title."`",
                 __METHOD__
             );
         }
@@ -112,7 +112,7 @@ class IA extends Component
                 ->setEventValue(intval($eventValue));
             $result = $analytics;
             Craft::info(
-                "Created sendEvent for `" . $eventCategory . "` - `" . $eventAction . "` - `" . $eventLabel . "` - `" . $eventValue . "`",
+                "Created sendEvent for `".$eventCategory."` - `".$eventAction."` - `".$eventLabel."` - `".$eventValue."`",
                 __METHOD__
             );
         }
@@ -154,9 +154,9 @@ class IA extends Component
         $path = parse_url($url, PHP_URL_PATH);
         $pathFragments = explode('/', rtrim($path, '/'));
         $fileName = end($pathFragments);
-        $trackingUrl = UrlHelper::siteUrl('instantanalytics/pageViewTrack/' . $fileName, $urlParams);
+        $trackingUrl = UrlHelper::siteUrl('instantanalytics/pageViewTrack/'.$fileName, $urlParams);
         Craft::info(
-            "Created pageViewTrackingUrl for " . $trackingUrl,
+            "Created pageViewTrackingUrl for ".$trackingUrl,
             __METHOD__
         );
 
@@ -185,9 +185,9 @@ class IA extends Component
             'eventValue'    => $eventValue,
         ];
         $fileName = pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_BASENAME);
-        $trackingUrl = UrlHelper::siteUrl('instantanalytics/eventTrack/' . $fileName, $urlParams);
+        $trackingUrl = UrlHelper::siteUrl('instantanalytics/eventTrack/'.$fileName, $urlParams);
         Craft::info(
-            "Created eventTrackingUrl for " . $trackingUrl,
+            "Created eventTrackingUrl for ".$trackingUrl,
             __METHOD__
         );
 
@@ -212,7 +212,7 @@ class IA extends Component
         if (!$settings->sendAnalyticsData) {
             if ($settings->logExcludedAnalytics) {
                 Craft::info(
-                    "Analytics excluded for: " . $requestIp . " due to: `sendAnalyticsData`",
+                    "Analytics excluded for: ".$requestIp." due to: `sendAnalyticsData`",
                     __METHOD__
                 );
             }
@@ -223,7 +223,7 @@ class IA extends Component
         if (!$settings->sendAnalyticsInDevMode && Craft::$app->getConfig()->getGeneral()->devMode) {
             if ($settings->logExcludedAnalytics) {
                 Craft::info(
-                    "Analytics excluded for: " . $requestIp . " due to: `sendAnalyticsInDevMode`",
+                    "Analytics excluded for: ".$requestIp." due to: `sendAnalyticsInDevMode`",
                     __METHOD__
                 );
             }
@@ -234,7 +234,7 @@ class IA extends Component
         if ($request->getIsConsoleRequest()) {
             if ($settings->logExcludedAnalytics) {
                 Craft::info(
-                    "Analytics excluded for: " . $requestIp . " due to: `craft()->isConsole()`",
+                    "Analytics excluded for: ".$requestIp." due to: `craft()->isConsole()`",
                     __METHOD__
                 );
             }
@@ -245,7 +245,7 @@ class IA extends Component
         if ($request->getIsCpRequest()) {
             if ($settings->logExcludedAnalytics) {
                 Craft::info(
-                    "Analytics excluded for: " . $requestIp . " due to: `craft()->request->isCpRequest()`",
+                    "Analytics excluded for: ".$requestIp." due to: `craft()->request->isCpRequest()`",
                     __METHOD__
                 );
             }
@@ -256,7 +256,7 @@ class IA extends Component
         if ($request->getIsLivePreview()) {
             if ($settings->logExcludedAnalytics) {
                 Craft::info(
-                    "Analytics excluded for: " . $requestIp . " due to: `craft()->request->isLivePreview()`",
+                    "Analytics excluded for: ".$requestIp." due to: `craft()->request->isLivePreview()`",
                     __METHOD__
                 );
             }
@@ -272,7 +272,7 @@ class IA extends Component
                         if (preg_match($matchItem, $_SERVER[$match])) {
                             if ($settings->logExcludedAnalytics) {
                                 Craft::info(
-                                    "Analytics excluded for: " . $requestIp . " due to: `serverExcludes`",
+                                    "Analytics excluded for: ".$requestIp." due to: `serverExcludes`",
                                     __METHOD__
                                 );
                             }
@@ -291,7 +291,7 @@ class IA extends Component
             if ($crawlerDetect->isCrawler()) {
                 if ($settings->logExcludedAnalytics) {
                     Craft::info(
-                        "Analytics excluded for: " . $requestIp . " due to: `filterBotUserAgents`",
+                        "Analytics excluded for: ".$requestIp." due to: `filterBotUserAgents`",
                         __METHOD__
                     );
                 }
@@ -308,7 +308,7 @@ class IA extends Component
             if ($settings->adminExclude && $user->admin) {
                 if ($settings->logExcludedAnalytics) {
                     Craft::info(
-                        "Analytics excluded for: " . $requestIp . " due to: `adminExclude`",
+                        "Analytics excluded for: ".$requestIp." due to: `adminExclude`",
                         __METHOD__
                     );
                 }
@@ -321,7 +321,7 @@ class IA extends Component
                     if ($user->isInGroup($matchItem)) {
                         if ($settings->logExcludedAnalytics) {
                             Craft::info(
-                                "Analytics excluded for: " . $requestIp . " due to: `groupExcludes`",
+                                "Analytics excluded for: ".$requestIp." due to: `groupExcludes`",
                                 __METHOD__
                             );
                         }

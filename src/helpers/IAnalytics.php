@@ -48,45 +48,6 @@ class IAnalytics extends Analytics
     }
 
     /**
-     * Override sendHit() so that we can prevent Analytics data from being sent
-     *
-     * @param $methodName
-     *
-     * @return AnalyticsResponseInterface|null
-     */
-    protected function sendHit($methodName)
-    {
-        /** @var Settings $settings */
-        $settings = InstantAnalytics::$plugin->getSettings();
-        $requestIp = $_SERVER['REMOTE_ADDR'];
-        if ($this->shouldSendAnalytics) {
-            try {
-                Craft::info(
-                    "Send hit for IAnalytics object: " . print_r($this, true),
-                    __METHOD__
-                );
-                return parent::sendHit($methodName);
-            } catch (\Exception $e) {
-                if ($settings->logExcludedAnalytics) {
-                    Craft::info(
-                        "*** sendHit(): error sending analytics: " . $e->getMessage(),
-                        __METHOD__
-                    );
-                }
-            }
-        } else {
-            if ($settings->logExcludedAnalytics) {
-                Craft::info(
-                    "*** sendHit(): analytics not sent for " . $requestIp,
-                    __METHOD__
-                );
-            }
-        }
-
-        return null;
-    }
-
-    /**
      * Add a product impression to the Analytics object
      *
      * @param string $productVariant
@@ -133,7 +94,7 @@ class IAnalytics extends Analytics
             if ($productVariant) {
                 /**
                  * TODO: pending Commerce for Craft 3
-                InstantAnalytics::$plugin->commerce->addCommerceProductDetailView($this, $productVariant);
+                 * InstantAnalytics::$plugin->commerce->addCommerceProductDetailView($this, $productVariant);
                  */
             }
         } else {
@@ -157,7 +118,7 @@ class IAnalytics extends Analytics
             if ($orderModel) {
                 /**
                  * TODO: pending Commerce for Craft 3
-                InstantAnalytics::$plugin->commerce->addCommerceCheckoutStep($this, $orderModel, $step, $option);
+                 * InstantAnalytics::$plugin->commerce->addCommerceCheckoutStep($this, $orderModel, $step, $option);
                  */
             }
         } else {
@@ -166,5 +127,45 @@ class IAnalytics extends Analytics
                 __METHOD__
             );
         }
+    }
+
+    /**
+     * Override sendHit() so that we can prevent Analytics data from being sent
+     *
+     * @param $methodName
+     *
+     * @return AnalyticsResponseInterface|null
+     */
+    protected function sendHit($methodName)
+    {
+        /** @var Settings $settings */
+        $settings = InstantAnalytics::$plugin->getSettings();
+        $requestIp = $_SERVER['REMOTE_ADDR'];
+        if ($this->shouldSendAnalytics) {
+            try {
+                Craft::info(
+                    "Send hit for IAnalytics object: ".print_r($this, true),
+                    __METHOD__
+                );
+
+                return parent::sendHit($methodName);
+            } catch (\Exception $e) {
+                if ($settings->logExcludedAnalytics) {
+                    Craft::info(
+                        "*** sendHit(): error sending analytics: ".$e->getMessage(),
+                        __METHOD__
+                    );
+                }
+            }
+        } else {
+            if ($settings->logExcludedAnalytics) {
+                Craft::info(
+                    "*** sendHit(): analytics not sent for ".$requestIp,
+                    __METHOD__
+                );
+            }
+        }
+
+        return null;
     }
 }
