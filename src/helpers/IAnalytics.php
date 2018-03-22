@@ -25,18 +25,16 @@ class IAnalytics extends Analytics
     protected $shouldSendAnalytics = null;
 
     /**
-     * Override __construct() to store whether or not we should be sending
-     * Analytics data
-     *
-     * @param bool $isSsl
+     * @inheritdoc
      */
-    public function __construct($isSsl = false)
+    public function __construct($isSsl = false, $isDisabled = false, array $options = [])
     {
         /** @var Settings $settings */
         $settings = InstantAnalytics::$plugin->getSettings();
+        // Store whether or not we should be sending Analytics data
         $this->shouldSendAnalytics = $settings->sendAnalyticsData;
 
-        return parent::__construct($isSsl);
+        parent::__construct($isSsl, $isDisabled, $options);
     }
 
     /**
@@ -88,11 +86,10 @@ class IAnalytics extends Analytics
         return null;
     }
 
-    // TODO: pending Commerce for Craft 3
     /**
      * Add a product impression to the Analytics object
      *
-     * @param null   $productVariant
+     * @param string $productVariant
      * @param int    $index
      * @param string $listName
      * @param int    $listIndex
@@ -106,6 +103,8 @@ class IAnalytics extends Analytics
 
         if (InstantAnalytics::$commercePlugin) {
             if ($productVariant) {
+                /*
+                 * TODO: pending Commerce for Craft 3
                 InstantAnalytics::$plugin->commerce->addCommerceProductImpression(
                     $this,
                     $productVariant,
@@ -113,6 +112,7 @@ class IAnalytics extends Analytics
                     $listName,
                     $listIndex
                 );
+                */
             }
         } else {
             Craft::warning(
@@ -122,17 +122,19 @@ class IAnalytics extends Analytics
         }
     }
 
-    // TODO: pending Commerce for Craft 3
     /**
      * Add a product detail view to the Analytics object
      *
-     * @param null $productVariant
+     * @param string $productVariant
      */
     public function addCommerceProductDetailView($productVariant = null)
     {
         if (InstantAnalytics::$commercePlugin) {
             if ($productVariant) {
+                /**
+                 * TODO: pending Commerce for Craft 3
                 InstantAnalytics::$plugin->commerce->addCommerceProductDetailView($this, $productVariant);
+                 */
             }
         } else {
             Craft::warning(
@@ -142,11 +144,10 @@ class IAnalytics extends Analytics
         }
     }
 
-    // TODO: pending Commerce for Craft 3
     /**
      * Add a checkout step to the Analytics object
      *
-     * @param null   $orderModel
+     * @param        $orderModel
      * @param int    $step
      * @param string $option
      */
@@ -154,7 +155,10 @@ class IAnalytics extends Analytics
     {
         if (InstantAnalytics::$commercePlugin) {
             if ($orderModel) {
+                /**
+                 * TODO: pending Commerce for Craft 3
                 InstantAnalytics::$plugin->commerce->addCommerceCheckoutStep($this, $orderModel, $step, $option);
+                 */
             }
         } else {
             Craft::warning(
