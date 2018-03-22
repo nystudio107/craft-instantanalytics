@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.0.6 - 2018.03.22
+### Added
+* Send only the path, not the full URL to Google Analytics via `eventTrackingUrl()`
+* Gutted the Commerce service, pending Craft Commerce 2
+
 ## 1.0.5 - 2018.02.01
 ### Added
 * Renamed the composer package name to `craft-instantanalytics`
