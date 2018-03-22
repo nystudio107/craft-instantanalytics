@@ -169,8 +169,8 @@ class InstantAnalytics extends Plugin
         $commerceFields = [];
 
         if (self::$commercePlugin) {
-            // TODO: pending Commerce for Craft 3
-            /*
+            /**
+             * TODO: pending Commerce for Craft 3
             $productTypes = craft()->commerce_productTypes->getAllProductTypes();
             foreach ($productTypes as $productType) {
                 $productFields = $this->_getPullFieldsFromLayoutId($productType->fieldLayoutId);
@@ -221,7 +221,6 @@ class InstantAnalytics extends Plugin
                 case "PlainText":
                 case "RichText":
                 case "RedactorI":
-                case "PreparseField_Preparse":
                 case "Categories":
                     $result[$field->handle] = $field->name;
                     break;
@@ -272,8 +271,8 @@ class InstantAnalytics extends Plugin
         if ($request->getIsSiteRequest() && !$request->getIsConsoleRequest()) {
             // If SEOmatic is installed, set the page title from it
             if (self::$seomaticPlugin && isset($context['seomaticMeta'])) {
-                // TODO: fix for SEOmatic
-                /*
+                /**
+                 * TODO: fix for SEOmatic
                 $seomaticMeta = $context['seomaticMeta'];
                 $analytics->setDocumentTitle($seomaticMeta['seoTitle']);
                 */

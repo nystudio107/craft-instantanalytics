@@ -489,9 +489,12 @@ class IA extends Component
      */
     private function gaParseCookie()
     {
+        $cid = '';
         if (isset($_COOKIE['_ga'])) {
             $parts = preg_split('[\.]', $_COOKIE["_ga"], 4);
-            $cid = implode(array_slice($parts, 2), '.');
+            if ($parts !== false) {
+                $cid = implode('.', array_slice($parts, 2));
+            }
         } else {
             if (isset($_COOKIE['_ia']) && $_COOKIE['_ia'] != '') {
                 $cid = $_COOKIE['_ia'];
