@@ -1,6 +1,12 @@
 # Instant Analytics Changelog
 
-All notable changes to this project will be documented in this file.
+## 1.0.7 - 2018.08.24
+### Added
+* Added welcome screen after install
+
+### Changed
+* Moved to a modern webpack build config for the AdminCP
+* Added install confetti
 
 ## 1.0.6 - 2018.03.22
 ### Added
