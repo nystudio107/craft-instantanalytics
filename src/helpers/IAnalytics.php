@@ -45,11 +45,11 @@ class IAnalytics extends Analytics
     /**
      * Turn an empty value so the twig tags {{ }} can be used
      *
-     * @return string ""
+     * @return string ''
      */
     public function __toString()
     {
-        return "";
+        return '';
     }
 
     /**
@@ -63,7 +63,7 @@ class IAnalytics extends Analytics
     public function addCommerceProductImpression(
         $productVariant = null,
         $index = 0,
-        $listName = "default",
+        $listName = 'default',
         $listIndex = 1
     ) {
 
@@ -82,7 +82,10 @@ class IAnalytics extends Analytics
             }
         } else {
             Craft::warning(
-                "Craft Commerce is not installed",
+                Craft::t(
+                    'instant-analytics',
+                    'Craft Commerce is not installed'
+                ),
                 __METHOD__
             );
         }
@@ -104,7 +107,10 @@ class IAnalytics extends Analytics
             }
         } else {
             Craft::warning(
-                "Craft Commerce is not installed",
+                Craft::t(
+                    'instant-analytics',
+                    'Craft Commerce is not installed'
+                ),
                 __METHOD__
             );
         }
@@ -128,7 +134,10 @@ class IAnalytics extends Analytics
             }
         } else {
             Craft::warning(
-                "Craft Commerce is not installed",
+                Craft::t(
+                    'instant-analytics',
+                    'Craft Commerce is not installed'
+                ),
                 __METHOD__
             );
         }
@@ -149,7 +158,7 @@ class IAnalytics extends Analytics
         if ($this->shouldSendAnalytics) {
             try {
                 Craft::info(
-                    "Send hit for IAnalytics object: ".print_r($this, true),
+                    'Send hit for IAnalytics object: '.print_r($this, true),
                     __METHOD__
                 );
 
@@ -157,18 +166,16 @@ class IAnalytics extends Analytics
             } catch (\Exception $e) {
                 if ($settings->logExcludedAnalytics) {
                     Craft::info(
-                        "*** sendHit(): error sending analytics: ".$e->getMessage(),
+                        '*** sendHit(): error sending analytics: '.$e->getMessage(),
                         __METHOD__
                     );
                 }
             }
-        } else {
-            if ($settings->logExcludedAnalytics) {
-                Craft::info(
-                    "*** sendHit(): analytics not sent for ".$requestIp,
-                    __METHOD__
-                );
-            }
+        } elseif ($settings->logExcludedAnalytics) {
+            Craft::info(
+                '*** sendHit(): analytics not sent for '.$requestIp,
+                __METHOD__
+            );
         }
 
         return null;

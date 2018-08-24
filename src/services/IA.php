@@ -23,15 +23,9 @@ use craft\helpers\UrlHelper;
 
 use yii\base\Exception;
 
+/** @noinspection MissingPropertyAnnotationsInspection */
+
 /**
- * IA Service
- *
- * All of your plugin’s business logic should go in services, including saving
- * data, retrieving data, etc. They provide APIs that your controllers,
- * template variables, and other plugins can interact with.
- *
- * https://craftcms.com/docs/plugins/services
- *
  * @author    nystudio107
  * @package   InstantAnalytics
  * @since     1.0.0
@@ -41,7 +35,10 @@ class IA extends Component
     // Public Methods
     // =========================================================================
 
-    protected $cachedAnalytics = null;
+    /**
+     * @var null|IAnalytics
+     */
+    protected $cachedAnalytics;
 
     /**
      * Get the global variables for our Twig context
@@ -50,12 +47,12 @@ class IA extends Component
      *
      * @return IAnalytics
      */
-    public function getGlobals($title)
+    public function getGlobals($title): IAnalytics
     {
         if ($this->cachedAnalytics) {
             $analytics = $this->cachedAnalytics;
         } else {
-            $analytics = $this->pageViewAnalytics("", $title);
+            $analytics = $this->pageViewAnalytics('', $title);
             $this->cachedAnalytics = $analytics;
         }
 
@@ -70,7 +67,7 @@ class IA extends Component
      *
      * @return null|IAnalytics
      */
-    public function pageViewAnalytics($url = "", $title = "")
+    public function pageViewAnalytics($url = '', $title = '')
     {
         $result = null;
         $analytics = $this->analytics();
@@ -81,7 +78,14 @@ class IA extends Component
                 ->setDocumentTitle($title);
             $result = $analytics;
             Craft::info(
-                "Created sendPageView for `".$url."` - `".$title."`",
+                Craft::t(
+                    'instant-analytics',
+                    'Created sendPageView for: {url} - {title}',
+                    [
+                        'url' => $url,
+                        'title' => $title
+                    ]
+                ),
                 __METHOD__
             );
         }
@@ -99,7 +103,7 @@ class IA extends Component
      *
      * @return null|IAnalytics
      */
-    public function eventAnalytics($eventCategory = "", $eventAction = "", $eventLabel = "", $eventValue = 0)
+    public function eventAnalytics($eventCategory = '', $eventAction = '', $eventLabel = '', $eventValue = 0)
     {
         $result = null;
         $analytics = $this->analytics();
@@ -109,10 +113,19 @@ class IA extends Component
                 ->setEventCategory($eventCategory)
                 ->setEventAction($eventAction)
                 ->setEventLabel($eventLabel)
-                ->setEventValue(intval($eventValue));
+                ->setEventValue((int)$eventValue);
             $result = $analytics;
             Craft::info(
-                "Created sendEvent for `".$eventCategory."` - `".$eventAction."` - `".$eventLabel."` - `".$eventValue."`",
+                Craft::t(
+                    'instant-analytics',
+                    'Created sendPageView for: {eventCategory} - {eventAction} - {eventLabel} - {eventValue}',
+                    [
+                        'eventCategory' => $eventCategory,
+                        'eventAction' => $eventAction,
+                        'eventLabel' => $eventLabel,
+                        'eventValue' => $eventValue
+                    ]
+                ),
                 __METHOD__
             );
         }
@@ -125,11 +138,14 @@ class IA extends Component
      *
      * @return IAnalytics object
      */
-    public function analytics()
+    public function analytics(): IAnalytics
     {
         $analytics = $this->getAnalyticsObj();
         Craft::info(
-            "Created generic analytics object",
+            Craft::t(
+                'instant-analytics',
+                'Created generic analytics object'
+            ),
             __METHOD__
         );
 
@@ -145,7 +161,7 @@ class IA extends Component
      * @return string
      * @throws \yii\base\Exception
      */
-    public function pageViewTrackingUrl($url, $title)
+    public function pageViewTrackingUrl($url, $title): string
     {
         $urlParams = [
             'url'   => $url,
@@ -156,7 +172,13 @@ class IA extends Component
         $fileName = end($pathFragments);
         $trackingUrl = UrlHelper::siteUrl('instantanalytics/pageViewTrack/'.$fileName, $urlParams);
         Craft::info(
-            "Created pageViewTrackingUrl for ".$trackingUrl,
+            Craft::t(
+                'instant-analytics',
+                'Created pageViewTrackingUrl for: {trackingUrl}',
+                [
+                    'trackingUrl' => $trackingUrl,
+                ]
+            ),
             __METHOD__
         );
 
@@ -175,8 +197,13 @@ class IA extends Component
      * @return string
      * @throws \yii\base\Exception
      */
-    public function eventTrackingUrl($url, $eventCategory = "", $eventAction = "", $eventLabel = "", $eventValue = 0)
-    {
+    public function eventTrackingUrl(
+        $url,
+        $eventCategory = '',
+        $eventAction = '',
+        $eventLabel = '',
+        $eventValue = 0
+    ): string {
         $urlParams = [
             'url'           => $url,
             'eventCategory' => $eventCategory,
@@ -187,7 +214,13 @@ class IA extends Component
         $fileName = pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_BASENAME);
         $trackingUrl = UrlHelper::siteUrl('instantanalytics/eventTrack/'.$fileName, $urlParams);
         Craft::info(
-            "Created eventTrackingUrl for ".$trackingUrl,
+            Craft::t(
+                'instant-analytics',
+                'Created eventTrackingUrl for: {trackingUrl}',
+                [
+                    'trackingUrl' => $trackingUrl,
+                ]
+            ),
             __METHOD__
         );
 
@@ -200,82 +233,51 @@ class IA extends Component
      *
      * @return bool
      */
-    public function shouldSendAnalytics()
+    public function shouldSendAnalytics(): bool
     {
         $result = true;
 
         /** @var Settings $settings */
         $settings = InstantAnalytics::$plugin->getSettings();
         $request = Craft::$app->getRequest();
-        $requestIp = $request->getUserIP();
 
         if (!$settings->sendAnalyticsData) {
-            if ($settings->logExcludedAnalytics) {
-                Craft::info(
-                    "Analytics excluded for: ".$requestIp." due to: `sendAnalyticsData`",
-                    __METHOD__
-                );
-            }
+            $this->logExclusion('sendAnalyticsData');
 
             return false;
         }
 
         if (!$settings->sendAnalyticsInDevMode && Craft::$app->getConfig()->getGeneral()->devMode) {
-            if ($settings->logExcludedAnalytics) {
-                Craft::info(
-                    "Analytics excluded for: ".$requestIp." due to: `sendAnalyticsInDevMode`",
-                    __METHOD__
-                );
-            }
+            $this->logExclusion('sendAnalyticsInDevMode');
 
             return false;
         }
 
         if ($request->getIsConsoleRequest()) {
-            if ($settings->logExcludedAnalytics) {
-                Craft::info(
-                    "Analytics excluded for: ".$requestIp." due to: `craft()->isConsole()`",
-                    __METHOD__
-                );
-            }
+            $this->logExclusion('Craft::$app->getRequest()->getIsConsoleRequest()');
 
             return false;
         }
 
         if ($request->getIsCpRequest()) {
-            if ($settings->logExcludedAnalytics) {
-                Craft::info(
-                    "Analytics excluded for: ".$requestIp." due to: `craft()->request->isCpRequest()`",
-                    __METHOD__
-                );
-            }
+            $this->logExclusion('Craft::$app->getRequest()->getIsCpRequest()');
 
             return false;
         }
 
         if ($request->getIsLivePreview()) {
-            if ($settings->logExcludedAnalytics) {
-                Craft::info(
-                    "Analytics excluded for: ".$requestIp." due to: `craft()->request->isLivePreview()`",
-                    __METHOD__
-                );
-            }
+            $this->logExclusion('Craft::$app->getRequest()->getIsLivePreview()');
 
             return false;
         }
 
         // Check the $_SERVER[] super-global exclusions
-        if (isset($settings->serverExcludes) && is_array($settings->serverExcludes)) {
+        if ($settings->serverExcludes !== null && \is_array($settings->serverExcludes)) {
             foreach ($settings->serverExcludes as $match => $matchArray) {
                 if (isset($_SERVER[$match])) {
                     foreach ($matchArray as $matchItem) {
                         if (preg_match($matchItem, $_SERVER[$match])) {
-                            if ($settings->logExcludedAnalytics) {
-                                Craft::info(
-                                    "Analytics excluded for: ".$requestIp." due to: `serverExcludes`",
-                                    __METHOD__
-                                );
-                            }
+                            $this->logExclusion('serverExcludes');
 
                             return false;
                         }
@@ -289,12 +291,7 @@ class IA extends Component
             $crawlerDetect = new CrawlerDetect;
             // Check the user agent of the current 'visitor'
             if ($crawlerDetect->isCrawler()) {
-                if ($settings->logExcludedAnalytics) {
-                    Craft::info(
-                        "Analytics excluded for: ".$requestIp." due to: `filterBotUserAgents`",
-                        __METHOD__
-                    );
-                }
+                $this->logExclusion('filterBotUserAgents');
 
                 return false;
             }
@@ -306,25 +303,15 @@ class IA extends Component
         $user = $userService->getIdentity();
         if ($user) {
             if ($settings->adminExclude && $user->admin) {
-                if ($settings->logExcludedAnalytics) {
-                    Craft::info(
-                        "Analytics excluded for: ".$requestIp." due to: `adminExclude`",
-                        __METHOD__
-                    );
-                }
+                $this->logExclusion('adminExclude');
 
                 return false;
             }
 
-            if (isset($settings->groupExcludes) && is_array($settings->groupExcludes)) {
+            if ($settings->groupExcludes !== null && \is_array($settings->groupExcludes)) {
                 foreach ($settings->groupExcludes as $matchItem) {
                     if ($user->isInGroup($matchItem)) {
-                        if ($settings->logExcludedAnalytics) {
-                            Craft::info(
-                                "Analytics excluded for: ".$requestIp." due to: `groupExcludes`",
-                                __METHOD__
-                            );
-                        }
+                        $this->logExclusion('groupExcludes');
 
                         return false;
                     }
@@ -336,15 +323,41 @@ class IA extends Component
     }
 
     /**
+     * Log the reason for excluding the sending of analytics
+     *
+     * @param string $setting
+     */
+    protected function logExclusion(string $setting)
+    {
+        /** @var Settings $settings */
+        $settings = InstantAnalytics::$plugin->getSettings();
+        if ($settings->logExcludedAnalytics) {
+            $request = Craft::$app->getRequest();
+            $requestIp = $request->getUserIP();
+            Craft::info(
+                Craft::t(
+                    'instant-analytics',
+                    'Analytics excluded for:: {requestIp} due to: `{setting}`',
+                    [
+                        'requestIp' => $requestIp,
+                        'setting' => $setting,
+                    ]
+                ),
+                __METHOD__
+            );
+        }
+    }
+
+    /**
      * Return a sanitized documentPath from a URL
      *
      * @param $url
      *
-     * @return bool|string
+     * @return string
      */
-    protected function documentPathFromUrl($url = '')
+    protected function documentPathFromUrl($url = ''): string
     {
-        if ($url == "") {
+        if ($url === '') {
             $url = Craft::$app->getRequest()->getFullPath();
         }
 
@@ -354,10 +367,10 @@ class IA extends Component
             if (isset($urlParts['path'])) {
                 $url = $urlParts['path'];
             } else {
-                $url = "/";
+                $url = '/';
             }
             if (isset($urlParts['query'])) {
-                $url = $url."?".$urlParts['query'];
+                $url = $url.'?'.$urlParts['query'];
             }
         }
 
@@ -368,13 +381,13 @@ class IA extends Component
 
         // Strip the query string if that's the global config setting
         $settings = InstantAnalytics::$plugin->getSettings();
-        if (isset($settings) && isset($settings->stripQueryString) && $settings->stripQueryString) {
+        if (isset($settings, $settings->stripQueryString) && $settings->stripQueryString) {
             $url = UrlHelper::stripQueryString($url);
         }
 
         // We always want the path to be / rather than empty
-        if ($url == "") {
-            $url = "/";
+        if ($url === '') {
+            $url = '/';
         }
 
         return $url;
@@ -385,12 +398,12 @@ class IA extends Component
      *
      * @return IAnalytics object
      */
-    private function getAnalyticsObj()
+    private function getAnalyticsObj(): IAnalytics
     {
         $analytics = null;
         $settings = InstantAnalytics::$plugin->getSettings();
         $request = Craft::$app->getRequest();
-        if (isset($settings) && !empty($settings->googleAnalyticsTracking)) {
+        if ($settings !== null && !empty($settings->googleAnalyticsTracking)) {
             $analytics = new IAnalytics();
             if ($analytics) {
                 $hostName = $request->getServerName();
@@ -410,7 +423,7 @@ class IA extends Component
                 }
                 $referrer = $request->getReferrer();
                 if (empty($referrer)) {
-                    $referrer = "";
+                    $referrer = '';
                 }
                 $analytics->setProtocolVersion('1')
                     ->setTrackingId($settings->googleAnalyticsTracking)
@@ -470,11 +483,11 @@ class IA extends Component
      */
     private function getGclid()
     {
-        $gclid = "";
+        $gclid = '';
         if (isset($_GET['gclid'])) {
             $gclid = $_GET['gclid'];
             if (!empty($gclid)) {
-                setcookie("gclid", $gclid, time() + (10 * 365 * 24 * 60 * 60), "/");
+                setcookie('gclid', $gclid, strtotime('+10 years'), '/');
             }
         }
 
@@ -493,16 +506,16 @@ class IA extends Component
         if (isset($_COOKIE['_ga'])) {
             $parts = preg_split('[\.]', $_COOKIE["_ga"], 4);
             if ($parts !== false) {
-                $cid = implode('.', array_slice($parts, 2));
+                $cid = implode('.', \array_slice($parts, 2));
             }
         } else {
-            if (isset($_COOKIE['_ia']) && $_COOKIE['_ia'] != '') {
+            if (isset($_COOKIE['_ia']) && $_COOKIE['_ia'] !== '') {
                 $cid = $_COOKIE['_ia'];
             } else {
                 $cid = $this->gaGenUUID();
             }
         }
-        setcookie('_ia', $cid, time() + 60 * 60 * 24 * 730, "/"); // Two years
+        setcookie('_ia', $cid, strtotime('+2 years'), '/'); // Two years
 
         return $cid;
     }
