@@ -21,5 +21,14 @@
  * @since     1.0.0
  */
 return [
-    '{name} plugin loaded'            => '{name} plugin loaded'
+    '{name} plugin loaded'            => '{name} plugin loaded',
+    'Craft Commerce is not installed' => 'Craft Commerce is not installed',
+    'Created sendPageView for: {eventCategory} - {eventAction} - {eventLabel} - {eventValue}' => 'Created sendPageView for: {eventCategory} - {eventAction} - {eventLabel} - {eventValue}',
+    'Created eventTrackingUrl for: {trackingUrl}' => 'Created eventTrackingUrl for: {trackingUrl}',
+    'Created pageViewTrackingUrl for: {trackingUrl}' => 'Created pageViewTrackingUrl for: {trackingUrl}',
+    'Analytics excluded for:: {requestIp} due to: `{setting}`' => 'Analytics excluded for:: {requestIp} due to: `{setting}`',
+    'Created sendPageView for: {url} - {title}' => 'Created sendPageView for: {url} - {title}',
+    'Created generic analytics object' => 'Created generic analytics object',
+    'Analytics not sent because googleAnalyticsTracking is not set' => 'Analytics not sent because googleAnalyticsTracking is not set',
+    'pageView sent, response:: {response}' => 'pageView sent, response:: {response}'
 ];
