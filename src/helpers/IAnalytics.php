@@ -3,7 +3,7 @@
  * Instant Analytics plugin for Craft CMS
  *
  * @author    nystudio107
- * @copyright Copyright (c) 2016 nystudio107
+ * @copyright Copyright (c) 2017 nystudio107
  * @link      http://nystudio107.com
  * @package   InstantAnalytics
  * @since     1.0.0
@@ -19,6 +19,11 @@ use Craft;
 use \TheIconic\Tracking\GoogleAnalytics\Analytics;
 use \TheIconic\Tracking\GoogleAnalytics\AnalyticsResponseInterface;
 
+/**
+ * @author    nystudio107
+ * @package   InstantAnalytics
+ * @since     1.0.0
+ */
 class IAnalytics extends Analytics
 {
 

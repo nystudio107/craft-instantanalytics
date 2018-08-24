@@ -1,38 +1,44 @@
-{% extends '_layouts/cp' %}
+{# @var craft \craft\web\twig\variables\CraftVariable #}
+{% extends 'instant-analytics/_layouts/instantanalytics-cp.twig' %}
+
+{% from "instant-analytics/_includes/macros.twig" import includeJsModule %}
+
 {% set title = 'Welcome to Instant Analytics!' %}
 
+{% set docsUrl = "https://github.com/nystudio107/craft-instantanalytics/blob/v1/README.md" %}
 {% set linkGetStarted = url('settings/plugins/instant-analytics') %}
-{% set docsUrl = "https://github.com/nystudio107/craft-instantanalytics/blob/master/README.md" %}
 
-{% do view.registerAssetBundle("nystudio107\\instantanalytics\\assetbundles\\instantanalytics\\InstantAnalyticsAsset") %}
+{% do view.registerAssetBundle("nystudio107\\instantanalytics\\assetbundles\\instantanalytics\\InstantAnalyticsWelcomeAsset") %}
 {% set baseAssetsUrl = view.getAssetManager().getPublishedUrl('@nystudio107/instantanalytics/assetbundles/instantanalytics/dist', true) %}
 
 {% set crumbs = [
-    { label: "Instant Analytics", url: url('instantanalytics') },
-    { label: "Welcome"|t, url: url('instantanalytics/welcome') },
+    { label: "Instant Analytics", url: url('instant-analytics') },
+    { label: "Welcome"|t, url: url('instant-analytics/welcome') },
 ] %}
 
-{% set content %}
-	<div style="text-align:center; margin:0 auto; padding: 5% 10%;">
-		<img src="{{ baseAssetsUrl ~ '/img/InstantAnalytics-icon.svg' }}" width="30%" height="auto" />
-		<h2>Thanks for using Instant Analytics!</h2>
-		<p>Instant Analytics brings full Google Analytics support to your Twig templates and automatic Craft Commerce integration with Google Enhanced Ecommerce.</p>
-		<p>Instant Analytics also lets you track otherwise untrackable assets & events with Google Analytics, and eliminates the need for Javascript tracking.</p>
-		<p>You don't need to include the typical Google Analytics script tag on your pages, instead Instant Analytics will send page views when your front-end templates are rendered via the officially supported <a href="https://developers.google.com/analytics/devguides/collection/protocol/v1/" target="_blank">Google Measurement Protocol</a>.</p>
-		<p>You can also track asset/media views in Google Analytics, either as PageViews or as Events. This lets you track otherwise untrackable things such as individual RSS feed accesses, images, PDF files, etc.</p>
-		{#
-		<p>If you are using Craft Commerce, Instant Analytics will automatically send Google Analytics Enhanced eCommerce data to your Google Analytics account as items are added/removed from your cart, and orders are tracked as well.</p>
-		#}
-		<p>
-			&nbsp;
-		</p>
-		<p>
-			<a href="{{ linkGetStarted }}"><button class="btn submit">Get Started</button></a>
-		</p>
-	</div>
-	<div style="text-align:center; margin:0 auto; padding: 0;">
-		<p class="instructions">
-			Brought to you by <a href="http://nystudio107.com" target="_blank">nystudio107</a>
-		</p>
-	</div>
-{% endset %}
+{% block content %}
+    <div id="cp-nav-content" class="readable" style="text-align:center; margin:0 auto; padding: 5% 10%;">
+        <confetti>
+        </confetti>
+        <img src="{{ baseAssetsUrl ~ '/img/InstantAnalytics-icon.svg' }}" width="30%" height="auto" />
+        <h2>Thanks for using Instant Analytics!</h2>
+        <p>Instant Analytics brings full Google Analytics support to your Twig templates and automatic Craft Commerce integration with Google Enhanced Ecommerce.</p>
+        <p>Instant Analytics also lets you track otherwise untrackable assets & events with Google Analytics, and eliminates the need for Javascript tracking.</p>
+
+        <p>For more information, please <a href="{{ docsUrl }}" target="_blank" rel="noopener">see the documentation</a>.</p>
+        <p>
+            &nbsp;
+        </p>
+        <p>
+            <a href="{{ linkGetStarted }}"><button class="btn submit">Get Started</button></a>
+        </p>
+    </div>
+    <div style="text-align:center; margin:0 auto; padding: 0;">
+        <p class="instructions">
+            Brought to you by <a href="http://nystudio107.com" target="_blank" rel="noopener">nystudio107</a>
+        </p>
+    </div>
+    {# include our JavaScript modules #}
+    {{ parent() }}
+    {{ includeJsModule("welcome") }}
+{% endblock %}

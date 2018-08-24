@@ -8,27 +8,31 @@
  * @copyright Copyright (c) 2017 nystudio107
  */
 
-namespace nystudio107\instantanalytics\assetbundles\InstantAnalytics;
+namespace nystudio107\instantanalytics\assetbundles\instantanalytics;
 
 use craft\web\AssetBundle;
 use craft\web\assets\cp\CpAsset;
 
-class InstantAnalyticsAsset extends AssetBundle
+/**
+ * @author    nystudio107
+ * @package   Instant Analytics
+ * @since     1.0.0
+ */
+class InstantAnalyticsWelcomeAsset extends AssetBundle
 {
     // Public Methods
     // =========================================================================
 
     /**
-     * Initializes the bundle.
+     * @inheritdoc
      */
     public function init()
     {
-        // define the path that your publishable resources live
-        $this->sourcePath = "@nystudio107/instantanalytics/assetbundles/instantanalytics/dist";
+        $this->sourcePath = '@nystudio107/instantanalytics/assetbundles/instantanalytics/dist';
 
-        // define the dependencies
         $this->depends = [
             CpAsset::class,
+            InstantAnalyticsAsset::class,
         ];
 
         parent::init();
