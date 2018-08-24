@@ -29,8 +29,12 @@ use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
 use craft\web\View;
 
+use nystudio107\seomatic\Seomatic;
+
 use yii\base\Event;
 use yii\base\Exception;
+
+/** @noinspection MissingPropertyAnnotationsInspection */
 
 /**
  * @author    nystudio107
@@ -42,6 +46,12 @@ use yii\base\Exception;
  */
 class InstantAnalytics extends Plugin
 {
+    // Constants
+    // =========================================================================
+
+    const COMMERCE_PLUGIN_HANDLE = 'commerce';
+    const SEOMATIC_PLUGIN_HANDLE = 'seomatic';
+
     // Static Properties
     // =========================================================================
 
@@ -82,9 +92,9 @@ class InstantAnalytics extends Plugin
         self::$plugin = $this;
 
         // Determine if Craft Commerce is installed & enabled
-        self::$commercePlugin = Craft::$app->getPlugins()->getPlugin('commerce');
+        self::$commercePlugin = Craft::$app->getPlugins()->getPlugin(self::COMMERCE_PLUGIN_HANDLE);
         // Determine if SEOmatic is installed & enabled
-        self::$seomaticPlugin = Craft::$app->getPlugins()->getPlugin('seomatic');
+        self::$seomaticPlugin = Craft::$app->getPlugins()->getPlugin(self::SEOMATIC_PLUGIN_HANDLE);
         // Add in our Craft components
         $this->addComponents();
         // Install our global event handlers
@@ -136,6 +146,8 @@ class InstantAnalytics extends Plugin
         } catch (Exception $e) {
             Craft::error($e->getMessage(), __METHOD__);
         }
+
+        return '';
     }
 
     // Protected Methods
@@ -281,22 +293,37 @@ class InstantAnalytics extends Plugin
     // Private Methods
     // =========================================================================
 
+    /**
+     * Send a page view with the pre-loaded IAnalytics object
+     */
     private function sendPageView()
     {
-        if (!self::$pageViewSent) {
+        $request = Craft::$app->getRequest();
+        if ($request->getIsSiteRequest() && !$request->getIsConsoleRequest() && !self::$pageViewSent) {
             self::$pageViewSent = true;
             /** @var IAnalytics $analytics */
             $analytics = InstantAnalytics::$plugin->ia->getGlobals(self::$currentTemplate);
+            // If SEOmatic is installed, set the page title from it
+            $this->setTitleFromSeomatic($analytics);
             // Send the page view
             if ($analytics) {
-                $response = $analytics->sendPageView();
+                $response = $analytics->sendPageview();
                 Craft::info(
-                    "pageView sent, response: ".print_r($response, true),
+                    Craft::t(
+                        'instant-analytics',
+                        'pageView sent, response:: {response}',
+                        [
+                            'response' => print_r($response, true),
+                        ]
+                    ),
                     __METHOD__
                 );
             } else {
                 Craft::error(
-                    "Analytics not sent because googleAnalyticsTracking is not set",
+                    Craft::t(
+                        'instant-analytics',
+                        'Analytics not sent because googleAnalyticsTracking is not set'
+                    ),
                     __METHOD__
                 );
             }
@@ -304,27 +331,34 @@ class InstantAnalytics extends Plugin
     }
 
     /**
-     * Send a page view with the pre-loaded IAnalytics object
+     * Handle the `{% hook isSendPageView %}`
      *
      * @param array &$context
      *
      * @return string|null
      */
-    private function iaSendPageView(array &$context)
+    private function iaSendPageView(/** @noinspection PhpUnusedParameterInspection */ array &$context)
     {
-        $request = Craft::$app->getRequest();
-        if ($request->getIsSiteRequest() && !$request->getIsConsoleRequest()) {
-            // If SEOmatic is installed, set the page title from it
-            if (self::$seomaticPlugin && isset($context['seomaticMeta'])) {
-                /**
-                 * TODO: fix for SEOmatic
-                 * $seomaticMeta = $context['seomaticMeta'];
-                 * $analytics->setDocumentTitle($seomaticMeta['seoTitle']);
-                 */
-            }
-            $this->sendPageView();
-        }
+        $this->sendPageView();
 
         return '';
+    }
+
+    /**
+     * If SEOmatic is installed, set the page title from it
+     *
+     * @param $analytics
+     */
+    private function setTitleFromSeomatic(IAnalytics $analytics)
+    {
+        if (self::$seomaticPlugin && Seomatic::$settings->renderEnabled) {
+            $titleTag = Seomatic::$plugin->title->get('title');
+            if ($titleTag) {
+                $titleArray = $titleTag->renderAttributes();
+                if (!empty($titleArray['title'])) {
+                    $analytics->setDocumentTitle($titleArray['title']);
+                }
+            }
+        }
     }
 }
