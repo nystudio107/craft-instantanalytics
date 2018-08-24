@@ -162,6 +162,7 @@ class Field
                 $layout = null;
             }
             if ($layout) {
+                /** @noinspection SlowArrayOperationsInLoopInspection */
                 $foundFields = array_merge(
                     $foundFields,
                     self::fieldsOfTypeFromLayout($fieldClassKey, $layout, $keysOnly)
@@ -198,6 +199,7 @@ class Field
                     $fields
                 );
                 // Merge with any fields we've already found
+                /** @noinspection SlowArrayOperationsInLoopInspection */
                 $foundFields = array_merge(
                     $foundFields,
                     $fields

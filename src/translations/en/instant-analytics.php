@@ -21,5 +21,5 @@
  * @since     1.0.0
  */
 return [
-    'Instant Analytics plugin loaded' => 'Instant Analytics plugin loaded',
+    '{name} plugin loaded'            => '{name} plugin loaded'
 ];

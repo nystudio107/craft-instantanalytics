@@ -36,7 +36,7 @@ class InstantAnalyticsVariable
      *
      * @return IAnalytics object
      */
-    public function pageViewAnalytics($url = "", $title = "")
+    public function pageViewAnalytics($url = '', $title = '')
     {
         return InstantAnalytics::$plugin->ia->pageViewAnalytics($url, $title);
     }
@@ -51,7 +51,7 @@ class InstantAnalyticsVariable
      *
      * @return null|IAnalytics
      */
-    public function eventAnalytics($eventCategory = "", $eventAction = "", $eventLabel = "", $eventValue = 0)
+    public function eventAnalytics($eventCategory = '', $eventAction = '', $eventLabel = '', $eventValue = 0)
     {
         return InstantAnalytics::$plugin->ia->eventAnalytics($eventCategory, $eventAction, $eventLabel, $eventValue);
     }
@@ -90,7 +90,7 @@ class InstantAnalyticsVariable
      * @return \Twig_Markup
      * @throws \yii\base\Exception
      */
-    public function eventTrackingUrl($url, $eventCategory = "", $eventAction = "", $eventLabel = "", $eventValue = 0)
+    public function eventTrackingUrl($url, $eventCategory = '', $eventAction = '', $eventLabel = '', $eventValue = 0)
     {
         return Template::raw(InstantAnalytics::$plugin->ia->eventTrackingUrl(
             $url,
