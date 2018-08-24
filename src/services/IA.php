@@ -21,6 +21,8 @@ use craft\base\Component;
 use craft\elements\User as UserElement;
 use craft\helpers\UrlHelper;
 
+use nystudio107\seomatic\Seomatic;
+
 use yii\base\Exception;
 
 /** @noinspection MissingPropertyAnnotationsInspection */
@@ -459,14 +461,10 @@ class IA extends Component
                 }
 
                 // If SEOmatic is installed, set the affiliation as well
-                // TODO: handle Seomatic
-                /*
-                $seomatic = craft()->plugins->getPlugin('Seomatic');
-                if ($seomatic && $seomatic->isInstalled && $seomatic->isEnabled) {
-                    $seomaticSettings = craft()->seomatic->getSettings(craft()->language);
-                    $analytics->setAffiliation($seomaticSettings['siteSeoName']);
+                if (InstantAnalytics::$seomaticPlugin && Seomatic::$settings->renderEnabled) {
+                    $siteName = Seomatic::$plugin->metaContainers->metaSiteVars->siteName;
+                    $analytics->setAffiliation($siteName);
                 }
-                */
             }
         }
 
