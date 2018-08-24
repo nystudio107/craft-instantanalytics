@@ -13,7 +13,6 @@ namespace nystudio107\instantanalytics\variables;
 use nystudio107\instantanalytics\InstantAnalytics;
 use nystudio107\instantanalytics\helpers\IAnalytics;
 
-use Craft;
 use craft\helpers\Template;
 
 /**
@@ -34,9 +33,9 @@ class InstantAnalyticsVariable
      * @param string $url
      * @param string $title
      *
-     * @return IAnalytics object
+     * @return null|IAnalytics object
      */
-    public function pageViewAnalytics($url = "", $title = "")
+    public function pageViewAnalytics($url = '', $title = '')
     {
         return InstantAnalytics::$plugin->ia->pageViewAnalytics($url, $title);
     }
@@ -51,7 +50,7 @@ class InstantAnalyticsVariable
      *
      * @return null|IAnalytics
      */
-    public function eventAnalytics($eventCategory = "", $eventAction = "", $eventLabel = "", $eventValue = 0)
+    public function eventAnalytics($eventCategory = '', $eventAction = '', $eventLabel = '', $eventValue = 0)
     {
         return InstantAnalytics::$plugin->ia->eventAnalytics($eventCategory, $eventAction, $eventLabel, $eventValue);
     }
@@ -59,7 +58,7 @@ class InstantAnalyticsVariable
     /**
      * Return an Analytics object
      */
-    public function analytics()
+    public function analytics(): IAnalytics
     {
         return InstantAnalytics::$plugin->ia->analytics();
     }
@@ -73,7 +72,7 @@ class InstantAnalyticsVariable
      * @return \Twig_Markup
      * @throws \yii\base\Exception
      */
-    public function pageViewTrackingUrl($url, $title)
+    public function pageViewTrackingUrl($url, $title): \Twig_Markup
     {
         return Template::raw(InstantAnalytics::$plugin->ia->pageViewTrackingUrl($url, $title));
     }
@@ -90,8 +89,13 @@ class InstantAnalyticsVariable
      * @return \Twig_Markup
      * @throws \yii\base\Exception
      */
-    public function eventTrackingUrl($url, $eventCategory = "", $eventAction = "", $eventLabel = "", $eventValue = 0)
-    {
+    public function eventTrackingUrl(
+        $url,
+        $eventCategory = '',
+        $eventAction = '',
+        $eventLabel = '',
+        $eventValue = 0
+    ): \Twig_Markup {
         return Template::raw(InstantAnalytics::$plugin->ia->eventTrackingUrl(
             $url,
             $eventCategory,

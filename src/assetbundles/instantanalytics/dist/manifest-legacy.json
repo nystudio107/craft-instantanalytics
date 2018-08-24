@@ -1,0 +1,14 @@
+{
+  "vendors~confetti~vue.js": "/cpresources/instant-analytics/js/vendors~confetti~vue-legacy.1e150b9a3825a680b683.js",
+  "vendors~confetti~vue.js.map": "/cpresources/instant-analytics/js/vendors~confetti~vue-legacy.1e150b9a3825a680b683.js.map",
+  "instantanalytics.css": "/cpresources/instant-analytics/css/instantanalytics.53901e4e3cd722c7660a.css",
+  "instantanalytics.js": "/cpresources/instant-analytics/js/instantanalytics-legacy.53901e4e3cd722c7660a.js",
+  "instantanalytics.js.map": "/cpresources/instant-analytics/js/instantanalytics-legacy.53901e4e3cd722c7660a.js.map",
+  "welcome.js": "/cpresources/instant-analytics/js/welcome-legacy.b008b31d41118cfa9baa.js",
+  "welcome.js.map": "/cpresources/instant-analytics/js/welcome-legacy.b008b31d41118cfa9baa.js.map",
+  "confetti.js": "/cpresources/instant-analytics/js/confetti-legacy.45da218dafd52d729a2e.js",
+  "confetti.js.map": "/cpresources/instant-analytics/js/confetti-legacy.45da218dafd52d729a2e.js.map",
+  "css/instantanalytics.53901e4e3cd722c7660a.css.map": "/cpresources/instant-analytics/css/instantanalytics.53901e4e3cd722c7660a.css.map",
+  "../../../templates/_includes/include-legacy-module.twig": "/cpresources/instant-analytics/../../../templates/_includes/include-legacy-module.twig",
+  "../../../templates/_includes/include-css-module.twig": "/cpresources/instant-analytics/../../../templates/_includes/include-css-module.twig"
+}

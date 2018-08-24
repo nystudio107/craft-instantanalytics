@@ -40,6 +40,7 @@ class InstantAnalyticsTwigExtension extends \Twig_Extension implements \Twig_Ext
         return 'InstantAnalytics';
     }
 
+    /** @noinspection ReturnTypeCanBeDeclaredInspection */
     /**
      * @@inheritdoc
      */
@@ -92,9 +93,9 @@ class InstantAnalyticsTwigExtension extends \Twig_Extension implements \Twig_Ext
      * @param string $url
      * @param string $title
      *
-     * @return IAnalytics object
+     * @return null|IAnalytics object
      */
-    public function pageViewAnalytics($url = "", $title = "")
+    public function pageViewAnalytics($url = '', $title = '')
     {
         return InstantAnalytics::$plugin->ia->pageViewAnalytics($url, $title);
     }
@@ -109,7 +110,7 @@ class InstantAnalyticsTwigExtension extends \Twig_Extension implements \Twig_Ext
      *
      * @return null|IAnalytics
      */
-    public function eventAnalytics($eventCategory = "", $eventAction = "", $eventLabel = "", $eventValue = 0)
+    public function eventAnalytics($eventCategory = '', $eventAction = '', $eventLabel = '', $eventValue = 0)
     {
         return InstantAnalytics::$plugin->ia->eventAnalytics($eventCategory, $eventAction, $eventLabel, $eventValue);
     }
@@ -131,7 +132,7 @@ class InstantAnalyticsTwigExtension extends \Twig_Extension implements \Twig_Ext
      * @return \Twig_Markup
      * @throws \yii\base\Exception
      */
-    public function pageViewTrackingUrl($url, $title)
+    public function pageViewTrackingUrl($url, $title): \Twig_Markup
     {
         return Template::raw(InstantAnalytics::$plugin->ia->pageViewTrackingUrl($url, $title));
     }
@@ -148,8 +149,13 @@ class InstantAnalyticsTwigExtension extends \Twig_Extension implements \Twig_Ext
      * @return \Twig_Markup
      * @throws \yii\base\Exception
      */
-    public function eventTrackingUrl($url, $eventCategory = "", $eventAction = "", $eventLabel = "", $eventValue = 0)
-    {
+    public function eventTrackingUrl(
+        $url,
+        $eventCategory = '',
+        $eventAction = '',
+        $eventLabel = '',
+        $eventValue = 0
+    ): \Twig_Markup {
         return Template::raw(InstantAnalytics::$plugin->ia->eventTrackingUrl(
             $url,
             $eventCategory,

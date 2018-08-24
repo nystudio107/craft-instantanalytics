@@ -1,0 +1,13 @@
+{% macro includeLegacyModule(jsModuleName) -%}
+    {% set hashLookup = {
+        
+        
+            "instantanalytics": "/cpresources/instant-analytics/js/instantanalytics-legacy.53901e4e3cd722c7660a.js",
+        
+            "welcome": "/cpresources/instant-analytics/js/welcome-legacy.b008b31d41118cfa9baa.js",
+        
+    } %}
+    {# Older browsers load this file (and module-supporting #}
+    {# browsers know *not* to load this file). #}
+    <script nomodule src="{{ hashLookup[jsModuleName] }}"></script>
+{%- endmacro includeLegacyModule %}

@@ -11,11 +11,12 @@
 namespace nystudio107\instantanalytics;
 
 use nystudio107\instantanalytics\helpers\IAnalytics;
+use nystudio107\instantanalytics\helpers\Field as FieldHelper;
+use nystudio107\instantanalytics\models\Settings;
 use nystudio107\instantanalytics\services\Commerce as CommerceService;
 use nystudio107\instantanalytics\services\IA as IAService;
 use nystudio107\instantanalytics\variables\InstantAnalyticsVariable;
 use nystudio107\instantanalytics\twigextensions\InstantAnalyticsTwigExtension;
-use nystudio107\instantanalytics\models\Settings;
 
 use Craft;
 use craft\base\Plugin;
@@ -28,7 +29,12 @@ use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
 use craft\web\View;
 
+use nystudio107\seomatic\Seomatic;
+
 use yii\base\Event;
+use yii\base\Exception;
+
+/** @noinspection MissingPropertyAnnotationsInspection */
 
 /**
  * @author    nystudio107
@@ -40,6 +46,12 @@ use yii\base\Event;
  */
 class InstantAnalytics extends Plugin
 {
+    // Constants
+    // =========================================================================
+
+    const COMMERCE_PLUGIN_HANDLE = 'commerce';
+    const SEOMATIC_PLUGIN_HANDLE = 'seomatic';
+
     // Static Properties
     // =========================================================================
 
@@ -78,78 +90,15 @@ class InstantAnalytics extends Plugin
     {
         parent::init();
         self::$plugin = $this;
-        $view = Craft::$app->getView();
-        $request = Craft::$app->getRequest();
-        // Add in our Twig extensions
-        $view->registerTwigExtension(new InstantAnalyticsTwigExtension());
-        // Install our template hook
-        $view->hook('iaSendPageView', [$this, 'iaSendPageView']);
+
         // Determine if Craft Commerce is installed & enabled
-        self::$commercePlugin = Craft::$app->getPlugins()->getPlugin('commerce');
+        self::$commercePlugin = Craft::$app->getPlugins()->getPlugin(self::COMMERCE_PLUGIN_HANDLE);
         // Determine if SEOmatic is installed & enabled
-        self::$seomaticPlugin = Craft::$app->getPlugins()->getPlugin('seomatic');
-        // Register our variables
-        Event::on(
-            CraftVariable::class,
-            CraftVariable::EVENT_INIT,
-            function (Event $event) {
-                /** @var CraftVariable $variable */
-                $variable = $event->sender;
-                $variable->set('instantAnalytics', InstantAnalyticsVariable::class);
-            }
-        );
-
-        // Do something after we're installed
-        Event::on(
-            Plugins::class,
-            Plugins::EVENT_AFTER_INSTALL_PLUGIN,
-            function (PluginEvent $event) {
-                if ($event->plugin === $this) {
-                    $request = Craft::$app->getRequest();
-                    if (($request->isCpRequest) && (!$request->isConsoleRequest)) {
-                        Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('instant-analytics/welcome'))->send();
-                    }
-                }
-            }
-        );
-
-        // We're only interested in site requests that are not console requests
-        if (($request->isSiteRequest) && (!$request->isConsoleRequest)) {
-            // Remember the name of the currently rendering template
-            Event::on(
-                View::class,
-                View::EVENT_BEFORE_RENDER_PAGE_TEMPLATE,
-                function (TemplateEvent $event) {
-                    self::$currentTemplate = $event->template;
-                }
-            );
-            // Remember the name of the currently rendering template
-            Event::on(
-                View::class,
-                View::EVENT_AFTER_RENDER_PAGE_TEMPLATE,
-                function (TemplateEvent $event) {
-                    $settings = InstantAnalytics::$plugin->getSettings();
-                    if ($settings->autoSendPageView) {
-                        $this->sendPageView();
-                    }
-                }
-            );
-            // Register our site routes
-            Event::on(
-                UrlManager::class,
-                UrlManager::EVENT_REGISTER_SITE_URL_RULES,
-                function (RegisterUrlRulesEvent $event) {
-                    $event->rules['instantanalytics/pageViewTrack/<filename:[-\w\.*]+>?'] =
-                        'instant-analytics/track/track-page-view-url';
-                    $event->rules['instantanalytics/eventTrack/<filename:[-\w\.*]+>?'] =
-                        'instant-analytics/track/track-event-url';
-                }
-            );
-            // Commerce-specific hooks
-            if (self::$commercePlugin) {
-                // TODO: pending Commerce for Craft 3
-            }
-        }
+        self::$seomaticPlugin = Craft::$app->getPlugins()->getPlugin(self::SEOMATIC_PLUGIN_HANDLE);
+        // Add in our Craft components
+        $this->addComponents();
+        // Install our global event handlers
+        $this->installEventListeners();
 
         Craft::info(
             Craft::t(
@@ -183,19 +132,155 @@ class InstantAnalytics extends Plugin
              */
         }
 
+        // Rend the settings template
+        try {
+            return Craft::$app->getView()->renderTemplate(
+                'instant-analytics/settings',
+                [
+                    'settings'       => $this->getSettings(),
+                    'commerceFields' => $commerceFields,
+                ]
+            );
+        } catch (\Twig_Error_Loader $e) {
+            Craft::error($e->getMessage(), __METHOD__);
+        } catch (Exception $e) {
+            Craft::error($e->getMessage(), __METHOD__);
+        }
 
-        // Render the settings template
-        return Craft::$app->getView()->renderTemplate(
-            'instant-analytics/settings',
-            [
-                'settings'       => $this->getSettings(),
-                'commerceFields' => $commerceFields,
-            ]
-        );
+        return '';
     }
 
     // Protected Methods
     // =========================================================================
+
+
+    /**
+     * Add in our Craft components
+     */
+    protected function addComponents()
+    {
+        $view = Craft::$app->getView();
+        // Add in our Twig extensions
+        $view->registerTwigExtension(new InstantAnalyticsTwigExtension());
+        // Install our template hook
+        $view->hook('iaSendPageView', [$this, 'iaSendPageView']);
+        // Register our variables
+        Event::on(
+            CraftVariable::class,
+            CraftVariable::EVENT_INIT,
+            function (Event $event) {
+                /** @var CraftVariable $variable */
+                $variable = $event->sender;
+                $variable->set('instantAnalytics', InstantAnalyticsVariable::class);
+            }
+        );
+    }
+
+    /**
+     * Install our event listeners
+     */
+    protected function installEventListeners()
+    {
+        // Handler: Plugins::EVENT_AFTER_INSTALL_PLUGIN
+        Event::on(
+            Plugins::class,
+            Plugins::EVENT_AFTER_INSTALL_PLUGIN,
+            function (PluginEvent $event) {
+                if ($event->plugin === $this) {
+                    $request = Craft::$app->getRequest();
+                    if ($request->isCpRequest) {
+                        Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('instant-analytics/welcome'))->send();
+                    }
+                }
+            }
+        );
+        $request = Craft::$app->getRequest();
+        // Install only for non-console site requests
+        if ($request->getIsSiteRequest() && !$request->getIsConsoleRequest()) {
+            $this->installSiteEventListeners();
+        }
+        // Install only for non-console AdminCP requests
+        if ($request->getIsCpRequest() && !$request->getIsConsoleRequest()) {
+            $this->installCpEventListeners();
+        }
+    }
+
+    /**
+     * Install site event listeners for site requests only
+     */
+    protected function installSiteEventListeners()
+    {
+        // Handler: UrlManager::EVENT_REGISTER_SITE_URL_RULES
+        Event::on(
+            UrlManager::class,
+            UrlManager::EVENT_REGISTER_SITE_URL_RULES,
+            function (RegisterUrlRulesEvent $event) {
+                Craft::debug(
+                    'UrlManager::EVENT_REGISTER_SITE_URL_RULES',
+                    __METHOD__
+                );
+                // Register our AdminCP routes
+                $event->rules = array_merge(
+                    $event->rules,
+                    $this->customFrontendRoutes()
+                );
+            }
+        );
+        // Remember the name of the currently rendering template
+        Event::on(
+            View::class,
+            View::EVENT_BEFORE_RENDER_PAGE_TEMPLATE,
+            function (TemplateEvent $event) {
+                self::$currentTemplate = $event->template;
+            }
+        );
+        // Remember the name of the currently rendering template
+        Event::on(
+            View::class,
+            View::EVENT_AFTER_RENDER_PAGE_TEMPLATE,
+            function (TemplateEvent $event) {
+                $settings = InstantAnalytics::$plugin->getSettings();
+                if ($settings->autoSendPageView) {
+                    $this->sendPageView();
+                }
+            }
+        );
+        // Register our site routes
+        Event::on(
+            UrlManager::class,
+            UrlManager::EVENT_REGISTER_SITE_URL_RULES,
+            function (RegisterUrlRulesEvent $event) {
+                $event->rules['instantanalytics/pageViewTrack/<filename:[-\w\.*]+>?'] =
+                    'instant-analytics/track/track-page-view-url';
+                $event->rules['instantanalytics/eventTrack/<filename:[-\w\.*]+>?'] =
+                    'instant-analytics/track/track-event-url';
+            }
+        );
+        // Commerce-specific hooks
+        if (self::$commercePlugin) {
+            // TODO: pending Commerce for Craft 3
+        }
+    }
+
+    /**
+     * Install site event listeners for AdminCP requests only
+     */
+    protected function installCpEventListeners()
+    {
+    }
+
+    /**
+     * Return the custom frontend routes
+     *
+     * @return array
+     */
+    protected function customFrontendRoutes(): array
+    {
+        return [
+            // Make webpack async bundle loading work out of published AssetBundles
+            '/cpresources/instant-analytics/<resourceType:{handle}>/<fileName>' => 'instant-analytics/cp-nav/resource',
+        ];
+    }
 
     /**
      * @inheritdoc
@@ -205,53 +290,40 @@ class InstantAnalytics extends Plugin
         return new Settings();
     }
 
-    /**
-     * @param int $layoutId
-     *
-     * @return array
-     */
-    private function getPullFieldsFromLayoutId(int $layoutId)
-    {
-        $result = ['' => "none"];
-        $fieldLayout = Craft::$app->getFields()->getLayoutById($layoutId);
-        $fieldLayoutFields = $fieldLayout->getFields();
-        foreach ($fieldLayoutFields as $fieldLayoutField) {
-            $field = $fieldLayoutField->field;
-            switch ($field->type) {
-                case "PlainText":
-                case "RichText":
-                case "RedactorI":
-                case "Categories":
-                    $result[$field->handle] = $field->name;
-                    break;
-
-                case "Tags":
-                    break;
-            }
-        }
-
-        return $result;
-    }
-
     // Private Methods
     // =========================================================================
 
+    /**
+     * Send a page view with the pre-loaded IAnalytics object
+     */
     private function sendPageView()
     {
-        if (!self::$pageViewSent) {
+        $request = Craft::$app->getRequest();
+        if ($request->getIsSiteRequest() && !$request->getIsConsoleRequest() && !self::$pageViewSent) {
             self::$pageViewSent = true;
             /** @var IAnalytics $analytics */
             $analytics = InstantAnalytics::$plugin->ia->getGlobals(self::$currentTemplate);
+            // If SEOmatic is installed, set the page title from it
+            $this->setTitleFromSeomatic($analytics);
             // Send the page view
             if ($analytics) {
-                $response = $analytics->sendPageView();
+                $response = $analytics->sendPageview();
                 Craft::info(
-                    "pageView sent, response: ".print_r($response, true),
+                    Craft::t(
+                        'instant-analytics',
+                        'pageView sent, response:: {response}',
+                        [
+                            'response' => print_r($response, true),
+                        ]
+                    ),
                     __METHOD__
                 );
             } else {
                 Craft::error(
-                    "Analytics not sent because googleAnalyticsTracking is not set",
+                    Craft::t(
+                        'instant-analytics',
+                        'Analytics not sent because googleAnalyticsTracking is not set'
+                    ),
                     __METHOD__
                 );
             }
@@ -259,27 +331,34 @@ class InstantAnalytics extends Plugin
     }
 
     /**
-     * Send a page view with the pre-loaded IAnalytics object
+     * Handle the `{% hook isSendPageView %}`
      *
      * @param array &$context
      *
      * @return string|null
      */
-    private function iaSendPageView(array &$context)
+    private function iaSendPageView(/** @noinspection PhpUnusedParameterInspection */ array &$context)
     {
-        $request = Craft::$app->getRequest();
-        if ($request->getIsSiteRequest() && !$request->getIsConsoleRequest()) {
-            // If SEOmatic is installed, set the page title from it
-            if (self::$seomaticPlugin && isset($context['seomaticMeta'])) {
-                /**
-                 * TODO: fix for SEOmatic
-                 * $seomaticMeta = $context['seomaticMeta'];
-                 * $analytics->setDocumentTitle($seomaticMeta['seoTitle']);
-                 */
-            }
-            $this->sendPageView();
-        }
+        $this->sendPageView();
 
         return '';
+    }
+
+    /**
+     * If SEOmatic is installed, set the page title from it
+     *
+     * @param $analytics
+     */
+    private function setTitleFromSeomatic(IAnalytics $analytics)
+    {
+        if (self::$seomaticPlugin && Seomatic::$settings->renderEnabled) {
+            $titleTag = Seomatic::$plugin->title->get('title');
+            if ($titleTag) {
+                $titleArray = $titleTag->renderAttributes();
+                if (!empty($titleArray['title'])) {
+                    $analytics->setDocumentTitle($titleArray['title']);
+                }
+            }
+        }
     }
 }

@@ -1,0 +1,14 @@
+{% extends "_layouts/cp" %}
+
+{% set welcomeJs = "welcome" %}
+{% set welcomeLegacyJs = "welcome-legacy" %}
+
+{% from "instant-analytics/_includes/macros.twig" import includeJsModule %}
+{% from "instant-analytics/_includes/macros.twig" import includeCssModule %}
+
+{% block head %}
+    {{ parent() }}
+    {{ includeCssModule("instantanalytics") }}
+    {% include "instant-analytics/_includes/safari-nomodule-fix.twig" %}
+    {{ includeJsModule("instantanalytics") }}
+{% endblock %}
