@@ -4,6 +4,7 @@
 ### Added
 * Added welcome screen after install
 * Automatically set the `documentTitle` from the SEOmatic `<title>` tag, if SEOmatic is installed
+* Automatically set the `affiliation` from the SEOmatic site name, if SEOmatic is installed
 
 ### Changed
 * Lots of code cleanup
