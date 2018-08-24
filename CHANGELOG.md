@@ -3,8 +3,10 @@
 ## 1.0.7 - 2018.08.24
 ### Added
 * Added welcome screen after install
+* Automatically set the `documentTitle` from the SEOmatic `<title>` tag, if SEOmatic is installed
 
 ### Changed
+* Lots of code cleanup
 * Moved to a modern webpack build config for the AdminCP
 * Added install confetti
 

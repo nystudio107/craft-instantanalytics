@@ -6,7 +6,7 @@ Instant Analytics brings full Google Analytics support to your Twig templates
 
 ![Screenshot](resources/img/plugin-logo.png)
 
-**Note**: _This plugin will cost $59.00 once Craft 3 GA is released._
+**Note**: _The license fee for this plugin is $59.00 via the Craft Plugin Store._
 
 Related: [Instant Analytics for Craft 2.x](https://github.com/nystudio107/instantanalytics)
 
@@ -14,7 +14,7 @@ Related: [Instant Analytics for Craft 2.x](https://github.com/nystudio107/instan
 
 ## Requirements
 
-This plugin requires Craft CMS 3.0.0-RC1 or later.
+This plugin requires Craft CMS 3.0.0 or later.
 
 ## Installation
 
