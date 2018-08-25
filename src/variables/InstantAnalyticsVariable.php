@@ -57,8 +57,10 @@ class InstantAnalyticsVariable
 
     /**
      * Return an Analytics object
+     *
+     * @return null|IAnalytics
      */
-    public function analytics(): IAnalytics
+    public function analytics()
     {
         return InstantAnalytics::$plugin->ia->analytics();
     }

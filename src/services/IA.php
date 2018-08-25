@@ -47,9 +47,9 @@ class IA extends Component
      *
      * @param $title
      *
-     * @return IAnalytics
+     * @return null|IAnalytics
      */
-    public function getGlobals($title): IAnalytics
+    public function getGlobals($title)
     {
         if ($this->cachedAnalytics) {
             $analytics = $this->cachedAnalytics;
@@ -138,9 +138,9 @@ class IA extends Component
     /**
      * getAnalyticsObject() return an analytics object
      *
-     * @return IAnalytics object
+     * @return null|IAnalytics object
      */
-    public function analytics(): IAnalytics
+    public function analytics()
     {
         $analytics = $this->getAnalyticsObj();
         Craft::info(
@@ -398,9 +398,9 @@ class IA extends Component
     /**
      * Get the Google Analytics object, primed with the default values
      *
-     * @return IAnalytics object
+     * @return null|IAnalytics object
      */
-    private function getAnalyticsObj(): IAnalytics
+    private function getAnalyticsObj()
     {
         $analytics = null;
         $settings = InstantAnalytics::$plugin->getSettings();
