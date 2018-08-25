@@ -1,5 +1,9 @@
 # Instant Analytics Changelog
 
+## 1.0.8 - 2018.08.24
+### Changed
+* Fixed an issue where manually using the `{% hook isSendPageView %}` would throw an error
+
 ## 1.0.7 - 2018.08.24
 ### Added
 * Added welcome screen after install
