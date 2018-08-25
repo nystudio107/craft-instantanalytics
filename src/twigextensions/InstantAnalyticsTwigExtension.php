@@ -117,6 +117,8 @@ class InstantAnalyticsTwigExtension extends \Twig_Extension implements \Twig_Ext
 
     /**
      * Return an Analytics object
+     *
+     * @return null|IAnalytics
      */
     public function analytics()
     {
