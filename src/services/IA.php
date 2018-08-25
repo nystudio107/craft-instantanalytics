@@ -462,8 +462,10 @@ class IA extends Component
 
                 // If SEOmatic is installed, set the affiliation as well
                 if (InstantAnalytics::$seomaticPlugin && Seomatic::$settings->renderEnabled) {
-                    $siteName = Seomatic::$plugin->metaContainers->metaSiteVars->siteName;
-                    $analytics->setAffiliation($siteName);
+                    if (Seomatic::$plugin->metaContainers->metaSiteVars !== null) {
+                        $siteName = Seomatic::$plugin->metaContainers->metaSiteVars->siteName;
+                        $analytics->setAffiliation($siteName);
+                    }
                 }
             }
         }
