@@ -316,6 +316,10 @@ class InstantAnalytics extends Plugin
             self::$pageViewSent = true;
             /** @var IAnalytics $analytics */
             $analytics = InstantAnalytics::$plugin->ia->getGlobals(self::$currentTemplate);
+            // Bail if we have no analytics object
+            if ($analytics === null) {
+                return;
+            }
             // If SEOmatic is installed, set the page title from it
             $this->setTitleFromSeomatic($analytics);
             // Send the page view
