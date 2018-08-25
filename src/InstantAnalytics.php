@@ -150,9 +150,22 @@ class InstantAnalytics extends Plugin
         return '';
     }
 
+    /**
+     * Handle the `{% hook isSendPageView %}`
+     *
+     * @param array &$context
+     *
+     * @return string|null
+     */
+    public function iaSendPageView(/** @noinspection PhpUnusedParameterInspection */ array &$context)
+    {
+        $this->sendPageView();
+
+        return '';
+    }
+
     // Protected Methods
     // =========================================================================
-
 
     /**
      * Add in our Craft components
@@ -328,20 +341,6 @@ class InstantAnalytics extends Plugin
                 );
             }
         }
-    }
-
-    /**
-     * Handle the `{% hook isSendPageView %}`
-     *
-     * @param array &$context
-     *
-     * @return string|null
-     */
-    private function iaSendPageView(/** @noinspection PhpUnusedParameterInspection */ array &$context)
-    {
-        $this->sendPageView();
-
-        return '';
     }
 
     /**
