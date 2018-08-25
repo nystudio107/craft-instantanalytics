@@ -3,6 +3,7 @@
 ## 1.0.9 - 2018.08.25
 ### Changed
 * Fixed an issue where the return type-hinting was incorrect
+* Handle cases where a `null` IAnalytics object is returned
 
 ## 1.0.8 - 2018.08.24
 ### Changed
