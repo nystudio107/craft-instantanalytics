@@ -258,17 +258,6 @@ class InstantAnalytics extends Plugin
                 }
             }
         );
-        // Register our site routes
-        Event::on(
-            UrlManager::class,
-            UrlManager::EVENT_REGISTER_SITE_URL_RULES,
-            function (RegisterUrlRulesEvent $event) {
-                $event->rules['instantanalytics/pageViewTrack/<filename:[-\w\.*]+>?'] =
-                    'instant-analytics/track/track-page-view-url';
-                $event->rules['instantanalytics/eventTrack/<filename:[-\w\.*]+>?'] =
-                    'instant-analytics/track/track-event-url';
-            }
-        );
         // Commerce-specific hooks
         if (self::$commercePlugin) {
             // TODO: pending Commerce for Craft 3
@@ -290,7 +279,11 @@ class InstantAnalytics extends Plugin
     protected function customFrontendRoutes(): array
     {
         return [
-            // Make webpack async bundle loading work out of published AssetBundles
+            'instantanalytics/pageViewTrack/<filename:[-\w\.*]+>?' =>
+                'instant-analytics/track/track-page-view-url',
+            'instantanalytics/eventTrack/<filename:[-\w\.*]+>?' =>
+                'instant-analytics/track/track-event-url',
+        // Make webpack async bundle loading work out of published AssetBundles
             '/cpresources/instant-analytics/<resourceType:{handle}>/<fileName>' => 'instant-analytics/cp-nav/resource',
         ];
     }
