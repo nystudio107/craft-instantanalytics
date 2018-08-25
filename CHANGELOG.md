@@ -1,5 +1,9 @@
 # Instant Analytics Changelog
 
+## 1.0.9 - 2018.08.25
+### Changed
+* Fixed an issue where the return type-hinting was incorrect
+
 ## 1.0.8 - 2018.08.24
 ### Changed
 * Fixed an issue where manually using the `{% hook isSendPageView %}` would throw an error
