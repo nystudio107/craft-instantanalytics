@@ -1,5 +1,9 @@
 # Instant Analytics Changelog
 
+## 1.0.10 - 2018.08.25
+### Changed
+* Fixed an issue integrating with SEOmatic
+
 ## 1.0.9 - 2018.08.25
 ### Changed
 * Fixed an issue where the return type-hinting was incorrect
