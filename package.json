@@ -5,8 +5,7 @@
     "copyright": "nystudio107",
     "main": "index.js",
     "scripts": {
-        "dev": "webpack --config webpack.dev.js --progress --hide-modules",
-        "watch": "webpack --config webpack.dev.js --progress --watch --hide-modules",
+        "dev": "webpack-dev-server --config webpack.dev.js --progress --hide-modules",
         "build": "webpack --config webpack.prod.js"
     },
     "repository": {
@@ -28,6 +27,7 @@
         "dist": {
             "base": "./src/assetbundles/instantanalytics/dist/",
             "public": "/cpresources/instant-analytics/",
+            "devPublic": "http://192.168.10.10:8080",
             "clean": [
                 "./js",
                 "./css"
@@ -90,8 +90,8 @@
     },
     "urls": {},
     "vars": {
-        "cssName": "instantanalytics.css",
-        "jsName": "instantanalytics.js"
+        "cssName": "styles",
+        "jsName": "instantanalytics"
     },
     "devDependencies": {
         "@babel/core": "^7.1.0",
