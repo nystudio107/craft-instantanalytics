@@ -1,14 +1,14 @@
 {
-  "vendors~confetti~vue.js": "/cpresources/instant-analytics/js/vendors~confetti~vue-legacy.1e150b9a3825a680b683.js",
-  "vendors~confetti~vue.js.map": "/cpresources/instant-analytics/js/vendors~confetti~vue-legacy.1e150b9a3825a680b683.js.map",
-  "instantanalytics.css": "/cpresources/instant-analytics/css/instantanalytics.53901e4e3cd722c7660a.css",
-  "instantanalytics.js": "/cpresources/instant-analytics/js/instantanalytics-legacy.53901e4e3cd722c7660a.js",
-  "instantanalytics.js.map": "/cpresources/instant-analytics/js/instantanalytics-legacy.53901e4e3cd722c7660a.js.map",
-  "welcome.js": "/cpresources/instant-analytics/js/welcome-legacy.b008b31d41118cfa9baa.js",
-  "welcome.js.map": "/cpresources/instant-analytics/js/welcome-legacy.b008b31d41118cfa9baa.js.map",
-  "confetti.js": "/cpresources/instant-analytics/js/confetti-legacy.45da218dafd52d729a2e.js",
-  "confetti.js.map": "/cpresources/instant-analytics/js/confetti-legacy.45da218dafd52d729a2e.js.map",
-  "css/instantanalytics.53901e4e3cd722c7660a.css.map": "/cpresources/instant-analytics/css/instantanalytics.53901e4e3cd722c7660a.css.map",
-  "../../../templates/_includes/include-legacy-module.twig": "/cpresources/instant-analytics/../../../templates/_includes/include-legacy-module.twig",
-  "../../../templates/_includes/include-css-module.twig": "/cpresources/instant-analytics/../../../templates/_includes/include-css-module.twig"
+  "styles.css": "/cpresources/instant-analytics/css/styles.f4eb7fbc6d16958d6d70.css",
+  "styles.js": "/cpresources/instant-analytics/js/styles-legacy.f4eb7fbc6d16958d6d70.js",
+  "styles.js.map": "/cpresources/instant-analytics/js/styles-legacy.f4eb7fbc6d16958d6d70.js.map",
+  "vendors~confetti~vue.js": "/cpresources/instant-analytics/js/vendors~confetti~vue-legacy.0d9acfb2213ba26e8362.js",
+  "vendors~confetti~vue.js.map": "/cpresources/instant-analytics/js/vendors~confetti~vue-legacy.0d9acfb2213ba26e8362.js.map",
+  "instantanalytics.js": "/cpresources/instant-analytics/js/instantanalytics-legacy.1f29aae097667c10e156.js",
+  "instantanalytics.js.map": "/cpresources/instant-analytics/js/instantanalytics-legacy.1f29aae097667c10e156.js.map",
+  "welcome.js": "/cpresources/instant-analytics/js/welcome-legacy.fd7416de8652a2f9e071.js",
+  "welcome.js.map": "/cpresources/instant-analytics/js/welcome-legacy.fd7416de8652a2f9e071.js.map",
+  "confetti.js": "/cpresources/instant-analytics/js/confetti-legacy.5d948a89718ce1513bbf.js",
+  "confetti.js.map": "/cpresources/instant-analytics/js/confetti-legacy.5d948a89718ce1513bbf.js.map",
+  "css/styles.f4eb7fbc6d16958d6d70.css.map": "/cpresources/instant-analytics/css/styles.f4eb7fbc6d16958d6d70.css.map"
 }
