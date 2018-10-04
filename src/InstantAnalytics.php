@@ -284,7 +284,7 @@ class InstantAnalytics extends Plugin
             'instantanalytics/eventTrack/<filename:[-\w\.*]+>?' =>
                 'instant-analytics/track/track-event-url',
         // Make webpack async bundle loading work out of published AssetBundles
-            '/cpresources/instant-analytics/<resourceType:{handle}>/<fileName>' => 'instant-analytics/cp-nav/resource',
+            '/cpresources/instant-analytics/<resourceType:{handle}>/<fileName>' => 'instant-analytics/manifest/resource',
         ];
     }
 
