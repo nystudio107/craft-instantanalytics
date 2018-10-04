@@ -2,7 +2,7 @@
 
 {% block head %}
     {{ parent() }}
-    {{ craft.retour.includeCssModule("styles.css") }}
-    {{ craft.retour.includeSafariNomoduleFix() }}
-    {{ craft.retour.includeJsModule("instantanalytics.js", true) }}
+    {{ craft.instantAnalytics.includeCssModule("styles.css") }}
+    {{ craft.instantAnalytics.includeSafariNomoduleFix() }}
+    {{ craft.instantAnalytics.includeJsModule("instantanalytics.js", true) }}
 {% endblock %}
