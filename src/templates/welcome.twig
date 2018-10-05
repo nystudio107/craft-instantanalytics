@@ -1,8 +1,6 @@
 {# @var craft \craft\web\twig\variables\CraftVariable #}
 {% extends 'instant-analytics/_layouts/instantanalytics-cp.twig' %}
 
-{% from "instant-analytics/_includes/macros.twig" import includeJsModule %}
-
 {% set title = 'Welcome to Instant Analytics!' %}
 
 {% set docsUrl = "https://github.com/nystudio107/craft-instantanalytics/blob/v1/README.md" %}
@@ -40,5 +38,5 @@
     </div>
     {# include our JavaScript modules #}
     {{ parent() }}
-    {{ includeJsModule("welcome") }}
+    {{ craft.instantAnalytics.includeJsModule("welcome.js", true) }}
 {% endblock %}

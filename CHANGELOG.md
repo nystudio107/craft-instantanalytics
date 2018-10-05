@@ -1,5 +1,9 @@
 # Instant Analytics Changelog
 
+## 1.0.11 - 2018.10.05
+### Changed
+* Updated build process
+
 ## 1.0.10 - 2018.08.25
 ### Changed
 * Fixed an issue integrating with SEOmatic

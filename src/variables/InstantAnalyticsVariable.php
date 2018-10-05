@@ -22,7 +22,7 @@ use craft\helpers\Template;
  * @package   InstantAnalytics
  * @since     1.0.0
  */
-class InstantAnalyticsVariable
+class InstantAnalyticsVariable extends ManifestVariable
 {
     // Public Methods
     // =========================================================================
