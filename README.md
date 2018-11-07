@@ -4,7 +4,7 @@
 
 Instant Analytics brings full Google Analytics support to your Twig templates
 
-![Screenshot](resources/img/plugin-logo.png)
+![Screenshot](resources/img/plugin-banner.jpg)
 
 **Note**: _The license fee for this plugin is $59.00 via the Craft Plugin Store._
 
