@@ -16,8 +16,11 @@
 
 {% do view.registerAssetBundle("nystudio107\\instantanalytics\\assetbundles\\instantanalytics\\InstantAnalyticsAsset") %}
 
-{% set commerce = craft.app.plugins.getPlugin('Commerce', false) %}
-{% set commerceEnabled = (commerce and commerce.isEnabled() and commerce.isInstalled()) %}
+{% set commerce = craft.app.plugins.getPlugin('commerce', false) %}
+{% set commerceInstalled = craft.app.plugins.isPluginInstalled('commerce') %}
+{% set commerceEnabled = craft.app.plugins.isPluginEnabled('commerce') %}
+
+{% set commerceEnabled = (commerce and commerceEnabled and commerceInstalled) %}
 
 {{ forms.textField({
     label: 'Google Analytics Tracking ID:',
