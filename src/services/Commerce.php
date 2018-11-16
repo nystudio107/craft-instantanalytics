@@ -154,7 +154,9 @@ class Commerce extends Component
                 if (isset($lineItem->purchasable->product)) {
                     $productVariant = $lineItem->purchasable->product;
 
-                    if (!$lineItem->purchasable->product->type->hasVariants) {
+                    $hasVariants = $lineItem->purchasable->product->type->hasVariants ?? null;
+
+                    if (!$hasVariants) {
                         //No variants (i.e. default variant)
                         $productData['name'] = $lineItem->purchasable->title;
                         $productData['category'] = $lineItem->purchasable->product->type['name'];
