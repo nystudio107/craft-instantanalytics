@@ -14,9 +14,9 @@ use nystudio107\instantanalytics\InstantAnalytics;
 
 use Craft;
 use craft\base\Component;
-use craft\elements\Category;
-use craft\elements\MatrixBlock;
-use craft\elements\Tag;
+use craft\elements\db\CategoryQuery;
+use craft\elements\db\MatrixBlockQuery;
+use craft\elements\db\TagQuery;
 use craft\helpers\ArrayHelper;
 
 use craft\commerce\Plugin as CommercePlugin;
@@ -392,53 +392,47 @@ class Commerce extends Component
                 $srcField = $productVariant[$fieldHandle];
 
                 if ($srcField == null) {
-                    $srcField = $productVariant->product->content->attributes[$fieldHandle];
+                    $srcField = $productVariant->product->$fieldHandle;
                 }
 
-                if (isset($srcField->elementType)) {
-                    switch ($srcField->elementType->classHandle) {
-                        case MatrixBlock::class:
-                            break;
-                        case Tag::class:
-                            break;
-                        case Category::class: {
-                            $cats = [];
+                switch (get_class($srcField)) {
+                    case MatrixBlockQuery::class:
+                        break;
+                    case TagQuery::class:
+                        break;
+                    case CategoryQuery::class: {
+                        $cats = [];
 
-                            if ($isBrand) {
-                                // Because we can only have one brand, we'll get
-                                // the very last category. This means if our
-                                // brand is a sub-category, we'll get the child
-                                // not the parent.
-                                /** @var CategoryModel $cat */
-                                foreach ($srcField as $cat) {
-                                    $cats = [$cat->getTitle()];
-                                }
-                            } else {
-                                // For every category, show its ancestors
-                                // delimited by a slash.
-                                /** @var CategoryModel $cat */
-                                foreach ($srcField as $cat) {
-                                    $name = $cat->getTitle();
-
-                                    while ($cat = $cat->getParent()) {
-                                        $name = $cat->getTitle() . "/" . $name;
-                                    }
-
-                                    $cats[] = $name;
-                                }
+                        if ($isBrand) {
+                            // Because we can only have one brand, we'll get
+                            // the very last category. This means if our
+                            // brand is a sub-category, we'll get the child
+                            // not the parent.
+                            foreach ($srcField->all() as $cat) {
+                                $cats = [$cat->title];
                             }
+                        } else {
+                            // For every category, show its ancestors
+                            // delimited by a slash.
+                            foreach ($srcField->all() as $cat) {
+                                $name = $cat->title;
 
-                            // Join separate categories with a pipe.
-                            $result = implode("|", $cats);
-                            break;
+                                while ($cat = $cat->parent) {
+                                    $name = $cat->title . "/" . $name;
+                                }
+
+                                $cats[] = $name;
+                            }
                         }
 
-                        default:
-                            $result = strip_tags($srcField);
-                            break;
+                        // Join separate categories with a pipe.
+                        $result = implode("|", $cats);
+                        break;
                     }
-                } else {
-                    $result = strip_tags($srcField);
+
+                    default:
+                        $result = strip_tags($srcField);
+                        break;
                 }
             }
         }
