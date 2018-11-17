@@ -1,7 +1,3 @@
 // Import our CSS
 import styles from '../css/app.pcss';
-
-const main = async () => {
-};
-
-main().then({});
+import icon from '../img/InstantAnalytics-icon.svg';
