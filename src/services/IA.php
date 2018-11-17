@@ -34,6 +34,11 @@ use yii\base\Exception;
  */
 class IA extends Component
 {
+    // Constants
+    // =========================================================================
+
+    const DEFAULT_USER_AGENT = "User-Agent:Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13\r\n";
+
     // Public Methods
     // =========================================================================
 
@@ -366,11 +371,7 @@ class IA extends Component
         // We want to send just a path to GA for page views
         if (UrlHelper::isAbsoluteUrl($url)) {
             $urlParts = parse_url($url);
-            if (isset($urlParts['path'])) {
-                $url = $urlParts['path'];
-            } else {
-                $url = '/';
-            }
+            $url = $urlParts['path'] ?? '/';
             if (isset($urlParts['query'])) {
                 $url = $url.'?'.$urlParts['query'];
             }
@@ -420,11 +421,11 @@ class IA extends Component
                     }
                 }
                 $userAgent = $request->getUserAgent();
-                if (empty($userAgent)) {
-                    $userAgent = "User-Agent:Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13\r\n";
+                if ($userAgent === null) {
+                    $userAgent = self::DEFAULT_USER_AGENT;
                 }
                 $referrer = $request->getReferrer();
-                if (empty($referrer)) {
+                if ($referrer === null) {
                     $referrer = '';
                 }
                 $analytics->setProtocolVersion('1')
@@ -461,11 +462,10 @@ class IA extends Component
                 }
 
                 // If SEOmatic is installed, set the affiliation as well
-                if (InstantAnalytics::$seomaticPlugin && Seomatic::$settings->renderEnabled) {
-                    if (Seomatic::$plugin->metaContainers->metaSiteVars !== null) {
-                        $siteName = Seomatic::$plugin->metaContainers->metaSiteVars->siteName;
-                        $analytics->setAffiliation($siteName);
-                    }
+                if (InstantAnalytics::$seomaticPlugin && Seomatic::$settings->renderEnabled
+                    && Seomatic::$plugin->metaContainers->metaSiteVars !== null) {
+                    $siteName = Seomatic::$plugin->metaContainers->metaSiteVars->siteName;
+                    $analytics->setAffiliation($siteName);
                 }
             }
         }
@@ -481,7 +481,7 @@ class IA extends Component
      *
      * @return string
      */
-    private function getGclid()
+    private function getGclid(): string
     {
         $gclid = '';
         if (isset($_GET['gclid'])) {
@@ -500,20 +500,18 @@ class IA extends Component
      *
      * @return string the cid
      */
-    private function gaParseCookie()
+    private function gaParseCookie(): string
     {
         $cid = '';
         if (isset($_COOKIE['_ga'])) {
-            $parts = preg_split('[\.]', $_COOKIE["_ga"], 4);
+            $parts = preg_split('[\.]', $_COOKIE['_ga'], 4);
             if ($parts !== false) {
                 $cid = implode('.', \array_slice($parts, 2));
             }
+        } elseif (isset($_COOKIE['_ia']) && $_COOKIE['_ia'] !== '') {
+            $cid = $_COOKIE['_ia'];
         } else {
-            if (isset($_COOKIE['_ia']) && $_COOKIE['_ia'] !== '') {
-                $cid = $_COOKIE['_ia'];
-            } else {
-                $cid = $this->gaGenUUID();
-            }
+            $cid = $this->gaGenUUID();
         }
         setcookie('_ia', $cid, strtotime('+2 years'), '/'); // Two years
 
