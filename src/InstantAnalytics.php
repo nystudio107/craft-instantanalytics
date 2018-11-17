@@ -33,6 +33,8 @@ use craft\web\View;
 
 use craft\commerce\Plugin as Commerce;
 use craft\commerce\elements\Order;
+use craft\commerce\events\OrderStatusEvent;
+use craft\commerce\events\LineItemEvent;
 
 use nystudio107\seomatic\Seomatic;
 
@@ -267,31 +269,29 @@ class InstantAnalytics extends Plugin
             Event::on(Order::class, Order::EVENT_AFTER_COMPLETE_ORDER, function (Event $e) {
                 $order = $e->sender;
                 $settings = InstantAnalytics::$plugin->getSettings();
-
                 if ($settings->autoSendPurchaseComplete) {
                     $this->commerce->orderComplete($order);
                 }
             });
 
-            Event::on(Order::class, Order::EVENT_AFTER_ADD_LINE_ITEM, function (Event $e) {
+            Event::on(Order::class, Order::EVENT_AFTER_ADD_LINE_ITEM, function (LineItemEvent $e) {
                 $lineItem = $e->lineItem;
-
                 $settings = InstantAnalytics::$plugin->getSettings();
-
                 if ($settings->autoSendAddToCart) {
                     $this->commerce->addToCart($lineItem->order, $lineItem);
                 }
             });
 
-            Event::on(Order::class, Order::EVENT_AFTER_REMOVE_LINE_ITEM, function (Event $e) {
-                $lineItem = $e->lineItem;
-
-                $settings = InstantAnalytics::$plugin->getSettings();
-
-                if ($settings->autoSendRemoveFromCart) {
-                    $this->commerce->removeFromCart($lineItem->order, $lineItem);
-                }
-            });
+            // Check to make sure Order::EVENT_AFTER_REMOVE_LINE_ITEM is defined
+            if (\defined('Order::EVENT_AFTER_REMOVE_LINE_ITEM')) {
+                Event::on(Order::class, Order::EVENT_AFTER_REMOVE_LINE_ITEM, function (LineItemEvent $e) {
+                    $lineItem = $e->lineItem;
+                    $settings = InstantAnalytics::$plugin->getSettings();
+                    if ($settings->autoSendRemoveFromCart) {
+                        $this->commerce->removeFromCart($lineItem->order, $lineItem);
+                    }
+                });
+            }
         }
     }
 
