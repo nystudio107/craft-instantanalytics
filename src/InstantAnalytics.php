@@ -23,11 +23,19 @@ use craft\base\Plugin;
 use craft\events\PluginEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\events\TemplateEvent;
+use craft\fields\Categories;
+use craft\fields\PlainText;
+use craft\fields\RichText;
+use craft\fields\Redactor;
+use craft\fields\Tags;
 use craft\helpers\UrlHelper;
 use craft\services\Plugins;
 use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
 use craft\web\View;
+
+use craft\commerce\Plugin as Commerce;
+use craft\commerce\elements\Order;
 
 use nystudio107\seomatic\Seomatic;
 
@@ -118,18 +126,17 @@ class InstantAnalytics extends Plugin
         $commerceFields = [];
 
         if (self::$commercePlugin) {
-            /**
-             * TODO: pending Commerce for Craft 3
-             * $productTypes = craft()->commerce_productTypes->getAllProductTypes();
-             * foreach ($productTypes as $productType) {
-             * $productFields = $this->_getPullFieldsFromLayoutId($productType->fieldLayoutId);
-             * $commerceFields = array_merge($commerceFields, $productFields);
-             * if ($productType->hasVariants) {
-             * $variantFields = $this->_getPullFieldsFromLayoutId($productType->variantFieldLayoutId);
-             * $commerceFields = array_merge($commerceFields, $variantFields);
-             * }
-             * }
-             */
+             $productTypes = Commerce::getInstance()->getProductTypes()->getAllProductTypes();
+
+             foreach ($productTypes as $productType) {
+                 $productFields = $this->_getPullFieldsFromLayoutId($productType->fieldLayoutId);
+                 $commerceFields = array_merge($commerceFields, $productFields);
+                 
+                 if ($productType->hasVariants) {
+                     $variantFields = $this->_getPullFieldsFromLayoutId($productType->variantFieldLayoutId);
+                     $commerceFields = array_merge($commerceFields, $variantFields);
+                 }
+             }
         }
 
         // Rend the settings template
@@ -260,7 +267,35 @@ class InstantAnalytics extends Plugin
         );
         // Commerce-specific hooks
         if (self::$commercePlugin) {
-            // TODO: pending Commerce for Craft 3
+
+            Event::on(Order::class, Order::EVENT_AFTER_COMPLETE_ORDER, function(Event $e) {
+                $order = $e->sender;
+                $settings = InstantAnalytics::$plugin->getSettings();
+
+                if ($settings->autoSendPurchaseComplete) {
+                    $this->commerce->orderComplete($order);
+                }
+            });
+
+            Event::on(Order::class, Order::EVENT_AFTER_ADD_LINE_ITEM, function(Event $e) {
+                $lineItem = $e->lineItem;
+
+                $settings = InstantAnalytics::$plugin->getSettings();
+                
+                if ($settings->autoSendAddToCart) {
+                    $this->commerce->addToCart($lineItem->order, $lineItem);
+                }
+            });
+
+            Event::on(Order::class, Order::EVENT_AFTER_REMOVE_LINE_ITEM, function(Event $e) {
+                $lineItem = $e->lineItem;
+
+                $settings = InstantAnalytics::$plugin->getSettings();
+                
+                if ($settings->autoSendRemoveFromCart) {
+                    $this->commerce->removeFromCart($lineItem->order, $lineItem);
+                }
+            });
         }
     }
 
@@ -356,5 +391,30 @@ class InstantAnalytics extends Plugin
                 }
             }
         }
+    }
+
+    /**
+     * @return array
+     */
+    private function _getPullFieldsFromLayoutId($layoutId)
+    {
+        $result = ['' => "none"];
+        $fieldLayout = Craft::$app->getFields()->getLayoutById($layoutId);
+        $fieldLayoutFields = $fieldLayout->getFields();
+        
+        foreach ($fieldLayoutFields as $field) {            
+            switch (get_class($field)) {
+                case PlainText::class:
+                case RichText::class:
+                case Redactor::class:
+                case Categories::class:
+                    $result[$field->handle] = $field->name;
+                    break;
+                case Tags::class:
+                    break;
+            }
+        }
+
+        return $result;
     }
 }

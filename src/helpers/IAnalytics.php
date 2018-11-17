@@ -69,8 +69,6 @@ class IAnalytics extends Analytics
 
         if (InstantAnalytics::$commercePlugin) {
             if ($productVariant) {
-                /*
-                 * TODO: pending Commerce for Craft 3
                 InstantAnalytics::$plugin->commerce->addCommerceProductImpression(
                     $this,
                     $productVariant,
@@ -78,7 +76,6 @@ class IAnalytics extends Analytics
                     $listName,
                     $listIndex
                 );
-                */
             }
         } else {
             Craft::warning(
@@ -100,10 +97,7 @@ class IAnalytics extends Analytics
     {
         if (InstantAnalytics::$commercePlugin) {
             if ($productVariant) {
-                /**
-                 * TODO: pending Commerce for Craft 3
-                 * InstantAnalytics::$plugin->commerce->addCommerceProductDetailView($this, $productVariant);
-                 */
+                 InstantAnalytics::$plugin->commerce->addCommerceProductDetailView($this, $productVariant);
             }
         } else {
             Craft::warning(
@@ -127,10 +121,7 @@ class IAnalytics extends Analytics
     {
         if (InstantAnalytics::$commercePlugin) {
             if ($orderModel) {
-                /**
-                 * TODO: pending Commerce for Craft 3
-                 * InstantAnalytics::$plugin->commerce->addCommerceCheckoutStep($this, $orderModel, $step, $option);
-                 */
+                 InstantAnalytics::$plugin->commerce->addCommerceCheckoutStep($this, $orderModel, $step, $option);
             }
         } else {
             Craft::warning(
