@@ -40,7 +40,7 @@ class Commerce extends Component
     /**
      * Send analytics information for the completed order
      *
-     * @param Order  $order the Product or Variant
+     * @param Order $order the Product or Variant
      */
     public function orderComplete($order = null)
     {
@@ -51,7 +51,7 @@ class Commerce extends Component
                 $order->number,
                 $order->totalPrice
             );
-            
+
             if ($analytics) {
                 $this->addCommerceOrderToAnalytics($analytics, $order);
                 // Don't forget to set the product action, in this case to PURCHASE
@@ -61,7 +61,7 @@ class Commerce extends Component
                 Craft::info(Craft::t(
                     'instant-analytics',
                     'orderComplete for `Commerce` - `Purchase` - `{number}` - `{price}`',
-                    [ 'number' => $order->number, 'price' => $order->totalPrice ]
+                    ['number' => $order->number, 'price' => $order->totalPrice]
                 ), __METHOD__);
             }
         }
@@ -69,16 +69,19 @@ class Commerce extends Component
 
     /**
      * Send analytics information for the item added to the cart
-     * @param Order  $order the Product or Variant
-     * @param LineItem  $lineItem the line item that was added
+     *
+     * @param Order    $order    the Product or Variant
+     * @param LineItem $lineItem the line item that was added
      */
-    public function addToCart(/** @noinspection PhpUnusedParameterInspection */ $order = null, $lineItem = null)
-    {
+    public function addToCart(
+        /** @noinspection PhpUnusedParameterInspection */
+        $order = null, $lineItem = null
+    ) {
         if ($lineItem) {
             $title = $lineItem->purchasable->title;
             $quantity = $lineItem->qty;
             $analytics = InstantAnalytics::$plugin->ia->eventAnalytics('Commerce', 'Add to Cart', $title, $quantity);
-            
+
             if ($analytics) {
                 $title = $this->addProductDataFromLineItem($analytics, $lineItem);
                 $analytics->setEventLabel($title);
@@ -89,7 +92,7 @@ class Commerce extends Component
                 Craft::info(Craft::t(
                     'instant-analytics',
                     'addToCart for `Commerce` - `Add to Cart` - `{title}` - `{quantity}`',
-                    [ 'title' => $title, 'quantity' => $quantity ]
+                    ['title' => $title, 'quantity' => $quantity]
                 ), __METHOD__);
             }
         }
@@ -101,8 +104,10 @@ class Commerce extends Component
      * @param Order|null    $order
      * @param LineItem|null $lineItem
      */
-    public function removeFromCart(/** @noinspection PhpUnusedParameterInspection */ $order = null, $lineItem = null)
-    {
+    public function removeFromCart(
+        /** @noinspection PhpUnusedParameterInspection */
+        $order = null, $lineItem = null
+    ) {
         if ($lineItem) {
             $title = $lineItem->purchasable->title;
             $quantity = $lineItem->qty;
@@ -112,7 +117,7 @@ class Commerce extends Component
                 $title,
                 $quantity
             );
-            
+
             if ($analytics) {
                 $title = $this->addProductDataFromLineItem($analytics, $lineItem);
                 $analytics->setEventLabel($title);
@@ -123,7 +128,7 @@ class Commerce extends Component
                 Craft::info(Craft::t(
                     'instant-analytics',
                     'removeFromCart for `Commerce` - `Remove to Cart` - `{title}` - `{quantity}`',
-                    [ 'title' => $title, 'quantity' => $quantity ]
+                    ['title' => $title, 'quantity' => $quantity]
                 ), __METHOD__);
             }
         }
@@ -134,7 +139,7 @@ class Commerce extends Component
      * Add a Craft Commerce OrderModel to an Analytics object
      *
      * @param IAnalytics $analytics the Analytics object
-     * @param Order  $order the Product or Variant
+     * @param Order      $order     the Product or Variant
      */
     public function addCommerceOrderToAnalytics($analytics = null, $order = null)
     {
@@ -144,7 +149,7 @@ class Commerce extends Component
                 ->setRevenue($order->totalPrice)
                 ->setTax($order->getAdjustmentsTotalByType('tax', true))
                 ->setShipping($order->getAdjustmentsTotalByType('shipping', true));
-            
+
             // Coupon code?
             if ($order->couponCode) {
                 $analytics->setCouponCode($order->couponCode);
@@ -211,18 +216,19 @@ class Commerce extends Component
                 $productData['list'] = $listName;
             }
             // Add in any custom categories/brands that might be set
-            $settings = InstantAnalytics::$plugin->getSettings();
-            if ($settings && $product) {
-                if (isset($settings['productCategoryField']) && !empty($settings['productCategoryField'])) {
+            if (InstantAnalytics::$settings && $product) {
+                if (isset(InstantAnalytics::$settings['productCategoryField'])
+                    && !empty(InstantAnalytics::$settings['productCategoryField'])) {
                     $productData['category'] = $this->pullDataFromField(
                         $product,
-                        $settings['productCategoryField']
+                        InstantAnalytics::$settings['productCategoryField']
                     );
                 }
-                if (isset($settings['productBrandField']) && !empty($settings['productBrandField'])) {
+                if (isset(InstantAnalytics::$settings['productBrandField'])
+                    && !empty(InstantAnalytics::$settings['productBrandField'])) {
                     $productData['brand'] = $this->pullDataFromField(
                         $product,
-                        $settings['productBrandField']
+                        InstantAnalytics::$settings['productBrandField']
                     );
                 }
             }
@@ -239,7 +245,8 @@ class Commerce extends Component
      *
      * @param IAnalytics      $analytics      the Analytics object
      * @param Product|Variant $productVariant the Product or Variant
-     * @param int             $index          Where the product appears in the list
+     * @param int             $index          Where the product appears in the
+     *                                        list
      * @param string          $listName
      * @param int             $listIndex
      *
@@ -272,7 +279,7 @@ class Commerce extends Component
             Craft::info(Craft::t(
                 'instant-analytics',
                 'addCommerceProductImpression for `{sku}` - `{name}` - `{name}` - `{index}`',
-                [ 'sku' => $productData['sku'], 'name' => $productData['name'], 'index' => $index ]
+                ['sku' => $productData['sku'], 'name' => $productData['name'], 'index' => $index]
             ), __METHOD__);
         }
     }
@@ -299,7 +306,7 @@ class Commerce extends Component
             Craft::info(Craft::t(
                 'instant-analytics',
                 'addCommerceProductDetailView for `{sku}` - `{name} - `{name}`',
-                [ 'sku' => $productData['sku'], 'name' => $productData['name'] ]
+                ['sku' => $productData['sku'], 'name' => $productData['name']]
             ), __METHOD__);
         }
     }
@@ -325,7 +332,7 @@ class Commerce extends Component
             }
 
             $analytics->setCheckoutStep($step);
-            
+
             if ($option) {
                 $analytics->setCheckoutStepOption($option);
             }
@@ -336,7 +343,7 @@ class Commerce extends Component
             Craft::info(Craft::t(
                 'instant-analytics',
                 'addCommerceCheckoutStep step: `{step}` with option: `{option}`',
-                [ 'step' => $step, 'option' => $option ]
+                ['step' => $step, 'option' => $option]
             ), __METHOD__);
         }
     }
@@ -352,7 +359,7 @@ class Commerce extends Component
     public function getProductDataFromProduct($productVariant = null): array
     {
         $result = [];
-        
+
         // Extract the variant if it's a Product or Purchasable
         if ($productVariant && \is_object($productVariant)) {
             if (is_a($productVariant, Product::class)
@@ -361,12 +368,12 @@ class Commerce extends Component
                 $productType = property_exists($productVariant, 'typeId')
                     ? InstantAnalytics::$commercePlugin->getProductTypes()->getProductTypeById($productVariant->typeId)
                     : null;
-                
+
                 if ($productType && $productType->hasVariants) {
                     $productVariants = $productVariant->getVariants();
                     $productVariant = reset($productVariants);
                     $product = $productVariant->getProduct();
-                    
+
                     if ($product) {
                         $category = $product->getType()['name'];
                         $name = $product->title;
@@ -409,36 +416,37 @@ class Commerce extends Component
                 $productData['variant'] = $variant;
             }
 
-            $settings = InstantAnalytics::$plugin->getSettings();
             $isVariant = is_a($productVariant, Variant::class);
-            
-            if ($settings && isset($settings['productCategoryField']) && !empty($settings['productCategoryField'])) {
-                $productData['category'] = $this->pullDataFromField(
-                    $productVariant,
-                    $settings['productCategoryField']
-                );
 
-                if (empty($productData['category']) && $isVariant) {
+            if (InstantAnalytics::$settings) {
+                if (isset(InstantAnalytics::$settings['productCategoryField'])
+                    && !empty(InstantAnalytics::$settings['productCategoryField'])) {
                     $productData['category'] = $this->pullDataFromField(
-                        $productVariant->product,
-                        $settings['productCategoryField']
+                        $productVariant,
+                        InstantAnalytics::$settings['productCategoryField']
                     );
+                    if (empty($productData['category']) && $isVariant) {
+                        $productData['category'] = $this->pullDataFromField(
+                            $productVariant->product,
+                            InstantAnalytics::$settings['productCategoryField']
+                        );
+                    }
                 }
-            }
-
-            if ($settings && isset($settings['productBrandField']) && !empty($settings['productBrandField'])) {
-                $productData['brand'] = $this->pullDataFromField(
-                    $productVariant,
-                    $settings['productBrandField'],
-                    true
-                );
-
-                if (empty($productData['brand']) && $isVariant) {
+                if (isset(InstantAnalytics::$settings['productBrandField'])
+                    && !empty(InstantAnalytics::$settings['productBrandField'])) {
                     $productData['brand'] = $this->pullDataFromField(
                         $productVariant,
-                        $settings['productBrandField'],
+                        InstantAnalytics::$settings['productBrandField'],
                         true
                     );
+
+                    if (empty($productData['brand']) && $isVariant) {
+                        $productData['brand'] = $this->pullDataFromField(
+                            $productVariant,
+                            InstantAnalytics::$settings['productBrandField'],
+                            true
+                        );
+                    }
                 }
             }
 
@@ -450,8 +458,8 @@ class Commerce extends Component
 
     /**
      * @param Product|Variant|null $productVariant
-     * @param string $fieldHandle
-     * @param bool $isBrand
+     * @param string               $fieldHandle
+     * @param bool                 $isBrand
      *
      * @return string
      */
@@ -489,7 +497,7 @@ class Commerce extends Component
                             $name = $cat->title;
 
                             while ($cat = $cat->parent) {
-                                $name = $cat->title .'/'. $name;
+                                $name = $cat->title.'/'.$name;
                             }
 
                             $cats[] = $name;

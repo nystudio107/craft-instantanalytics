@@ -34,10 +34,8 @@ class IAnalytics extends Analytics
      */
     public function __construct($isSsl = false, $isDisabled = false, array $options = [])
     {
-        /** @var Settings $settings */
-        $settings = InstantAnalytics::$plugin->getSettings();
         // Store whether or not we should be sending Analytics data
-        $this->shouldSendAnalytics = $settings->sendAnalyticsData;
+        $this->shouldSendAnalytics = InstantAnalytics::$settings->sendAnalyticsData;
 
         parent::__construct($isSsl, $isDisabled, $options);
     }
@@ -143,8 +141,6 @@ class IAnalytics extends Analytics
      */
     protected function sendHit($methodName)
     {
-        /** @var Settings $settings */
-        $settings = InstantAnalytics::$plugin->getSettings();
         $requestIp = $_SERVER['REMOTE_ADDR'];
         if ($this->shouldSendAnalytics) {
             try {
@@ -155,14 +151,14 @@ class IAnalytics extends Analytics
 
                 return parent::sendHit($methodName);
             } catch (\Exception $e) {
-                if ($settings->logExcludedAnalytics) {
+                if (InstantAnalytics::$settings->logExcludedAnalytics) {
                     Craft::info(
                         '*** sendHit(): error sending analytics: '.$e->getMessage(),
                         __METHOD__
                     );
                 }
             }
-        } elseif ($settings->logExcludedAnalytics) {
+        } elseif (InstantAnalytics::$settings->logExcludedAnalytics) {
             Craft::info(
                 '*** sendHit(): analytics not sent for '.$requestIp,
                 __METHOD__

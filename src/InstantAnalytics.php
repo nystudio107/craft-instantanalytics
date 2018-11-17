@@ -33,7 +33,6 @@ use craft\web\View;
 
 use craft\commerce\Plugin as Commerce;
 use craft\commerce\elements\Order;
-use craft\commerce\events\OrderStatusEvent;
 use craft\commerce\events\LineItemEvent;
 
 use nystudio107\seomatic\Seomatic;
@@ -68,6 +67,11 @@ class InstantAnalytics extends Plugin
     public static $plugin;
 
     /**
+     * @var Settings
+     */
+    public static $settings;
+
+    /**
      * @var Commerce|null
      */
     public static $commercePlugin;
@@ -97,6 +101,7 @@ class InstantAnalytics extends Plugin
     {
         parent::init();
         self::$plugin = $this;
+        self::$settings = $this->getSettings();
 
         // Determine if Craft Commerce is installed & enabled
         self::$commercePlugin = Craft::$app->getPlugins()->getPlugin(self::COMMERCE_PLUGIN_HANDLE);
@@ -258,8 +263,7 @@ class InstantAnalytics extends Plugin
             View::class,
             View::EVENT_AFTER_RENDER_PAGE_TEMPLATE,
             function (TemplateEvent $event) {
-                $settings = InstantAnalytics::$plugin->getSettings();
-                if ($settings->autoSendPageView) {
+                if (self::$settings->autoSendPageView) {
                     $this->sendPageView();
                 }
             }
@@ -268,16 +272,14 @@ class InstantAnalytics extends Plugin
         if (self::$commercePlugin) {
             Event::on(Order::class, Order::EVENT_AFTER_COMPLETE_ORDER, function (Event $e) {
                 $order = $e->sender;
-                $settings = InstantAnalytics::$plugin->getSettings();
-                if ($settings->autoSendPurchaseComplete) {
+                if (self::$settings->autoSendPurchaseComplete) {
                     $this->commerce->orderComplete($order);
                 }
             });
 
             Event::on(Order::class, Order::EVENT_AFTER_ADD_LINE_ITEM, function (LineItemEvent $e) {
                 $lineItem = $e->lineItem;
-                $settings = InstantAnalytics::$plugin->getSettings();
-                if ($settings->autoSendAddToCart) {
+                if (self::$settings->autoSendAddToCart) {
                     $this->commerce->addToCart($lineItem->order, $lineItem);
                 }
             });
@@ -286,8 +288,7 @@ class InstantAnalytics extends Plugin
             if (\defined('Order::EVENT_AFTER_REMOVE_LINE_ITEM')) {
                 Event::on(Order::class, Order::EVENT_AFTER_REMOVE_LINE_ITEM, function (LineItemEvent $e) {
                     $lineItem = $e->lineItem;
-                    $settings = InstantAnalytics::$plugin->getSettings();
-                    if ($settings->autoSendRemoveFromCart) {
+                    if (self::$settings->autoSendRemoveFromCart) {
                         $this->commerce->removeFromCart($lineItem->order, $lineItem);
                     }
                 });
