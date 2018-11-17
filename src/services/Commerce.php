@@ -164,70 +164,69 @@ class Commerce extends Component
     /**
      * Add a Craft Commerce LineItem to an Analytics object
      *
-     * @param IAnalytics|null   $analytics
+     * @param IAnalytics|null $analytics
      * @param LineItem|null   $lineItem
-     * @param int    $index
-     * @param string $listName
+     * @param int             $index
+     * @param string          $listName
      *
      * @return string the title of the product
+     * @throws \yii\base\InvalidConfigException
      */
     public function addProductDataFromLineItem($analytics = null, $lineItem = null, $index = 0, $listName = ''): string
     {
         $result = '';
         if ($lineItem && $analytics) {
+            $product = null;
+            $purchasable = $lineItem->purchasable;
             //This is the same for both variant and non variant products
             $productData = [
-                'sku' => $lineItem->purchasable->sku,
+                'name' => $purchasable->title,
+                'sku' => $purchasable->sku,
                 'price' => $lineItem->salePrice,
                 'quantity' => $lineItem->qty,
             ];
-
-            if (isset($lineItem->purchasable->product)) {
-                $productVariant = $lineItem->purchasable->product;
-                $hasVariants = $lineItem->purchasable->product->type->hasVariants ?? null;
-                if (!$hasVariants) {
-                    //No variants (i.e. default variant)
-                    $productData['name'] = $lineItem->purchasable->title;
-                    $productData['category'] = $lineItem->purchasable->product->type['name'];
-                } else {
-                    // Product with variants
-                    $productData['name'] = $lineItem->purchasable->product->title;
-                    $productData['category'] = $lineItem->purchasable->product->type['name'];
-                    $productData['variant'] = $lineItem->purchasable->title;
-                }
-            } else {
-                $productVariant = $lineItem->purchasable;
-                $productData['name'] = $lineItem->purchasable->title;
+            // Handle this purchasable being a Variant
+            if (is_a($purchasable, Variant::class)) {
+                /** @var Variant $purchasable */
+                $product = $purchasable->getProduct();
+                $variant = $purchasable;
+                // Product with variants
+                $productData['name'] = $product->title;
+                $productData['variant'] = $variant->title;
+                $productData['category'] = $product->getType();
             }
-
-            $result = $productData['name'];
-
+            // Handle this purchasable being a Product
+            if (is_a($purchasable, Product::class)) {
+                /** @var Product $purchasable */
+                $product = $purchasable;
+                $productData['name'] = $product->title;
+                $productData['variant'] = $product->title;
+                $productData['category'] = $product->getType();
+            }
+            // Handle product lists
             if ($index) {
                 $productData['position'] = $index;
             }
-
             if ($listName) {
                 $productData['list'] = $listName;
             }
-
+            // Add in any custom categories/brands that might be set
             $settings = InstantAnalytics::$plugin->getSettings();
-
-            if ($settings) {
+            if ($settings && $product) {
                 if (isset($settings['productCategoryField']) && !empty($settings['productCategoryField'])) {
                     $productData['category'] = $this->pullDataFromField(
-                        $productVariant,
+                        $product,
                         $settings['productCategoryField']
                     );
                 }
-
                 if (isset($settings['productBrandField']) && !empty($settings['productBrandField'])) {
                     $productData['brand'] = $this->pullDataFromField(
-                        $productVariant,
+                        $product,
                         $settings['productBrandField']
                     );
                 }
             }
-
+            $result = $productData['name'];
             //Add each product to the hit to be sent
             $analytics->addProduct($productData);
         }
