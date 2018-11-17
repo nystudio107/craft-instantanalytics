@@ -1,5 +1,12 @@
 # Instant Analytics Changelog
 
+## 1.1.0 - 2018.11.19
+### Added
+* Added support for automatic sending of Google Analytics Enhanced eCommerce events from Craft Commerce 2 
+
+### Changed
+* Retooled the JavaScript build system to be more compatible with edge case server setups
+
 ## 1.0.11 - 2018.10.05
 ### Changed
 * Updated build process
