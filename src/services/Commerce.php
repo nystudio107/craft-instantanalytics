@@ -19,7 +19,6 @@ use craft\elements\db\CategoryQuery;
 use craft\elements\db\MatrixBlockQuery;
 use craft\elements\db\TagQuery;
 
-use craft\commerce\Plugin as CommercePlugin;
 use craft\commerce\base\Purchasable;
 use craft\commerce\elements\Order;
 use craft\commerce\elements\Product;
@@ -183,12 +182,23 @@ class Commerce extends Component
                 'quantity' => $lineItem->qty,
             ];
 
-            $productVariant = $lineItem->purchasable;
-            $productData['name'] = $lineItem->purchasable->title;
-            /**
-             * @TODO: See if there is a Commerce 2 equivalent
-            $productData['category'] = $lineItem->purchasable->type->name;
-             */
+            if (isset($lineItem->purchasable->product)) {
+                $productVariant = $lineItem->purchasable->product;
+                $hasVariants = $lineItem->purchasable->product->type->hasVariants ?? null;
+                if (!$hasVariants) {
+                    //No variants (i.e. default variant)
+                    $productData['name'] = $lineItem->purchasable->title;
+                    $productData['category'] = $lineItem->purchasable->product->type['name'];
+                } else {
+                    // Product with variants
+                    $productData['name'] = $lineItem->purchasable->product->title;
+                    $productData['category'] = $lineItem->purchasable->product->type['name'];
+                    $productData['variant'] = $lineItem->purchasable->title;
+                }
+            } else {
+                $productVariant = $lineItem->purchasable;
+                $productData['name'] = $lineItem->purchasable->title;
+            }
 
             $result = $productData['name'];
 
