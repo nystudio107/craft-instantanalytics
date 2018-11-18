@@ -32,7 +32,7 @@ You can also install Instant Analytics via the **Plugin Store** in the Craft Adm
 
 ## Instant Analytics Overview
 
-Instant Analytics brings full Google Analytics support to your Twig templates and automatic Craft Commerce integration with Google Enhanced Ecommerce.
+Instant Analytics brings full Google Analytics support to your Twig templates and automatic Craft Commerce 2 integration with Google Enhanced Ecommerce.
 
 Instant Analytics also lets you track otherwise untrackable assets & events with Google Analytics, and eliminates the need for Javascript tracking.
 
@@ -40,7 +40,7 @@ You don't need to include the typical Google Analytics script tag on your pages,
 
 You can also track asset/media views in Google Analytics, either as PageViews or as Events. This lets you track otherwise untrackable things such as individual RSS feed accesses, images, PDF files, etc.
 
-If you are using Craft Commerce, Instant Analytics will automatically send Google Analytics Enhanced eCommerce data to your Google Analytics account as items are added/removed from your cart, and orders are tracked as well.
+If you are using Craft Commerce 2, Instant Analytics will automatically send Google Analytics Enhanced eCommerce data to your Google Analytics account as items are added/removed from your cart, and orders are tracked as well.
 
 Instant Analytics is implemented on the demo site [Brads for Men](https://bradsformen.com)
 
@@ -58,12 +58,12 @@ It has the added benefit of not having to load any Javascript on the front-end t
 * Pages will be tracked even if the client's browser has Javascript disabled or blocked
 * Javascript errors will not cause Google Analytics data to fail to be collected
 
-### Craft Commerce Integration with Google Enhanced Ecommerce
+### Craft Commerce 2 Integration with Google Enhanced Ecommerce
 
-If you are using Craft Commerce, Instant Analytics will recognize this, and automatically send Google Enhanced Ecommerce data for the following actions:
+If you are using Craft Commerce 2, Instant Analytics will recognize this, and automatically send Google Enhanced Ecommerce data for the following actions:
 
 * **Add to Cart** - When someone adds an item from your Craft Commerce store to their cart.  This will include data for the Product or Variant that was added to the cart.
-* **Remove from Cart** - When someone removes an item from your Craft Commerce store cart (requires Craft Commerce 1.2.x or later).  This will include data for the Product or Variant that was removed from the cart.
+* **Remove from Cart** - When someone removes an item from your Craft Commerce store cart (requires Craft Commerce 2.0.0-beta.x or later).  This will include data for the Product or Variant that was removed from the cart.
 * **Purchase** - When someone completes a purchase in your Craft Commerce store.  This will include all of the LineItems that were added to the cart, as well as the TransactionID, Revenue, Tax, Shipping, and Coupon Code used (if any).
 
 Additionally, you can add simple Twig tags to your templates to track Product Impressions, Product Detail Views, and track each step of the Checkout process.  In Google Analytics, you will be able to view detailed information on the sales from your Craft Commerce store, and other useful information such as where customers are abandoning their cart in the Checkout process.
