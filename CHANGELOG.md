@@ -2,7 +2,7 @@
 
 ## 1.1.0 - 2018.11.19
 ### Added
-* Added support for automatic sending of Google Analytics Enhanced eCommerce events from Craft Commerce 2 
+* Added Craft Commerce 2 support for automatic sending of Google Analytics Enhanced eCommerce events  
 
 ### Changed
 * Retooled the JavaScript build system to be more compatible with edge case server setups
