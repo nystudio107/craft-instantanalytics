@@ -130,7 +130,7 @@ class InstantAnalytics extends Plugin
         $commerceFields = [];
 
         if (self::$commercePlugin) {
-            $productTypes = Commerce::getInstance()->getProductTypes()->getAllProductTypes();
+            $productTypes = InstantAnalytics::$commercePlugin->getProductTypes()->getAllProductTypes();
 
             foreach ($productTypes as $productType) {
                 $productFields = $this->getPullFieldsFromLayoutId($productType->fieldLayoutId);
@@ -315,8 +315,6 @@ class InstantAnalytics extends Plugin
                 'instant-analytics/track/track-page-view-url',
             'instantanalytics/eventTrack/<filename:[-\w\.*]+>?' =>
                 'instant-analytics/track/track-event-url',
-            // Make webpack async bundle loading work out of published AssetBundles
-            '/cpresources/instant-analytics/<resourceType:{handle}>/<fileName>' => 'instant-analytics/manifest/resource',
         ];
     }
 
