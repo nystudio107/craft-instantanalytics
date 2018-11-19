@@ -2,7 +2,7 @@
 
 # Instant Analytics plugin for Craft CMS 3.x
 
-Instant Analytics brings full Google Analytics support to your Twig templates
+Instant Analytics brings full Google Analytics support to your Twig templates and automatic Craft Commerce integration with Google Enhanced Ecommerce.
 
 ![Screenshot](resources/img/plugin-banner.jpg)
 
