@@ -32,7 +32,7 @@
 
 ### Changed
 * Lots of code cleanup
-* Moved to a modern webpack build config for the AdminCP
+* Moved to a modern webpack build config for the Control Panel
 * Added install confetti
 
 ## 1.0.6 - 2018.03.22

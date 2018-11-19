@@ -28,7 +28,7 @@ To install the plugin, follow these instructions.
 
 3. In the Control Panel, go to Settings → Plugins and click the “Install” button for Instant Analytics.
 
-You can also install Instant Analytics via the **Plugin Store** in the Craft AdminCP.
+You can also install Instant Analytics via the **Plugin Store** in the Craft Control Panel.
 
 ## Instant Analytics Overview
 

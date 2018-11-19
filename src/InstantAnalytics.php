@@ -223,7 +223,7 @@ class InstantAnalytics extends Plugin
         if ($request->getIsSiteRequest() && !$request->getIsConsoleRequest()) {
             $this->installSiteEventListeners();
         }
-        // Install only for non-console AdminCP requests
+        // Install only for non-console Control Panel requests
         if ($request->getIsCpRequest() && !$request->getIsConsoleRequest()) {
             $this->installCpEventListeners();
         }
@@ -243,7 +243,7 @@ class InstantAnalytics extends Plugin
                     'UrlManager::EVENT_REGISTER_SITE_URL_RULES',
                     __METHOD__
                 );
-                // Register our AdminCP routes
+                // Register our Control Panel routes
                 $event->rules = array_merge(
                     $event->rules,
                     $this->customFrontendRoutes()
@@ -297,7 +297,7 @@ class InstantAnalytics extends Plugin
     }
 
     /**
-     * Install site event listeners for AdminCP requests only
+     * Install site event listeners for Control Panel requests only
      */
     protected function installCpEventListeners()
     {
