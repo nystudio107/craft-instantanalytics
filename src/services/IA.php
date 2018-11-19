@@ -34,6 +34,11 @@ use yii\base\Exception;
  */
 class IA extends Component
 {
+    // Constants
+    // =========================================================================
+
+    const DEFAULT_USER_AGENT = "User-Agent:Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13\r\n";
+
     // Public Methods
     // =========================================================================
 
@@ -239,17 +244,15 @@ class IA extends Component
     {
         $result = true;
 
-        /** @var Settings $settings */
-        $settings = InstantAnalytics::$plugin->getSettings();
         $request = Craft::$app->getRequest();
 
-        if (!$settings->sendAnalyticsData) {
+        if (!InstantAnalytics::$settings->sendAnalyticsData) {
             $this->logExclusion('sendAnalyticsData');
 
             return false;
         }
 
-        if (!$settings->sendAnalyticsInDevMode && Craft::$app->getConfig()->getGeneral()->devMode) {
+        if (!InstantAnalytics::$settings->sendAnalyticsInDevMode && Craft::$app->getConfig()->getGeneral()->devMode) {
             $this->logExclusion('sendAnalyticsInDevMode');
 
             return false;
@@ -274,8 +277,9 @@ class IA extends Component
         }
 
         // Check the $_SERVER[] super-global exclusions
-        if ($settings->serverExcludes !== null && \is_array($settings->serverExcludes)) {
-            foreach ($settings->serverExcludes as $match => $matchArray) {
+        if (InstantAnalytics::$settings->serverExcludes !== null
+            && \is_array(InstantAnalytics::$settings->serverExcludes)) {
+            foreach (InstantAnalytics::$settings->serverExcludes as $match => $matchArray) {
                 if (isset($_SERVER[$match])) {
                     foreach ($matchArray as $matchItem) {
                         if (preg_match($matchItem, $_SERVER[$match])) {
@@ -289,7 +293,7 @@ class IA extends Component
         }
 
         // Filter out bot/spam requests via UserAgent
-        if ($settings->filterBotUserAgents) {
+        if (InstantAnalytics::$settings->filterBotUserAgents) {
             $crawlerDetect = new CrawlerDetect;
             // Check the user agent of the current 'visitor'
             if ($crawlerDetect->isCrawler()) {
@@ -304,14 +308,15 @@ class IA extends Component
         /** @var UserElement $user */
         $user = $userService->getIdentity();
         if ($user) {
-            if ($settings->adminExclude && $user->admin) {
+            if (InstantAnalytics::$settings->adminExclude && $user->admin) {
                 $this->logExclusion('adminExclude');
 
                 return false;
             }
 
-            if ($settings->groupExcludes !== null && \is_array($settings->groupExcludes)) {
-                foreach ($settings->groupExcludes as $matchItem) {
+            if (InstantAnalytics::$settings->groupExcludes !== null
+                && \is_array(InstantAnalytics::$settings->groupExcludes)) {
+                foreach (InstantAnalytics::$settings->groupExcludes as $matchItem) {
                     if ($user->isInGroup($matchItem)) {
                         $this->logExclusion('groupExcludes');
 
@@ -331,9 +336,7 @@ class IA extends Component
      */
     protected function logExclusion(string $setting)
     {
-        /** @var Settings $settings */
-        $settings = InstantAnalytics::$plugin->getSettings();
-        if ($settings->logExcludedAnalytics) {
+        if (InstantAnalytics::$settings->logExcludedAnalytics) {
             $request = Craft::$app->getRequest();
             $requestIp = $request->getUserIP();
             Craft::info(
@@ -366,11 +369,7 @@ class IA extends Component
         // We want to send just a path to GA for page views
         if (UrlHelper::isAbsoluteUrl($url)) {
             $urlParts = parse_url($url);
-            if (isset($urlParts['path'])) {
-                $url = $urlParts['path'];
-            } else {
-                $url = '/';
-            }
+            $url = $urlParts['path'] ?? '/';
             if (isset($urlParts['query'])) {
                 $url = $url.'?'.$urlParts['query'];
             }
@@ -382,9 +381,11 @@ class IA extends Component
         }
 
         // Strip the query string if that's the global config setting
-        $settings = InstantAnalytics::$plugin->getSettings();
-        if (isset($settings, $settings->stripQueryString) && $settings->stripQueryString) {
-            $url = UrlHelper::stripQueryString($url);
+        if (InstantAnalytics::$settings) {
+            if (InstantAnalytics::$settings->stripQueryString !== null
+                && InstantAnalytics::$settings->stripQueryString) {
+                $url = UrlHelper::stripQueryString($url);
+            }
         }
 
         // We always want the path to be / rather than empty
@@ -403,9 +404,9 @@ class IA extends Component
     private function getAnalyticsObj()
     {
         $analytics = null;
-        $settings = InstantAnalytics::$plugin->getSettings();
         $request = Craft::$app->getRequest();
-        if ($settings !== null && !empty($settings->googleAnalyticsTracking)) {
+        if (InstantAnalytics::$settings !== null
+            && !empty(InstantAnalytics::$settings->googleAnalyticsTracking)) {
             $analytics = new IAnalytics();
             if ($analytics) {
                 $hostName = $request->getServerName();
@@ -420,15 +421,15 @@ class IA extends Component
                     }
                 }
                 $userAgent = $request->getUserAgent();
-                if (empty($userAgent)) {
-                    $userAgent = "User-Agent:Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13\r\n";
+                if ($userAgent === null) {
+                    $userAgent = self::DEFAULT_USER_AGENT;
                 }
                 $referrer = $request->getReferrer();
-                if (empty($referrer)) {
+                if ($referrer === null) {
                     $referrer = '';
                 }
                 $analytics->setProtocolVersion('1')
-                    ->setTrackingId($settings->googleAnalyticsTracking)
+                    ->setTrackingId(InstantAnalytics::$settings->googleAnalyticsTracking)
                     ->setIpOverride($request->getUserIP())
                     ->setUserAgentOverride($userAgent)
                     ->setDocumentHostName($hostName)
@@ -461,11 +462,10 @@ class IA extends Component
                 }
 
                 // If SEOmatic is installed, set the affiliation as well
-                if (InstantAnalytics::$seomaticPlugin && Seomatic::$settings->renderEnabled) {
-                    if (Seomatic::$plugin->metaContainers->metaSiteVars !== null) {
-                        $siteName = Seomatic::$plugin->metaContainers->metaSiteVars->siteName;
-                        $analytics->setAffiliation($siteName);
-                    }
+                if (InstantAnalytics::$seomaticPlugin && Seomatic::$settings->renderEnabled
+                    && Seomatic::$plugin->metaContainers->metaSiteVars !== null) {
+                    $siteName = Seomatic::$plugin->metaContainers->metaSiteVars->siteName;
+                    $analytics->setAffiliation($siteName);
                 }
             }
         }
@@ -481,7 +481,7 @@ class IA extends Component
      *
      * @return string
      */
-    private function getGclid()
+    private function getGclid(): string
     {
         $gclid = '';
         if (isset($_GET['gclid'])) {
@@ -500,20 +500,18 @@ class IA extends Component
      *
      * @return string the cid
      */
-    private function gaParseCookie()
+    private function gaParseCookie(): string
     {
         $cid = '';
         if (isset($_COOKIE['_ga'])) {
-            $parts = preg_split('[\.]', $_COOKIE["_ga"], 4);
+            $parts = preg_split('[\.]', $_COOKIE['_ga'], 4);
             if ($parts !== false) {
                 $cid = implode('.', \array_slice($parts, 2));
             }
+        } elseif (isset($_COOKIE['_ia']) && $_COOKIE['_ia'] !== '') {
+            $cid = $_COOKIE['_ia'];
         } else {
-            if (isset($_COOKIE['_ia']) && $_COOKIE['_ia'] !== '') {
-                $cid = $_COOKIE['_ia'];
-            } else {
-                $cid = $this->gaGenUUID();
-            }
+            $cid = $this->gaGenUUID();
         }
         setcookie('_ia', $cid, strtotime('+2 years'), '/'); // Two years
 

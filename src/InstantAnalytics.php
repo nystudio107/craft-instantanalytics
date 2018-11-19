@@ -23,11 +23,17 @@ use craft\base\Plugin;
 use craft\events\PluginEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\events\TemplateEvent;
+use craft\fields\RichText;
+use craft\fields\Redactor;
 use craft\helpers\UrlHelper;
 use craft\services\Plugins;
 use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
 use craft\web\View;
+
+use craft\commerce\Plugin as Commerce;
+use craft\commerce\elements\Order;
+use craft\commerce\events\LineItemEvent;
 
 use nystudio107\seomatic\Seomatic;
 
@@ -41,7 +47,7 @@ use yii\base\Exception;
  * @package   InstantAnalytics
  * @since     1.0.0
  *
- * @property  IAService       $ia
+ * @property  IAService $ia
  * @property  CommerceService $commerce
  */
 class InstantAnalytics extends Plugin
@@ -61,12 +67,17 @@ class InstantAnalytics extends Plugin
     public static $plugin;
 
     /**
-     * @var Plugin|null
+     * @var Settings
+     */
+    public static $settings;
+
+    /**
+     * @var Commerce|null
      */
     public static $commercePlugin;
 
     /**
-     * @var Plugin|null
+     * @var Seomatic|null
      */
     public static $seomaticPlugin;
 
@@ -90,6 +101,7 @@ class InstantAnalytics extends Plugin
     {
         parent::init();
         self::$plugin = $this;
+        self::$settings = $this->getSettings();
 
         // Determine if Craft Commerce is installed & enabled
         self::$commercePlugin = Craft::$app->getPlugins()->getPlugin(self::COMMERCE_PLUGIN_HANDLE);
@@ -118,18 +130,17 @@ class InstantAnalytics extends Plugin
         $commerceFields = [];
 
         if (self::$commercePlugin) {
-            /**
-             * TODO: pending Commerce for Craft 3
-             * $productTypes = craft()->commerce_productTypes->getAllProductTypes();
-             * foreach ($productTypes as $productType) {
-             * $productFields = $this->_getPullFieldsFromLayoutId($productType->fieldLayoutId);
-             * $commerceFields = array_merge($commerceFields, $productFields);
-             * if ($productType->hasVariants) {
-             * $variantFields = $this->_getPullFieldsFromLayoutId($productType->variantFieldLayoutId);
-             * $commerceFields = array_merge($commerceFields, $variantFields);
-             * }
-             * }
-             */
+            $productTypes = InstantAnalytics::$commercePlugin->getProductTypes()->getAllProductTypes();
+
+            foreach ($productTypes as $productType) {
+                $productFields = $this->getPullFieldsFromLayoutId($productType->fieldLayoutId);
+                $commerceFields = \array_merge($commerceFields, $productFields);
+
+                if ($productType->hasVariants) {
+                    $variantFields = $this->getPullFieldsFromLayoutId($productType->variantFieldLayoutId);
+                    $commerceFields = \array_merge($commerceFields, $variantFields);
+                }
+            }
         }
 
         // Rend the settings template
@@ -137,7 +148,7 @@ class InstantAnalytics extends Plugin
             return Craft::$app->getView()->renderTemplate(
                 'instant-analytics/settings',
                 [
-                    'settings'       => $this->getSettings(),
+                    'settings' => $this->getSettings(),
                     'commerceFields' => $commerceFields,
                 ]
             );
@@ -252,15 +263,36 @@ class InstantAnalytics extends Plugin
             View::class,
             View::EVENT_AFTER_RENDER_PAGE_TEMPLATE,
             function (TemplateEvent $event) {
-                $settings = InstantAnalytics::$plugin->getSettings();
-                if ($settings->autoSendPageView) {
+                if (self::$settings->autoSendPageView) {
                     $this->sendPageView();
                 }
             }
         );
         // Commerce-specific hooks
         if (self::$commercePlugin) {
-            // TODO: pending Commerce for Craft 3
+            Event::on(Order::class, Order::EVENT_AFTER_COMPLETE_ORDER, function (Event $e) {
+                $order = $e->sender;
+                if (self::$settings->autoSendPurchaseComplete) {
+                    $this->commerce->orderComplete($order);
+                }
+            });
+
+            Event::on(Order::class, Order::EVENT_AFTER_ADD_LINE_ITEM, function (LineItemEvent $e) {
+                $lineItem = $e->lineItem;
+                if (self::$settings->autoSendAddToCart) {
+                    $this->commerce->addToCart($lineItem->order, $lineItem);
+                }
+            });
+
+            // Check to make sure Order::EVENT_AFTER_REMOVE_LINE_ITEM is defined
+            if (\defined('Order::EVENT_AFTER_REMOVE_LINE_ITEM')) {
+                Event::on(Order::class, Order::EVENT_AFTER_REMOVE_LINE_ITEM, function (LineItemEvent $e) {
+                    $lineItem = $e->lineItem;
+                    if (self::$settings->autoSendRemoveFromCart) {
+                        $this->commerce->removeFromCart($lineItem->order, $lineItem);
+                    }
+                });
+            }
         }
     }
 
@@ -283,8 +315,6 @@ class InstantAnalytics extends Plugin
                 'instant-analytics/track/track-page-view-url',
             'instantanalytics/eventTrack/<filename:[-\w\.*]+>?' =>
                 'instant-analytics/track/track-event-url',
-        // Make webpack async bundle loading work out of published AssetBundles
-            '/cpresources/instant-analytics/<resourceType:{handle}>/<fileName>' => 'instant-analytics/manifest/resource',
         ];
     }
 
@@ -356,5 +386,21 @@ class InstantAnalytics extends Plugin
                 }
             }
         }
+    }
+
+    /**
+     * @param $layoutId
+     *
+     * @return array
+     */
+    private function getPullFieldsFromLayoutId($layoutId): array
+    {
+        $result = ['' => 'none'];
+        $fieldLayout = Craft::$app->getFields()->getLayoutById($layoutId);
+        if ($fieldLayout) {
+            $result = FieldHelper::fieldsOfTypeFromLayout(FieldHelper::TEXT_FIELD_CLASS_KEY, $fieldLayout, false);
+        }
+
+        return $result;
     }
 }

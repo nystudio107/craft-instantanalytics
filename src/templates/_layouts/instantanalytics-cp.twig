@@ -2,7 +2,8 @@
 
 {% block head %}
     {{ parent() }}
-    {{ craft.instantAnalytics.includeCssModule("styles.css") }}
-    {{ craft.instantAnalytics.includeSafariNomoduleFix() }}
-    {{ craft.instantAnalytics.includeJsModule("instantanalytics.js", true) }}
+    {{ craft.instantAnalytics.includeCssModule("styles.css", false) }}
+    {{ craft.instantAnalytics.includeCssModule("vendor.css", false) }}
+    {{ craft.instantAnalytics.includeJsModule("vendor.js", false) }}
+    {{ craft.instantAnalytics.includeJsModule("instantanalytics.js", false) }}
 {% endblock %}

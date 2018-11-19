@@ -4,17 +4,15 @@
 
 Instant Analytics brings full Google Analytics support to your Twig templates
 
-![Screenshot](resources/img/plugin-logo.png)
+![Screenshot](resources/img/plugin-banner.jpg)
 
 **Note**: _The license fee for this plugin is $59.00 via the Craft Plugin Store._
 
 Related: [Instant Analytics for Craft 2.x](https://github.com/nystudio107/instantanalytics)
 
-**N.B.:** Support for Craft Commerce is _not_ in this version. It is pending the release of Commerce 2 beta for Craft CMS 3
-
 ## Requirements
 
-This plugin requires Craft CMS 3.0.0 or later.
+This plugin requires Craft CMS 3.0.0 or later. Commerce 2 is required for Google Analytics Enhanced eCommerce support.
 
 ## Installation
 
@@ -34,7 +32,7 @@ You can also install Instant Analytics via the **Plugin Store** in the Craft Adm
 
 ## Instant Analytics Overview
 
-Instant Analytics brings full Google Analytics support to your Twig templates and automatic Craft Commerce integration with Google Enhanced Ecommerce.
+Instant Analytics brings full Google Analytics support to your Twig templates and automatic Craft Commerce 2 integration with Google Enhanced Ecommerce.
 
 Instant Analytics also lets you track otherwise untrackable assets & events with Google Analytics, and eliminates the need for Javascript tracking.
 
@@ -42,7 +40,7 @@ You don't need to include the typical Google Analytics script tag on your pages,
 
 You can also track asset/media views in Google Analytics, either as PageViews or as Events. This lets you track otherwise untrackable things such as individual RSS feed accesses, images, PDF files, etc.
 
-If you are using Craft Commerce, Instant Analytics will automatically send Google Analytics Enhanced eCommerce data to your Google Analytics account as items are added/removed from your cart, and orders are tracked as well.
+If you are using Craft Commerce 2, Instant Analytics will automatically send Google Analytics Enhanced eCommerce data to your Google Analytics account as items are added/removed from your cart, and orders are tracked as well.
 
 Instant Analytics is implemented on the demo site [Brads for Men](https://bradsformen.com)
 
@@ -60,12 +58,12 @@ It has the added benefit of not having to load any Javascript on the front-end t
 * Pages will be tracked even if the client's browser has Javascript disabled or blocked
 * Javascript errors will not cause Google Analytics data to fail to be collected
 
-### Craft Commerce Integration with Google Enhanced Ecommerce
+### Craft Commerce 2 Integration with Google Enhanced Ecommerce
 
-If you are using Craft Commerce, Instant Analytics will recognize this, and automatically send Google Enhanced Ecommerce data for the following actions:
+If you are using Craft Commerce 2, Instant Analytics will recognize this, and automatically send Google Enhanced Ecommerce data for the following actions:
 
 * **Add to Cart** - When someone adds an item from your Craft Commerce store to their cart.  This will include data for the Product or Variant that was added to the cart.
-* **Remove from Cart** - When someone removes an item from your Craft Commerce store cart (requires Craft Commerce 1.2.x or later).  This will include data for the Product or Variant that was removed from the cart.
+* **Remove from Cart** - When someone removes an item from your Craft Commerce store cart (requires Craft Commerce 2.0.0-beta.x or later).  This will include data for the Product or Variant that was removed from the cart.
 * **Purchase** - When someone completes a purchase in your Craft Commerce store.  This will include all of the LineItems that were added to the cart, as well as the TransactionID, Revenue, Tax, Shipping, and Coupon Code used (if any).
 
 Additionally, you can add simple Twig tags to your templates to track Product Impressions, Product Detail Views, and track each step of the Checkout process.  In Google Analytics, you will be able to view detailed information on the sales from your Craft Commerce store, and other useful information such as where customers are abandoning their cart in the Checkout process.
@@ -180,7 +178,33 @@ If there is a `gclid` cookie (used for Google AdWords tracking), this will also 
 
 ### Craft Commerce Tracking with Google Enhanced Ecommerce
 
-Unimplemented; waiting on Craft Commerce 2.0 for Craft 3 to be released.
+If you are using Craft Commerce, Instant Analytics will recognize this, and automatically send Google Enhanced Ecommerce data for the following actions:
+
+* **Add to Cart** - When someone adds an item from your Craft Commerce store to their cart.  This will include data for the Product or Variant that was added to the cart.
+* **Remove from Cart** - When someone removes an item from your Craft Commerce store cart (requires Craft Commerce 1.2.x or later).  This will include data for the Product or Variant that was removed from the cart.
+* **Purchase** - When someone completes a purchase in your Craft Commerce store.  This will include all of the LineItems that were added to the cart, as well as the TransactionID, Revenue, Tax, Shipping, and Coupon Code used (if any).
+
+You simply need to enable Enhanced Ecommerce in your Google Analytics Admin area for your website's property:
+
+![Screenshot](resources/screenshots/ia_screenshot04.png)
+
+That's it!  It'll just work.  In addition to the basic automatic tracking that Instant Analytics does, you can use the `instantAnalytics` object to send additional data to Google Analytics Enhanced Ecommerce:
+
+* `{% do instantAnalytics.addCommerceProductImpression(PRODUCT_VARIANT, INDEX, LIST_NAME, LIST_INDEX) %}` - This will add an _impression_ for a given Craft Commerce `Product` or `Variant` (you can pass in either in `PRODUCT_VARIANT`).  `INDEX` must be a number between 1-200, and is the position in the list of products where this product appears. This should be used on product listing pages that show a number of products, to indicate that the user has been shown a particular product. `LIST_NAME` and `LIST_INDEX` are optional; they let you set the product list name, and the index of that list, which is a number from 1-200, and should be unique to the list. `LIST_NAME` defaults to `default` and `LIST_INDEX` defaults to `1` if not specified.
+*  `{% do instantAnalytics.addCommerceProductDetailView(PRODUCT_VARIANT) %}` - This will add a _product detail view_ for a given Craft Commerce `Product` or `Variant` (you can pass in either in `PRODUCT_VARIANT`).  This should be used when the user is shown the detail view of a product.
+*  `{% do instantAnalytics.addCommerceCheckoutStep(CART, STEP, OPTION) %}` - This will add a _checkout step_ for a given Craft Commerce `CART` (obtained via `craft.commerce.cart`).  The `STEP` parameter lets you specify which step in the checkout process you are on, and the `OPTION` parameter is optional information you can associate with this checkout step, e.g.: `Shipping Info` or `VISA`.
+
+You can set up names for each of the Checkout Steps in your Google Analytics Admin area for your website's property:
+
+![Screenshot](resources/screenshots/ia_screenshot05.png)
+
+Once you are using these tags in your templates, Google Analytics Enhanced Ecommerce will be able to provide you with extended analysis of things like at what step in your Checkout process people abandon their carts, which products people are looking at detailed views of, etc.:
+
+![Screenshot](resources/screenshots/ia_screenshot02.png)
+
+In addition to the expected sales data:
+
+![Screenshot](resources/screenshots/ia_screenshot03.png)
 
 ### Sending Events
 
