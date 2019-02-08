@@ -396,6 +396,9 @@ class InstantAnalytics extends Plugin
     private function getPullFieldsFromLayoutId($layoutId): array
     {
         $result = ['' => 'none'];
+        if ($layoutId === null) {
+            return $result;
+        }
         $fieldLayout = Craft::$app->getFields()->getLayoutById($layoutId);
         if ($fieldLayout) {
             $result = FieldHelper::fieldsOfTypeFromLayout(FieldHelper::TEXT_FIELD_CLASS_KEY, $fieldLayout, false);
