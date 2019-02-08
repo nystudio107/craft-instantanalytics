@@ -1,5 +1,9 @@
 # Instant Analytics Changelog
 
+## 1.1.1 - 2019.02.10
+### Added
+* Fixed an issue on the Settings page where it would blindly pass in null values to `getLayoutById()`
+
 ## 1.1.0 - 2018.11.19
 ### Added
 * Added Craft Commerce 2 support for automatic sending of Google Analytics Enhanced eCommerce events  
