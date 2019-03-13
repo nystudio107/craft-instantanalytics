@@ -473,7 +473,10 @@ class Commerce extends Component
             if ($srcField === null) {
                 $srcField = $productVariant->product->$fieldHandle;
             }
-
+            // If the source field isn't an object, return nothing
+            if (!is_object($srcField)) {
+                return $result;
+            }
             switch (\get_class($srcField)) {
                 case MatrixBlockQuery::class:
                     break;
