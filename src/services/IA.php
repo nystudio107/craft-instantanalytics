@@ -405,8 +405,12 @@ class IA extends Component
     {
         $analytics = null;
         $request = Craft::$app->getRequest();
+        $trackingId = InstantAnalytics::$settings->googleAnalyticsTracking;
+        if (InstantAnalytics::$craft31 && !empty($trackingId)) {
+            $trackingId = Craft::parseEnv($trackingId);
+        }
         if (InstantAnalytics::$settings !== null
-            && !empty(InstantAnalytics::$settings->googleAnalyticsTracking)) {
+            && !empty($trackingId)) {
             $analytics = new IAnalytics();
             if ($analytics) {
                 $hostName = $request->getServerName();
@@ -429,7 +433,7 @@ class IA extends Component
                     $referrer = '';
                 }
                 $analytics->setProtocolVersion('1')
-                    ->setTrackingId(InstantAnalytics::$settings->googleAnalyticsTracking)
+                    ->setTrackingId($trackingId)
                     ->setIpOverride($request->getUserIP())
                     ->setUserAgentOverride($userAgent)
                     ->setDocumentHostName($hostName)

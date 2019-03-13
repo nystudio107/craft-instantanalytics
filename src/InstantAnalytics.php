@@ -91,6 +91,11 @@ class InstantAnalytics extends Plugin
      */
     public static $pageViewSent = false;
 
+    /**
+     * @var bool
+     */
+    public static $craft31 = false;
+
     // Public Methods
     // =========================================================================
 
@@ -102,6 +107,7 @@ class InstantAnalytics extends Plugin
         parent::init();
         self::$plugin = $this;
         self::$settings = $this->getSettings();
+        self::$craft31 = version_compare(Craft::$app->getVersion(), '3.1', '>=');
 
         // Determine if Craft Commerce is installed & enabled
         self::$commercePlugin = Craft::$app->getPlugins()->getPlugin(self::COMMERCE_PLUGIN_HANDLE);
