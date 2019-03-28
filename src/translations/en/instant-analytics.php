@@ -34,7 +34,7 @@ return [
     'addCommerceCheckoutStep step: `{step}` with option: `{option}`' => 'addCommerceCheckoutStep step: `{step}` with option: `{option}`',
     'removeFromCart for `Commerce` - `Remove to Cart` - `{title}` - `{quantity}`' => 'removeFromCart for `Commerce` - `Remove to Cart` - `{title}` - `{quantity}`',
     'Manifest file not found at: {manifestPath}' => 'Manifest file not found at: {manifestPath}',
-    'orderComplete for `Commerce` - `Purchase` - `{number}` - `{price}`' => 'orderComplete for `Commerce` - `Purchase` - `{number}` - `{price}`',
+    'orderComplete for `Commerce` - `Purchase` - `{reference}` - `{price}`' => 'orderComplete for `Commerce` - `Purchase` - `{reference}` - `{price}`',
     'addCommerceProductImpression for `{sku}` - `{name}` - `{name}` - `{index}`' => 'addCommerceProductImpression for `{sku}` - `{name}` - `{name}` - `{index}`',
     'Module does not exist in the manifest: {moduleName}' => 'Module does not exist in the manifest: {moduleName}',
     'addCommerceProductDetailView for `{sku}` - `{name} - `{name}`' => 'addCommerceProductDetailView for `{sku}` - `{name} - `{name}`',
