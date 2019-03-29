@@ -64,7 +64,7 @@ If you are using Craft Commerce 2, Instant Analytics will recognize this, and au
 
 * **Add to Cart** - When someone adds an item from your Craft Commerce store to their cart.  This will include data for the Product or Variant that was added to the cart.
 * **Remove from Cart** - When someone removes an item from your Craft Commerce store cart (requires Craft Commerce 2.0.0-beta.x or later).  This will include data for the Product or Variant that was removed from the cart.
-* **Purchase** - When someone completes a purchase in your Craft Commerce store.  This will include all of the LineItems that were added to the cart, as well as the TransactionID, Revenue, Tax, Shipping, and Coupon Code used (if any).
+* **Purchase** - When someone completes a purchase in your Craft Commerce store.  This will include all of the LineItems that were added to the cart, as well as the Order Reference, Revenue, Tax, Shipping, and Coupon Code used (if any).
 
 Additionally, you can add simple Twig tags to your templates to track Product Impressions, Product Detail Views, and track each step of the Checkout process.  In Google Analytics, you will be able to view detailed information on the sales from your Craft Commerce store, and other useful information such as where customers are abandoning their cart in the Checkout process.
 
@@ -198,6 +198,10 @@ You can set up names for each of the Checkout Steps in your Google Analytics Adm
 
 ![Screenshot](resources/screenshots/ia_screenshot05.png)
 
+Note the`STEP` supplied to Instant Analytics must be in number form - to match the number of the step you have created in the Google Analytics Admin area.  So to record a customer reaching your checkout's shipping step, and the type of shipping they have chosen, you could do this:
+
+    {% do instantAnalytics.addCommerceCheckoutStep(cart, 2, "Standard Post") %}
+
 Once you are using these tags in your templates, Google Analytics Enhanced Ecommerce will be able to provide you with extended analysis of things like at what step in your Checkout process people abandon their carts, which products people are looking at detailed views of, etc.:
 
 ![Screenshot](resources/screenshots/ia_screenshot02.png)
@@ -214,7 +218,7 @@ You can obtain an `Analytics` object preloaded to send events to Google Analytic
     -OR-
     {% set myAnalytics = craft.instantAnalytics.eventAnalytics(CATEGORY, ACTION, LABEL, VALUE) %}
 
-What `CATEGORY`, `ACTION`, `LABEL`, and `VALUE` are is completely up to you; you can provide whatever data makes sense for your application, and view it in Google Analytics.  See [Event Tracking](https://developers.google.com/analytics/devguides/collection/analyticsjs/events) for more information.
+What `CATEGORY`, `ACTION`, `LABEL`, and `VALUE` are is completely up to you (`VALUE` must be an integer, though); you can provide whatever data makes sense for your application, and view it in Google Analytics.  See [Event Tracking](https://developers.google.com/analytics/devguides/collection/analyticsjs/events) for more information.
 
 By default, the injected `instantAnalytics` object is filled in with the following info:
 
