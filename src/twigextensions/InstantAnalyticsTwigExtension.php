@@ -27,7 +27,7 @@ use craft\helpers\Template;
  * @package   InstantAnalytics
  * @since     1.0.0
  */
-class InstantAnalyticsTwigExtension extends \Twig_Extension implements \Twig_Extension_GlobalsInterface
+class InstantAnalyticsTwigExtension extends \Twig\Extension\AbstractExtension implements \Twig\Extension\GlobalsInterface
 {
     // Public Methods
     // =========================================================================
@@ -67,10 +67,10 @@ class InstantAnalyticsTwigExtension extends \Twig_Extension implements \Twig_Ext
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('pageViewAnalytics', [$this, 'pageViewAnalytics']),
-            new \Twig_SimpleFilter('eventAnalytics', [$this, 'eventAnalytics']),
-            new \Twig_SimpleFilter('pageViewTrackingUrl', [$this, 'pageViewTrackingUrl']),
-            new \Twig_SimpleFilter('eventTrackingUrl', [$this, 'eventTrackingUrl']),
+            new \Twig\TwigFilter('pageViewAnalytics', [$this, 'pageViewAnalytics']),
+            new \Twig\TwigFilter('eventAnalytics', [$this, 'eventAnalytics']),
+            new \Twig\TwigFilter('pageViewTrackingUrl', [$this, 'pageViewTrackingUrl']),
+            new \Twig\TwigFilter('eventTrackingUrl', [$this, 'eventTrackingUrl']),
         ];
     }
 
@@ -80,10 +80,10 @@ class InstantAnalyticsTwigExtension extends \Twig_Extension implements \Twig_Ext
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('pageViewAnalytics', [$this, 'pageViewAnalytics']),
-            new \Twig_SimpleFunction('eventAnalytics', [$this, 'eventAnalytics']),
-            new \Twig_SimpleFunction('pageViewTrackingUrl', [$this, 'pageViewTrackingUrl']),
-            new \Twig_SimpleFunction('eventTrackingUrl', [$this, 'eventTrackingUrl']),
+            new \Twig\TwigFunction('pageViewAnalytics', [$this, 'pageViewAnalytics']),
+            new \Twig\TwigFunction('eventAnalytics', [$this, 'eventAnalytics']),
+            new \Twig\TwigFunction('pageViewTrackingUrl', [$this, 'pageViewTrackingUrl']),
+            new \Twig\TwigFunction('eventTrackingUrl', [$this, 'eventTrackingUrl']),
         ];
     }
 
@@ -131,10 +131,10 @@ class InstantAnalyticsTwigExtension extends \Twig_Extension implements \Twig_Ext
      * @param $url
      * @param $title
      *
-     * @return \Twig_Markup
+     * @return \Twig\Markup
      * @throws \yii\base\Exception
      */
-    public function pageViewTrackingUrl($url, $title): \Twig_Markup
+    public function pageViewTrackingUrl($url, $title): \Twig\Markup
     {
         return Template::raw(InstantAnalytics::$plugin->ia->pageViewTrackingUrl($url, $title));
     }
@@ -148,7 +148,7 @@ class InstantAnalyticsTwigExtension extends \Twig_Extension implements \Twig_Ext
      * @param string $eventLabel
      * @param int    $eventValue
      *
-     * @return \Twig_Markup
+     * @return \Twig\Markup
      * @throws \yii\base\Exception
      */
     public function eventTrackingUrl(
@@ -157,7 +157,7 @@ class InstantAnalyticsTwigExtension extends \Twig_Extension implements \Twig_Ext
         $eventAction = '',
         $eventLabel = '',
         $eventValue = 0
-    ): \Twig_Markup {
+    ): \Twig\Markup {
         return Template::raw(InstantAnalytics::$plugin->ia->eventTrackingUrl(
             $url,
             $eventCategory,

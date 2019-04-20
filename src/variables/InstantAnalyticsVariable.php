@@ -71,10 +71,10 @@ class InstantAnalyticsVariable extends ManifestVariable
      * @param $url
      * @param $title
      *
-     * @return \Twig_Markup
+     * @return \Twig\Markup
      * @throws \yii\base\Exception
      */
-    public function pageViewTrackingUrl($url, $title): \Twig_Markup
+    public function pageViewTrackingUrl($url, $title): \Twig\Markup
     {
         return Template::raw(InstantAnalytics::$plugin->ia->pageViewTrackingUrl($url, $title));
     }
@@ -88,7 +88,7 @@ class InstantAnalyticsVariable extends ManifestVariable
      * @param string $eventLabel
      * @param int    $eventValue
      *
-     * @return \Twig_Markup
+     * @return \Twig\Markup
      * @throws \yii\base\Exception
      */
     public function eventTrackingUrl(
@@ -97,7 +97,7 @@ class InstantAnalyticsVariable extends ManifestVariable
         $eventAction = '',
         $eventLabel = '',
         $eventValue = 0
-    ): \Twig_Markup {
+    ): \Twig\Markup {
         return Template::raw(InstantAnalytics::$plugin->ia->eventTrackingUrl(
             $url,
             $eventCategory,
