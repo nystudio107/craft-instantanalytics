@@ -23,8 +23,6 @@ use craft\base\Plugin;
 use craft\events\PluginEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\events\TemplateEvent;
-use craft\fields\RichText;
-use craft\fields\Redactor;
 use craft\helpers\UrlHelper;
 use craft\services\Plugins;
 use craft\web\twig\variables\CraftVariable;
@@ -37,8 +35,9 @@ use craft\commerce\events\LineItemEvent;
 
 use nystudio107\seomatic\Seomatic;
 
+use Twig\Error\LoaderError;
+
 use yii\base\Event;
-use yii\base\Exception;
 
 /** @noinspection MissingPropertyAnnotationsInspection */
 
@@ -136,14 +135,15 @@ class InstantAnalytics extends Plugin
         $commerceFields = [];
 
         if (self::$commercePlugin) {
-            $productTypes = InstantAnalytics::$commercePlugin->getProductTypes()->getAllProductTypes();
+            $productTypes = self::$commercePlugin->getProductTypes()->getAllProductTypes();
 
             foreach ($productTypes as $productType) {
                 $productFields = $this->getPullFieldsFromLayoutId($productType->fieldLayoutId);
+                /** @noinspection SlowArrayOperationsInLoopInspection */
                 $commerceFields = \array_merge($commerceFields, $productFields);
-
                 if ($productType->hasVariants) {
                     $variantFields = $this->getPullFieldsFromLayoutId($productType->variantFieldLayoutId);
+                    /** @noinspection SlowArrayOperationsInLoopInspection */
                     $commerceFields = \array_merge($commerceFields, $variantFields);
                 }
             }
@@ -158,7 +158,7 @@ class InstantAnalytics extends Plugin
                     'commerceFields' => $commerceFields,
                 ]
             );
-        } catch (\Twig\Error\LoaderError $e) {
+        } catch (LoaderError $e) {
             Craft::error($e->getMessage(), __METHOD__);
         } catch (\Exception $e) {
             Craft::error($e->getMessage(), __METHOD__);
@@ -291,7 +291,7 @@ class InstantAnalytics extends Plugin
             });
 
             // Check to make sure Order::EVENT_AFTER_REMOVE_LINE_ITEM is defined
-            if (\defined('Order::EVENT_AFTER_REMOVE_LINE_ITEM')) {
+            if (defined('Order::EVENT_AFTER_REMOVE_LINE_ITEM')) {
                 Event::on(Order::class, Order::EVENT_AFTER_REMOVE_LINE_ITEM, function (LineItemEvent $e) {
                     $lineItem = $e->lineItem;
                     if (self::$settings->autoSendRemoveFromCart) {
@@ -344,7 +344,7 @@ class InstantAnalytics extends Plugin
         if ($request->getIsSiteRequest() && !$request->getIsConsoleRequest() && !self::$pageViewSent) {
             self::$pageViewSent = true;
             /** @var IAnalytics $analytics */
-            $analytics = InstantAnalytics::$plugin->ia->getGlobals(self::$currentTemplate);
+            $analytics = self::$plugin->ia->getGlobals(self::$currentTemplate);
             // Bail if we have no analytics object
             if ($analytics === null) {
                 return;

@@ -12,7 +12,6 @@ namespace nystudio107\instantanalytics\services;
 
 use nystudio107\instantanalytics\InstantAnalytics;
 use nystudio107\instantanalytics\helpers\IAnalytics;
-use nystudio107\instantanalytics\models\Settings;
 
 use Jaybizzle\CrawlerDetect\CrawlerDetect;
 
@@ -90,7 +89,7 @@ class IA extends Component
                     'Created sendPageView for: {url} - {title}',
                     [
                         'url' => $url,
-                        'title' => $title
+                        'title' => $title,
                     ]
                 ),
                 __METHOD__
@@ -130,7 +129,7 @@ class IA extends Component
                         'eventCategory' => $eventCategory,
                         'eventAction' => $eventAction,
                         'eventLabel' => $eventLabel,
-                        'eventValue' => $eventValue
+                        'eventValue' => $eventValue,
                     ]
                 ),
                 __METHOD__
@@ -171,7 +170,7 @@ class IA extends Component
     public function pageViewTrackingUrl($url, $title): string
     {
         $urlParams = [
-            'url'   => $url,
+            'url' => $url,
             'title' => $title,
         ];
         $path = parse_url($url, PHP_URL_PATH);
@@ -212,11 +211,11 @@ class IA extends Component
         $eventValue = 0
     ): string {
         $urlParams = [
-            'url'           => $url,
+            'url' => $url,
             'eventCategory' => $eventCategory,
-            'eventAction'   => $eventAction,
-            'eventLabel'    => $eventLabel,
-            'eventValue'    => $eventValue,
+            'eventAction' => $eventAction,
+            'eventLabel' => $eventLabel,
+            'eventValue' => $eventValue,
         ];
         $fileName = pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_BASENAME);
         $trackingUrl = UrlHelper::siteUrl('instantanalytics/eventTrack/'.$fileName, $urlParams);

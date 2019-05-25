@@ -50,7 +50,8 @@ class Settings extends Model
     public $autoSendPageView = true;
 
     /**
-     * The field in a Commerce Product Variant that should be used for the category
+     * The field in a Commerce Product Variant that should be used for the
+     * category
      *
      * @var string
      */
@@ -172,7 +173,7 @@ class Settings extends Model
                     'adminExclude',
                     'logExcludedAnalytics',
                 ],
-                'boolean'
+                'boolean',
             ],
             [
                 [
@@ -181,14 +182,14 @@ class Settings extends Model
                     'productBrandField',
                     'googleAnalyticsTracking',
                 ],
-                'string'
+                'string',
             ],
             [
                 [
                     'groupExcludes',
                     'serverExcludes',
                 ],
-                ArrayValidator::class
+                ArrayValidator::class,
             ],
         ];
     }
@@ -206,7 +207,7 @@ class Settings extends Model
                     'attributes' => [
                         'googleAnalyticsTracking',
                     ],
-                ]
+                ],
             ];
         }
 
