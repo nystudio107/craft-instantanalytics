@@ -8,6 +8,10 @@ use nystudio107\instantanalytics\assetbundles\instantanalytics\InstantAnalyticsA
 use Craft;
 use craft\helpers\Template;
 
+use Twig\Markup;
+
+use yii\web\NotFoundHttpException;
+
 class ManifestVariable
 {
     // Protected Static Properties
@@ -17,17 +21,17 @@ class ManifestVariable
         // If `devMode` is on, use webpack-dev-server to all for HMR (hot module reloading)
         'useDevServer' => false,
         // Manifest names
-        'manifest'     => [
+        'manifest' => [
             'legacy' => 'manifest.json',
             'modern' => 'manifest.json',
         ],
         // Public server config
-        'server'       => [
+        'server' => [
             'manifestPath' => '/',
             'publicPath' => '/',
         ],
         // webpack-dev-server config
-        'devServer'    => [
+        'devServer' => [
             'manifestPath' => 'http://127.0.0.1:8080',
             'publicPath' => '/',
         ],
@@ -60,10 +64,10 @@ class ManifestVariable
      * @param bool       $async
      * @param null|array $config
      *
-     * @return \Twig_Markup
-     * @throws \yii\web\NotFoundHttpException
+     * @return Markup
+     * @throws NotFoundHttpException
      */
-    public function includeCssModule(string $moduleName, bool $async = false, $config = null): \Twig_Markup
+    public function includeCssModule(string $moduleName, bool $async = false, $config = null): Markup
     {
         return Template::raw(
             ManifestHelper::getCssModuleTags(self::$config, $moduleName, $async)
@@ -75,9 +79,9 @@ class ManifestVariable
      *
      * @param string $path
      *
-     * @return \Twig_Markup
+     * @return Markup
      */
-    public function includeInlineCssTags(string $path): \Twig_Markup
+    public function includeInlineCssTags(string $path): Markup
     {
         return Template::raw(
             ManifestHelper::getCssInlineTags($path)
@@ -88,9 +92,9 @@ class ManifestVariable
      * Returns the uglified loadCSS rel=preload Polyfill as per:
      * https://github.com/filamentgroup/loadCSS#how-to-use-loadcss-recommended-example
      *
-     * @return \Twig_Markup
+     * @return Markup
      */
-    public static function includeCssRelPreloadPolyfill(): \Twig_Markup
+    public static function includeCssRelPreloadPolyfill(): Markup
     {
         return Template::raw(
             ManifestHelper::getCssRelPreloadPolyfill()
@@ -102,8 +106,8 @@ class ManifestVariable
      * @param bool       $async
      * @param null|array $config
      *
-     * @return null|\Twig_Markup
-     * @throws \yii\web\NotFoundHttpException
+     * @return null|Markup
+     * @throws NotFoundHttpException
      */
     public function includeJsModule(string $moduleName, bool $async = false, $config = null)
     {
@@ -119,8 +123,8 @@ class ManifestVariable
      * @param string $type
      * @param null   $config
      *
-     * @return null|\Twig_Markup
-     * @throws \yii\web\NotFoundHttpException
+     * @return null|Markup
+     * @throws NotFoundHttpException
      */
     public function getModuleUri(string $moduleName, string $type = 'modern', $config = null)
     {
@@ -132,9 +136,9 @@ class ManifestVariable
     /**
      * Include the Safari 10.1 nomodule fix JavaScript
      *
-     * @return \Twig_Markup
+     * @return Markup
      */
-    public function includeSafariNomoduleFix(): \Twig_Markup
+    public function includeSafariNomoduleFix(): Markup
     {
         return Template::raw(
             ManifestHelper::getSafariNomoduleFix()
@@ -146,9 +150,9 @@ class ManifestVariable
      *
      * @param string $path
      *
-     * @return \Twig_Markup
+     * @return Markup
      */
-    public function includeFile(string $path): \Twig_Markup
+    public function includeFile(string $path): Markup
     {
         return Template::raw(
             ManifestHelper::getFile($path)
@@ -162,9 +166,9 @@ class ManifestVariable
      * @param string $type
      * @param null   $config
      *
-     * @return \Twig_Markup
+     * @return Markup
      */
-    public function includeFileFromManifest(string $fileName, string $type = 'legacy', $config = null): \Twig_Markup
+    public function includeFileFromManifest(string $fileName, string $type = 'legacy', $config = null): Markup
     {
         return Template::raw(
             ManifestHelper::getFileFromManifest($config, $fileName, $type)

@@ -23,8 +23,6 @@ use craft\base\Plugin;
 use craft\events\PluginEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\events\TemplateEvent;
-use craft\fields\RichText;
-use craft\fields\Redactor;
 use craft\helpers\UrlHelper;
 use craft\services\Plugins;
 use craft\web\twig\variables\CraftVariable;
@@ -37,8 +35,9 @@ use craft\commerce\events\LineItemEvent;
 
 use nystudio107\seomatic\Seomatic;
 
+use Twig\Error\LoaderError;
+
 use yii\base\Event;
-use yii\base\Exception;
 
 /** @noinspection MissingPropertyAnnotationsInspection */
 
@@ -91,6 +90,11 @@ class InstantAnalytics extends Plugin
      */
     public static $pageViewSent = false;
 
+    /**
+     * @var bool
+     */
+    public static $craft31 = false;
+
     // Public Methods
     // =========================================================================
 
@@ -102,6 +106,7 @@ class InstantAnalytics extends Plugin
         parent::init();
         self::$plugin = $this;
         self::$settings = $this->getSettings();
+        self::$craft31 = version_compare(Craft::$app->getVersion(), '3.1', '>=');
 
         // Determine if Craft Commerce is installed & enabled
         self::$commercePlugin = Craft::$app->getPlugins()->getPlugin(self::COMMERCE_PLUGIN_HANDLE);
@@ -130,14 +135,15 @@ class InstantAnalytics extends Plugin
         $commerceFields = [];
 
         if (self::$commercePlugin) {
-            $productTypes = InstantAnalytics::$commercePlugin->getProductTypes()->getAllProductTypes();
+            $productTypes = self::$commercePlugin->getProductTypes()->getAllProductTypes();
 
             foreach ($productTypes as $productType) {
                 $productFields = $this->getPullFieldsFromLayoutId($productType->fieldLayoutId);
+                /** @noinspection SlowArrayOperationsInLoopInspection */
                 $commerceFields = \array_merge($commerceFields, $productFields);
-
                 if ($productType->hasVariants) {
                     $variantFields = $this->getPullFieldsFromLayoutId($productType->variantFieldLayoutId);
+                    /** @noinspection SlowArrayOperationsInLoopInspection */
                     $commerceFields = \array_merge($commerceFields, $variantFields);
                 }
             }
@@ -152,9 +158,9 @@ class InstantAnalytics extends Plugin
                     'commerceFields' => $commerceFields,
                 ]
             );
-        } catch (\Twig_Error_Loader $e) {
+        } catch (LoaderError $e) {
             Craft::error($e->getMessage(), __METHOD__);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             Craft::error($e->getMessage(), __METHOD__);
         }
 
@@ -223,7 +229,7 @@ class InstantAnalytics extends Plugin
         if ($request->getIsSiteRequest() && !$request->getIsConsoleRequest()) {
             $this->installSiteEventListeners();
         }
-        // Install only for non-console AdminCP requests
+        // Install only for non-console Control Panel requests
         if ($request->getIsCpRequest() && !$request->getIsConsoleRequest()) {
             $this->installCpEventListeners();
         }
@@ -243,7 +249,7 @@ class InstantAnalytics extends Plugin
                     'UrlManager::EVENT_REGISTER_SITE_URL_RULES',
                     __METHOD__
                 );
-                // Register our AdminCP routes
+                // Register our Control Panel routes
                 $event->rules = array_merge(
                     $event->rules,
                     $this->customFrontendRoutes()
@@ -285,7 +291,7 @@ class InstantAnalytics extends Plugin
             });
 
             // Check to make sure Order::EVENT_AFTER_REMOVE_LINE_ITEM is defined
-            if (\defined('Order::EVENT_AFTER_REMOVE_LINE_ITEM')) {
+            if (defined('Order::EVENT_AFTER_REMOVE_LINE_ITEM')) {
                 Event::on(Order::class, Order::EVENT_AFTER_REMOVE_LINE_ITEM, function (LineItemEvent $e) {
                     $lineItem = $e->lineItem;
                     if (self::$settings->autoSendRemoveFromCart) {
@@ -297,7 +303,7 @@ class InstantAnalytics extends Plugin
     }
 
     /**
-     * Install site event listeners for AdminCP requests only
+     * Install site event listeners for Control Panel requests only
      */
     protected function installCpEventListeners()
     {
@@ -338,7 +344,7 @@ class InstantAnalytics extends Plugin
         if ($request->getIsSiteRequest() && !$request->getIsConsoleRequest() && !self::$pageViewSent) {
             self::$pageViewSent = true;
             /** @var IAnalytics $analytics */
-            $analytics = InstantAnalytics::$plugin->ia->getGlobals(self::$currentTemplate);
+            $analytics = self::$plugin->ia->getGlobals(self::$currentTemplate);
             // Bail if we have no analytics object
             if ($analytics === null) {
                 return;
@@ -396,6 +402,9 @@ class InstantAnalytics extends Plugin
     private function getPullFieldsFromLayoutId($layoutId): array
     {
         $result = ['' => 'none'];
+        if ($layoutId === null) {
+            return $result;
+        }
         $fieldLayout = Craft::$app->getFields()->getLayoutById($layoutId);
         if ($fieldLayout) {
             $result = FieldHelper::fieldsOfTypeFromLayout(FieldHelper::TEXT_FIELD_CLASS_KEY, $fieldLayout, false);

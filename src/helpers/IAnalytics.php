@@ -95,7 +95,7 @@ class IAnalytics extends Analytics
     {
         if (InstantAnalytics::$commercePlugin) {
             if ($productVariant) {
-                 InstantAnalytics::$plugin->commerce->addCommerceProductDetailView($this, $productVariant);
+                InstantAnalytics::$plugin->commerce->addCommerceProductDetailView($this, $productVariant);
             }
         } else {
             Craft::warning(
@@ -119,7 +119,7 @@ class IAnalytics extends Analytics
     {
         if (InstantAnalytics::$commercePlugin) {
             if ($orderModel) {
-                 InstantAnalytics::$plugin->commerce->addCommerceCheckoutStep($this, $orderModel, $step, $option);
+                InstantAnalytics::$plugin->commerce->addCommerceCheckoutStep($this, $orderModel, $step, $option);
             }
         } else {
             Craft::warning(

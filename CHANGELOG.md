@@ -1,5 +1,12 @@
 # Instant Analytics Changelog
 
+## 1.1.1 - 2019.04.22
+### Added
+* Fixed an issue on the Settings page where it would blindly pass in null values to `getLayoutById()`
+* If you're using Craft 3.1, Instant Analytics will use Craft [environmental variables](https://docs.craftcms.com/v3/config/environments.html#control-panel-settings) for secrets
+* Fixed an issue where `get_class()` was passed a non-object
+* Updated Twig namespacing to be compliant with deprecated class aliases in 2.7.x
+
 ## 1.1.0 - 2018.11.19
 ### Added
 * Added Craft Commerce 2 support for automatic sending of Google Analytics Enhanced eCommerce events  
@@ -32,7 +39,7 @@
 
 ### Changed
 * Lots of code cleanup
-* Moved to a modern webpack build config for the AdminCP
+* Moved to a modern webpack build config for the Control Panel
 * Added install confetti
 
 ## 1.0.6 - 2018.03.22

@@ -4,7 +4,7 @@
 
 Instant Analytics brings full Google Analytics support to your Twig templates and automatic Craft Commerce integration with Google Enhanced Ecommerce.
 
-![Screenshot](./docs/docs/resources/img/plugin-banner.jpg)
+![Screenshot](./resources/img/plugin-banner.jpg)
 
 **Note**: _The license fee for this plugin is $59.00 via the Craft Plugin Store._
 
@@ -29,15 +29,5 @@ To install the plugin, follow these instructions.
 3. Install the plugin via `./craft install/plugin instant-analytics` via the CLI, or in the Control Panel, go to Settings → Plugins and click the “Install” button for Connect.
 
 You can also install Instant Analytics via the **Plugin Store** in the Craft Control Panel.
-
-## Documentation
-
-Click here -> [Instant Analytics Documentation](https://nystudio107.com/plugins/instant-analytics/documentation)
-
-## Instant Analytics Roadmap
-
-Some things to do, and ideas for potential features:
-
-* Support for Commerce 3 alpha
 
 Brought to you by [nystudio107](http://nystudio107.com)

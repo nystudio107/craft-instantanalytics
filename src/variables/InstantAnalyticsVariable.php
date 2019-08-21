@@ -15,6 +15,8 @@ use nystudio107\instantanalytics\helpers\IAnalytics;
 
 use craft\helpers\Template;
 
+use \Twig\Markup;
+
 /**
  * Instant Analytics Variable
  *
@@ -71,10 +73,10 @@ class InstantAnalyticsVariable extends ManifestVariable
      * @param $url
      * @param $title
      *
-     * @return \Twig_Markup
+     * @return Markup
      * @throws \yii\base\Exception
      */
-    public function pageViewTrackingUrl($url, $title): \Twig_Markup
+    public function pageViewTrackingUrl($url, $title): Markup
     {
         return Template::raw(InstantAnalytics::$plugin->ia->pageViewTrackingUrl($url, $title));
     }
@@ -88,7 +90,7 @@ class InstantAnalyticsVariable extends ManifestVariable
      * @param string $eventLabel
      * @param int    $eventValue
      *
-     * @return \Twig_Markup
+     * @return Markup
      * @throws \yii\base\Exception
      */
     public function eventTrackingUrl(
@@ -97,7 +99,7 @@ class InstantAnalyticsVariable extends ManifestVariable
         $eventAction = '',
         $eventLabel = '',
         $eventValue = 0
-    ): \Twig_Markup {
+    ): Markup {
         return Template::raw(InstantAnalytics::$plugin->ia->eventTrackingUrl(
             $url,
             $eventCategory,

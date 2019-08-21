@@ -22,13 +22,24 @@
 
 {% set commerceEnabled = (commerce and commerceEnabled and commerceInstalled) %}
 
-{{ forms.textField({
-    label: 'Google Analytics Tracking ID:',
-    instructions: "Enter your Google Analytics Tracking ID here. Only enter the ID, e.g.: UA-XXXXXX-XX, not the entire script code.",
-    id: 'googleAnalyticsTracking',
-    name: 'googleAnalyticsTracking',
-    value: settings['googleAnalyticsTracking']})
-}}
+{% if craft.imageOptimize.craft31 %}
+    {{ forms.autosuggestField({
+        label: 'Google Analytics Tracking ID:',
+        instructions: "Enter your Google Analytics Tracking ID here. Only enter the ID, e.g.: UA-XXXXXX-XX, not the entire script code.",
+        suggestEnvVars: true,
+        id: 'googleAnalyticsTracking',
+        name: 'googleAnalyticsTracking',
+        value: settings['googleAnalyticsTracking'],
+    }) }}
+{% else %}
+    {{ forms.textField({
+        label: 'Google Analytics Tracking ID:',
+        instructions: "Enter your Google Analytics Tracking ID here. Only enter the ID, e.g.: UA-XXXXXX-XX, not the entire script code.",
+        id: 'googleAnalyticsTracking',
+        name: 'googleAnalyticsTracking',
+        value: settings['googleAnalyticsTracking']})
+    }}
+{% endif %}
 
 {{ forms.lightswitchField({
     label: 'Strip Query String from PageView URLs:',

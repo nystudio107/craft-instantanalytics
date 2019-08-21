@@ -10,8 +10,13 @@
 
 namespace nystudio107\instantanalytics\models;
 
+use nystudio107\instantanalytics\InstantAnalytics;
+
 use craft\base\Model;
+use craft\behaviors\EnvAttributeParserBehavior;
 use craft\validators\ArrayValidator;
+
+use yii\behaviors\AttributeTypecastBehavior;
 
 /**
  * @author    nystudio107
@@ -45,7 +50,8 @@ class Settings extends Model
     public $autoSendPageView = true;
 
     /**
-     * The field in a Commerce Product Variant that should be used for the category
+     * The field in a Commerce Product Variant that should be used for the
+     * category
      *
      * @var string
      */
@@ -167,7 +173,7 @@ class Settings extends Model
                     'adminExclude',
                     'logExcludedAnalytics',
                 ],
-                'boolean'
+                'boolean',
             ],
             [
                 [
@@ -176,15 +182,40 @@ class Settings extends Model
                     'productBrandField',
                     'googleAnalyticsTracking',
                 ],
-                'string'
+                'string',
             ],
             [
                 [
                     'groupExcludes',
                     'serverExcludes',
                 ],
-                ArrayValidator::class
+                ArrayValidator::class,
             ],
         ];
+    }
+
+    /**
+     * @return array
+     */
+    public function behaviors()
+    {
+        $craft31Behaviors = [];
+        if (InstantAnalytics::$craft31) {
+            $craft31Behaviors = [
+                'parser' => [
+                    'class' => EnvAttributeParserBehavior::class,
+                    'attributes' => [
+                        'googleAnalyticsTracking',
+                    ],
+                ],
+            ];
+        }
+
+        return array_merge($craft31Behaviors, [
+            'typecast' => [
+                'class' => AttributeTypecastBehavior::class,
+                // 'attributeTypes' will be composed automatically according to `rules()`
+            ],
+        ]);
     }
 }

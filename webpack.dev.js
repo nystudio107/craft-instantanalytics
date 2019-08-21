@@ -22,6 +22,7 @@ const configureDevServer = () => {
         host: settings.devServerConfig.host(),
         port: settings.devServerConfig.port(),
         https: !!parseInt(settings.devServerConfig.https()),
+        disableHostCheck: true,
         quiet: true,
         hot: true,
         hotOnly: true,
@@ -29,6 +30,7 @@ const configureDevServer = () => {
         stats: 'errors-only',
         watchOptions: {
             poll: !!parseInt(settings.devServerConfig.poll()),
+            ignored: /node_modules/,
         },
         headers: {
             'Access-Control-Allow-Origin': '*'
