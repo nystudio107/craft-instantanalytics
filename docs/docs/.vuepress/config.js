@@ -4,6 +4,7 @@ module.exports = {
     base: '/docs/instant-analytics/',
     dest: '../../../../sites/nystudio107/web/docs/instant-analytics',
     themeConfig: {
+        displayAllHeaders: true,
         sidebar: [
             ['/', 'Instant Analytics plugin for Craft CMS 3.x'],
             ['/Overview', 'Instant Analytics Overview'],
