@@ -20,17 +20,26 @@ const configureBabelLoader = (browserList) => {
         use: {
             loader: 'babel-loader',
             options: {
+                cacheDirectory: true,
                 presets: [
                     [
                         '@babel/preset-env', {
-                        useBuiltIns: 'usage',
+                        modules: false,
+                        corejs:  {
+                            version: 3,
+                            proposals: true
+                        },
+                        useBuiltIns: 'entry',
                         targets: {
                             browsers: browserList,
                         },
                     }
                     ],
                 ],
-                plugins: [],
+                plugins: [
+                    '@babel/plugin-syntax-dynamic-import',
+                    '@babel/plugin-transform-runtime',
+                ],
             },
         },
     };
