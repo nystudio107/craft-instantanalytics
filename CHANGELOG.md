@@ -1,7 +1,7 @@
 # Instant Analytics Changelog
 
 ## 1.1.1 - 2019.09.27
-### Added
+### Changed
 * Fixed an issue on the Settings page where it would blindly pass in null values to `getLayoutById()`
 * If you're using Craft 3.1, Instant Analytics will use Craft [environmental variables](https://docs.craftcms.com/v3/config/environments.html#control-panel-settings) for secrets
 * Fixed an issue where `get_class()` was passed a non-object
