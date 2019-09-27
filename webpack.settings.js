@@ -17,15 +17,13 @@ module.exports = {
         dist: {
             base: "./src/assetbundles/instantanalytics/dist/",
             clean: [
-                "./img",
-                "./css",
-                "./js"
+                '**/*',
             ]
         },
         templates: "./src/templates/"
     },
     urls: {
-        publicPath: ""
+        publicPath: () => process.env.PUBLIC_PATH || "",
     },
     vars: {
         cssName: "styles"
