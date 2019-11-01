@@ -22,7 +22,7 @@
 
 {% set commerceEnabled = (commerce and commerceEnabled and commerceInstalled) %}
 
-{% if craft.imageOptimize.craft31 %}
+{% if craft.instantAnalytics.craft31 %}
     {{ forms.autosuggestField({
         label: 'Google Analytics Tracking ID:',
         instructions: "Enter your Google Analytics Tracking ID here. Only enter the ID, e.g.: UA-XXXXXX-XX, not the entire script code.",

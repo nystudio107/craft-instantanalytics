@@ -1,5 +1,9 @@
 # Instant Analytics Changelog
 
+## 1.1.2 - 2019.11.01
+### Changed
+* Fixed an issue that would cause it to throw an error on the settings page if you didn't have ImageOptimized installed
+
 ## 1.1.1 - 2019.09.27
 ### Changed
 * Fixed an issue on the Settings page where it would blindly pass in null values to `getLayoutById()`
