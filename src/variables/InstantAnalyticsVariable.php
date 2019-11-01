@@ -108,4 +108,14 @@ class InstantAnalyticsVariable extends ManifestVariable
             $eventValue
         ));
     }
+
+    /**
+     * Return whether we are running Craft 3.1 or later
+     *
+     * @return bool
+     */
+    public function craft31(): bool
+    {
+        return InstantAnalytics::$craft31;
+    }
 }
