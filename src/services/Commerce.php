@@ -146,6 +146,7 @@ class Commerce extends Component
         if ($order && $analytics) {
             // First, include the transaction data
             $analytics->setTransactionId($order->number)
+                ->setCurrencyCode($order->paymentCurrency)
                 ->setRevenue($order->totalPrice)
                 ->setTax($order->getAdjustmentsTotalByType('tax', true))
                 ->setShipping($order->getAdjustmentsTotalByType('shipping', true));
