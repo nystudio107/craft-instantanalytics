@@ -18,7 +18,7 @@ If you are using Craft Commerce 2, Instant Analytics will recognize this, and au
 
 * **Add to Cart** - When someone adds an item from your Craft Commerce store to their cart.  This will include data for the Product or Variant that was added to the cart.
 * **Remove from Cart** - When someone removes an item from your Craft Commerce store cart (requires Craft Commerce 2.0.0-beta.x or later).  This will include data for the Product or Variant that was removed from the cart.
-* **Purchase** - When someone completes a purchase in your Craft Commerce store.  This will include all of the LineItems that were added to the cart, as well as the TransactionID, Revenue, Tax, Shipping, and Coupon Code used (if any).
+* **Purchase** - When someone completes a purchase in your Craft Commerce store.  This will include all of the LineItems that were added to the cart, as well as the Order Reference, Revenue, Tax, Shipping, and Coupon Code used (if any).
 
 Additionally, you can add simple Twig tags to your templates to track Product Impressions, Product Detail Views, and track each step of the Checkout process.  In Google Analytics, you will be able to view detailed information on the sales from your Craft Commerce store, and other useful information such as where customers are abandoning their cart in the Checkout process.
 

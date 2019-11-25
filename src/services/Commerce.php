@@ -48,7 +48,7 @@ class Commerce extends Component
             $analytics = InstantAnalytics::$plugin->ia->eventAnalytics(
                 'Commerce',
                 'Purchase',
-                $order->number,
+                $order->reference,
                 $order->totalPrice
             );
 
@@ -60,8 +60,8 @@ class Commerce extends Component
 
                 Craft::info(Craft::t(
                     'instant-analytics',
-                    'orderComplete for `Commerce` - `Purchase` - `{number}` - `{price}`',
-                    ['number' => $order->number, 'price' => $order->totalPrice]
+                    'orderComplete for `Commerce` - `Purchase` - `{reference}` - `{price}`',
+                    ['reference' => $order->reference, 'price' => $order->totalPrice]
                 ), __METHOD__);
             }
         }
@@ -145,7 +145,8 @@ class Commerce extends Component
     {
         if ($order && $analytics) {
             // First, include the transaction data
-            $analytics->setTransactionId($order->number)
+            $analytics->setTransactionId($order->reference)
+                ->setCurrencyCode($order->paymentCurrency)
                 ->setRevenue($order->totalPrice)
                 ->setTax($order->getAdjustmentsTotalByType('tax', true))
                 ->setShipping($order->getAdjustmentsTotalByType('shipping', true));

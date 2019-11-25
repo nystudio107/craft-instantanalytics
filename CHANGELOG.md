@@ -1,5 +1,13 @@
 # Instant Analytics Changelog
 
+## 1.1.3 - 2019.11.25
+### Added
+* Add currency code to transaction event
+
+### Changed
+* Replace use of order number (UID) with the much more human friendly order reference
+* Documentation improvements
+
 ## 1.1.2 - 2019.11.01
 ### Changed
 * Fixed an issue that would cause it to throw an error on the settings page if you didn't have ImageOptimized installed
