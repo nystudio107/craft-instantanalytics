@@ -3,6 +3,7 @@
 ## 1.1.3 - 2019.11.25
 ### Changed
 * Replace use of order number (UID) with the much more human friendly order reference
+* Add currency code to transaction event
 
 ## 1.1.2 - 2019.11.01
 ### Changed
