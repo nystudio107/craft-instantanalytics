@@ -1,9 +1,12 @@
 # Instant Analytics Changelog
 
 ## 1.1.3 - 2019.11.25
+### Added
+* Add currency code to transaction event
+
 ### Changed
 * Replace use of order number (UID) with the much more human friendly order reference
-* Add currency code to transaction event
+* Documentation improvements
 
 ## 1.1.2 - 2019.11.01
 ### Changed
