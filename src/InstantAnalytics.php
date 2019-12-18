@@ -168,7 +168,7 @@ class InstantAnalytics extends Plugin
     }
 
     /**
-     * Handle the `{% hook isSendPageView %}`
+     * Handle the `{% hook iaSendPageView %}`
      *
      * @param array &$context
      *
