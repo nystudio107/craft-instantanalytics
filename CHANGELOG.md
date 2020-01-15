@@ -1,5 +1,9 @@
 # Instant Analytics Changelog
 
+## 1.1.4 - 2020.01.15
+### Added
+* 
+
 ## 1.1.3 - 2019.11.25
 ### Added
 * Add currency code to transaction event
