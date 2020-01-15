@@ -2,7 +2,7 @@
 
 ## 1.1.4 - 2020.01.15
 ### Added
-* 
+* Added **Create GCLID Cookie** setting to control whether ID creates cookies or not
 
 ## 1.1.3 - 2019.11.25
 ### Added
