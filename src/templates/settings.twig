@@ -58,6 +58,14 @@
 }}
 
 {{ forms.lightswitchField({
+    label: 'Create GCLID Cookie:',
+    instructions: "Google Click Identifier (GCLID), is a unique tracking parameter that Google uses to transfer information between your Google Ads account and your Google Analytics account. If this setting is on, the GCLID will be created if it doesn't exist for the current request.",
+    id: 'createGclidCookie',
+    name: 'createGclidCookie',
+    on: settings['createGclidCookie']})
+}}
+
+{{ forms.lightswitchField({
     label: 'Auto Send "Add To Cart" Events:',
     instructions: "If this setting is on, Google Analytics Enhanced Ecommerce events are automatically sent when an item is added to your Craft Commerce cart.",
     id: 'autoSendAddToCart',

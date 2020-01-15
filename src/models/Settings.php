@@ -50,6 +50,11 @@ class Settings extends Model
     public $autoSendPageView = true;
 
     /**
+     * @var bool Should the GCLID cookie be created if it doesn't exist?
+     */
+    public $createGclidCookie = true;
+
+    /**
      * The field in a Commerce Product Variant that should be used for the
      * category
      *
@@ -164,6 +169,7 @@ class Settings extends Model
                 [
                     'stripQueryString',
                     'autoSendPageView',
+                    'createGclidCookie',
                     'autoSendAddToCart',
                     'autoSendRemoveFromCart',
                     'autoSendPurchaseComplete',
