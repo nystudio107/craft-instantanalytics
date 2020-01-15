@@ -38,5 +38,7 @@ return [
     'addCommerceProductImpression for `{sku}` - `{name}` - `{name}` - `{index}`' => 'addCommerceProductImpression for `{sku}` - `{name}` - `{name}` - `{index}`',
     'Module does not exist in the manifest: {moduleName}' => 'Module does not exist in the manifest: {moduleName}',
     'addCommerceProductDetailView for `{sku}` - `{name} - `{name}`' => 'addCommerceProductDetailView for `{sku}` - `{name} - `{name}`',
-    'addToCart for `Commerce` - `Add to Cart` - `{title}` - `{quantity}`' => 'addToCart for `Commerce` - `Add to Cart` - `{title}` - `{quantity}`'
+    'addToCart for `Commerce` - `Add to Cart` - `{title}` - `{quantity}`' => 'addToCart for `Commerce` - `Add to Cart` - `{title}` - `{quantity}`',
+    'orderComplete for `Commerce` - `Purchase` - `{number}` - `{price}`' => 'orderComplete for `Commerce` - `Purchase` - `{number}` - `{price}`',
+    'addCommerceProductDetailView for `{sku}` - `{name}`' => 'addCommerceProductDetailView for `{sku}` - `{name}`'
 ];
