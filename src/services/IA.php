@@ -489,7 +489,7 @@ class IA extends Component
         $gclid = '';
         if (isset($_GET['gclid'])) {
             $gclid = $_GET['gclid'];
-            if (!empty($gclid)) {
+            if (!InstantAnalytics::$settings->createGclidCookie && !empty($gclid)) {
                 setcookie('gclid', $gclid, strtotime('+10 years'), '/');
             }
         }
@@ -516,7 +516,9 @@ class IA extends Component
         } else {
             $cid = $this->gaGenUUID();
         }
-        setcookie('_ia', $cid, strtotime('+2 years'), '/'); // Two years
+        if (!InstantAnalytics::$settings->createGclidCookie && !empty($cid)) {
+            setcookie('_ia', $cid, strtotime('+2 years'), '/'); // Two years
+        }
 
         return $cid;
     }

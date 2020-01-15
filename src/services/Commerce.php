@@ -306,7 +306,7 @@ class Commerce extends Component
 
             Craft::info(Craft::t(
                 'instant-analytics',
-                'addCommerceProductDetailView for `{sku}` - `{name} - `{name}`',
+                'addCommerceProductDetailView for `{sku}` - `{name}`',
                 ['sku' => $productData['sku'], 'name' => $productData['name']]
             ), __METHOD__);
         }

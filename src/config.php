@@ -39,6 +39,11 @@ return [
     'autoSendPageView' => true,
 
     /**
+     * Should the GCLID cookie be created if it doesn't exist?
+     */
+    'createGclidCookie' => true,
+    
+    /**
      * The field in a Commerce Product Variant that should be used for the category
      */
     'productCategoryField' => '',
