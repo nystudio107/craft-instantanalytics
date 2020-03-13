@@ -1,5 +1,9 @@
 # Instant Analytics Changelog
 
+## 1.1.6 - 2020.03.13
+### Fixed
+* Fixed an issue where an error would be thrown if a brand field didn't exist for a given Product Type
+
 ## 1.1.5 - 2020.02.05
 ### Fixed
 * Fixed the logic used checking the **Create GCLID Cookie** setting by removing the not `!`
