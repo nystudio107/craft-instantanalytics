@@ -467,13 +467,8 @@ class Commerce extends Component
     private function pullDataFromField($productVariant, $fieldHandle, $isBrand = false): string
     {
         $result = '';
-
         if ($productVariant && $fieldHandle) {
-            $srcField = $productVariant[$fieldHandle];
-
-            if ($srcField === null) {
-                $srcField = $productVariant->product->$fieldHandle;
-            }
+            $srcField = $productVariant[$fieldHandle] ?? $productVariant->product[$fieldHandle] ?? null;
             // If the source field isn't an object, return nothing
             if (!is_object($srcField)) {
                 return $result;
