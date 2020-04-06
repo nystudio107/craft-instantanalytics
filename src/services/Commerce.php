@@ -148,8 +148,8 @@ class Commerce extends Component
             $analytics->setTransactionId($order->reference)
                 ->setCurrencyCode($order->paymentCurrency)
                 ->setRevenue($order->totalPrice)
-                ->setTax($order->getAdjustmentsTotalByType('tax', true))
-                ->setShipping($order->getAdjustmentsTotalByType('shipping', true));
+                ->setTax($order->getTotalTax())
+                ->setShipping($order->getTotalShippingCost());
 
             // Coupon code?
             if ($order->couponCode) {
@@ -467,13 +467,8 @@ class Commerce extends Component
     private function pullDataFromField($productVariant, $fieldHandle, $isBrand = false): string
     {
         $result = '';
-
         if ($productVariant && $fieldHandle) {
-            $srcField = $productVariant[$fieldHandle];
-
-            if ($srcField === null) {
-                $srcField = $productVariant->product->$fieldHandle;
-            }
+            $srcField = $productVariant[$fieldHandle] ?? $productVariant->product[$fieldHandle] ?? null;
             // If the source field isn't an object, return nothing
             if (!is_object($srcField)) {
                 return $result;
