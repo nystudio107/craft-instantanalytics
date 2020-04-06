@@ -148,8 +148,8 @@ class Commerce extends Component
             $analytics->setTransactionId($order->reference)
                 ->setCurrencyCode($order->paymentCurrency)
                 ->setRevenue($order->totalPrice)
-                ->setTax($order->getAdjustmentsTotalByType('tax', true))
-                ->setShipping($order->getAdjustmentsTotalByType('shipping', true));
+                ->setTax($order->getTotalTax())
+                ->setShipping($order->getTotalShippingCost());
 
             // Coupon code?
             if ($order->couponCode) {
