@@ -1,6 +1,9 @@
 # Instant Analytics Changelog
 
-## 1.1.6 - 2020.03.13
+## 1.1.6 - 2020.04.06
+### Changed
+* Updated to latest npm dependencies via `npm audit fix` for both the primary app and the docs
+
 ### Fixed
 * Fixed an issue where an error would be thrown if a brand field didn't exist for a given Product Type
 
