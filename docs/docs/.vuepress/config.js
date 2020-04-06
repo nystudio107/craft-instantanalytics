@@ -2,7 +2,7 @@ module.exports = {
     title: 'Instant Analytics Documentation',
     description: 'Documentation for the Instant Analytics plugin',
     base: '/docs/instant-analytics/',
-    dest: '../../../../sites/nystudio107/web/docs/instant-analytics',
+    dest: '../../../sites/nystudio107/web/docs/instant-analytics',
     themeConfig: {
         displayAllHeaders: true,
         sidebar: [
