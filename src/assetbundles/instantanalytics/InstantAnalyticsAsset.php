@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2017 nystudio107
  */
 
-namespace nystudio107\instantanalytics\assetbundles\InstantAnalytics;
+namespace nystudio107\instantanalytics\assetbundles\instantanalytics;
 
 use craft\web\AssetBundle;
 use craft\web\assets\cp\CpAsset;
