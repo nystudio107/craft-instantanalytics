@@ -1,5 +1,9 @@
 # Instant Analytics Changelog
 
+## 1.1.7 - 2020.04.16
+### Fixed
+* Fixed Asset Bundle namespace case
+
 ## 1.1.6 - 2020.04.06
 ### Changed
 * Updated to latest npm dependencies via `npm audit fix` for both the primary app and the docs
