@@ -1,6 +1,9 @@
 # Instant Analytics Changelog
 
 ## 1.1.9 - 2020.09.10
+### Added
+* Stash the various `utm` settings in local storage to allow proper attribution from Commerce events
+
 ### Fixed
 * Set alternative title if item is not a Product (such as a donation)
 
