@@ -291,7 +291,7 @@ class InstantAnalytics extends Plugin
             });
 
             // Check to make sure Order::EVENT_AFTER_REMOVE_LINE_ITEM is defined
-            if (defined('Order::EVENT_AFTER_REMOVE_LINE_ITEM')) {
+            if (defined(Order::class . '::EVENT_AFTER_REMOVE_LINE_ITEM')) {
                 Event::on(Order::class, Order::EVENT_AFTER_REMOVE_LINE_ITEM, function (LineItemEvent $e) {
                     $lineItem = $e->lineItem;
                     if (self::$settings->autoSendRemoveFromCart) {
@@ -349,6 +349,7 @@ class InstantAnalytics extends Plugin
             if ($analytics === null) {
                 return;
             }
+            Craft::dd($analytics);
             // If SEOmatic is installed, set the page title from it
             $this->setTitleFromSeomatic($analytics);
             // Send the page view
