@@ -349,7 +349,6 @@ class InstantAnalytics extends Plugin
             if ($analytics === null) {
                 return;
             }
-            Craft::dd($analytics);
             // If SEOmatic is installed, set the page title from it
             $this->setTitleFromSeomatic($analytics);
             // Send the page view
