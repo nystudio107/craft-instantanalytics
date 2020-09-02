@@ -22,6 +22,8 @@ However, to prevent duplicate data from being sent, if you use Instant Analytics
 
 Then you can still use the `ga()` calls to send events to Google Analytics.  Or, if you don't send events via Javascript, you can just remove the Google Analytics tag/Javascript from your page entirely.
 
+In addition, to ensure that the data is tracked under a uniform `usersession` in the Google Analytics backend, you should have the **Require GA Cookie clientId** setting **on** (which is the default). This causes Instant Analytics to not send any analytics data unless it has received a `clientId` from the frontend GA cookie.
+
 ## Customizing via the config.php file
 
 Instant Analytics has a number of other configuration options that can be customized on a per-environment basis via the `config.php` file.  Don't edit this file, instead copy it to `craft/config` as `instantanalytics.php` (rename it) and make your changes there.

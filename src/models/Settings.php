@@ -50,6 +50,12 @@ class Settings extends Model
     public $autoSendPageView = true;
 
     /**
+     * If you plan to use Instant Analytics in conjunction with frontend JavaScript, this setting should be on, so that Instant Analytics requires a `clientId` from the frontend-set GA cookie before it will send analytics data.
+     * @var bool
+     */
+    public $requireGaCookieClientId = true;
+
+    /**
      * @var bool Should the GCLID cookie be created if it doesn't exist?
      */
     public $createGclidCookie = true;
@@ -169,6 +175,7 @@ class Settings extends Model
                 [
                     'stripQueryString',
                     'autoSendPageView',
+                    'requireGaCookieClientId',
                     'createGclidCookie',
                     'autoSendAddToCart',
                     'autoSendRemoveFromCart',

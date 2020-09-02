@@ -1,5 +1,9 @@
 # Instant Analytics Changelog
 
+## 1.1.8 - 2020.09.02
+### Fixed
+* Instant Analytics will no longer attempt to create its own `clientId` by default, instead deferring to obtaining `clientId` from the GA cookie. Analytics data will not be sent if there is no `clientId`, preventing it from creating duplicate `usersessions`
+
 ## 1.1.7 - 2020.04.16
 ### Fixed
 * Fixed Asset Bundle namespace case

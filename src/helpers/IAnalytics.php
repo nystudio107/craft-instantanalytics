@@ -143,20 +143,27 @@ class IAnalytics extends Analytics
     {
         $requestIp = $_SERVER['REMOTE_ADDR'];
         if ($this->shouldSendAnalytics) {
-            try {
-                Craft::info(
-                    'Send hit for IAnalytics object: '.print_r($this, true),
-                    __METHOD__
-                );
-
-                return parent::sendHit($methodName);
-            } catch (\Exception $e) {
-                if (InstantAnalytics::$settings->logExcludedAnalytics) {
+            if ($this->getClientId() !== null || $this->getUserId() !== null) {
+                try {
                     Craft::info(
-                        '*** sendHit(): error sending analytics: '.$e->getMessage(),
+                        'Send hit for IAnalytics object: ' . print_r($this, true),
                         __METHOD__
                     );
+
+                    return parent::sendHit($methodName);
+                } catch (\Exception $e) {
+                    if (InstantAnalytics::$settings->logExcludedAnalytics) {
+                        Craft::info(
+                            '*** sendHit(): error sending analytics: ' . $e->getMessage(),
+                            __METHOD__
+                        );
+                    }
                 }
+            } elseif (InstantAnalytics::$settings->logExcludedAnalytics) {
+                Craft::info(
+                    '*** sendHit(): analytics not sent for '.$requestIp. ' because no clientId or userId is set',
+                    __METHOD__
+                );
             }
         } elseif (InstantAnalytics::$settings->logExcludedAnalytics) {
             Craft::info(
