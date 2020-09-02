@@ -10,6 +10,7 @@
 
 namespace nystudio107\instantanalytics\services;
 
+use craft\errors\MissingComponentException;
 use nystudio107\instantanalytics\InstantAnalytics;
 use nystudio107\instantanalytics\helpers\IAnalytics;
 
@@ -451,21 +452,43 @@ class IA extends Component
                 }
 
                 // Handle UTM parameters
-                $utm_source = $request->getParam('utm_source');
+                try {
+                    $session = Craft::$app->getSession();
+                } catch (MissingComponentException $e) {
+                    // That's ok
+                    $session = null;
+                }
+                // utm_source
+                $utm_source = $request->getParam('utm_source') ?? $session->get('utm_source') ?? null;
                 if (!empty($utm_source)) {
                     $analytics->setCampaignSource($utm_source);
+                    if ($session) {
+                        $session->set('utm_source', $utm_source);
+                    }
                 }
-                $utm_medium = $request->getParam('utm_medium');
+                // utm_medium
+                $utm_medium = $request->getParam('utm_medium') ?? $session->get('utm_medium') ?? null;
                 if (!empty($utm_medium)) {
                     $analytics->setCampaignMedium($utm_medium);
+                    if ($session) {
+                        $session->set('utm_medium', $utm_medium);
+                    }
                 }
-                $utm_campaign = $request->getParam('utm_campaign');
+                // utm_campaign
+                $utm_campaign = $request->getParam('utm_campaign') ?? $session->get('utm_campaign') ?? null;
                 if (!empty($utm_campaign)) {
                     $analytics->setCampaignName($utm_campaign);
+                    if ($session) {
+                        $session->set('utm_campaign', $utm_campaign);
+                    }
                 }
-                $utm_content = $request->getParam('utm_content');
+                // utm_content
+                $utm_content = $request->getParam('utm_content') ?? $session->get('utm_content') ?? null;
                 if (!empty($utm_content)) {
                     $analytics->setCampaignContent($utm_content);
+                    if ($session) {
+                        $session->set('utm_content', $utm_content);
+                    }
                 }
 
                 // If SEOmatic is installed, set the affiliation as well
