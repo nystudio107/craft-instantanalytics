@@ -437,9 +437,13 @@ class IA extends Component
                     ->setUserAgentOverride($userAgent)
                     ->setDocumentHostName($hostName)
                     ->setDocumentReferrer($referrer)
-                    ->setAsyncRequest(false)
-                    ->setClientId($this->gaParseCookie());
+                    ->setAsyncRequest(false);
 
+                // Try to parse a clientId from an existing _ga cookie
+                $clientId = $this->gaParseCookie();
+                if (!empty($clientId)) {
+                    $analytics->setClientId($clientId);
+                }
                 // Set the gclid
                 $gclid = $this->getGclid();
                 if ($gclid) {
@@ -514,7 +518,10 @@ class IA extends Component
         } elseif (isset($_COOKIE['_ia']) && $_COOKIE['_ia'] !== '') {
             $cid = $_COOKIE['_ia'];
         } else {
-            $cid = $this->gaGenUUID();
+            // Only generate our own unique clientId if `requireGaCookieClientId` isn't true
+            if (!InstantAnalytics::$settings->requireGaCookieClientId)  {
+                $cid = $this->gaGenUUID();
+            }
         }
         if (InstantAnalytics::$settings->createGclidCookie && !empty($cid)) {
             setcookie('_ia', $cid, strtotime('+2 years'), '/'); // Two years

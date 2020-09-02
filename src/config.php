@@ -39,10 +39,15 @@ return [
     'autoSendPageView' => true,
 
     /**
+     * If you plan to use Instant Analytics in conjunction with frontend JavaScript, this setting should be on, so that Instant Analytics requires a `clientId` from the frontend-set GA cookie before it will send analytics data.
+     */
+    '$requireGaCookieClientId' => true,
+
+    /**
      * Should the GCLID cookie be created if it doesn't exist?
      */
     'createGclidCookie' => true,
-    
+
     /**
      * The field in a Commerce Product Variant that should be used for the category
      */
