@@ -1,6 +1,6 @@
 # Instant Analytics Changelog
 
-## 1.1.9 - 2020.09.10
+## 1.1.9 - 2020.09.02
 ### Added
 * Stash the various `utm` settings in local storage to allow proper attribution from Commerce events
 
