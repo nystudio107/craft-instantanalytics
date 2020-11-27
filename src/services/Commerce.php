@@ -109,7 +109,7 @@ class Commerce extends Component
         $order = null, $lineItem = null
     ) {
         if ($lineItem) {
-            $title = $lineItem->purchasable->title;
+            $title = $lineItem->purchasable->title ?? $lineItem->description;
             $quantity = $lineItem->qty;
             $analytics = InstantAnalytics::$plugin->ia->eventAnalytics(
                 'Commerce',
