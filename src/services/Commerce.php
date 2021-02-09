@@ -187,7 +187,7 @@ class Commerce extends Component
             //This is the same for both variant and non variant products
             $productData = [
                 'name' => $purchasable->title ?? $lineItem->description,
-                'sku' => $purchasable->sku,
+                'sku' => $purchasable->sku ?? $lineItem->sku,
                 'price' => $lineItem->salePrice,
                 'quantity' => $lineItem->qty,
             ];
