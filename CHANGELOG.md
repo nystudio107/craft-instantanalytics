@@ -3,6 +3,7 @@
 ## 1.1.10 - UNRELEASED
 ### Changed
 * Verify if purchasable exists before getting its title
+* Updated to webpack 5 buildchain
 
 ## 1.1.9 - 2020.09.02
 ### Added
