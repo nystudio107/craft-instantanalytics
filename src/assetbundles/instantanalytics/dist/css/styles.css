@@ -1,10 +1,8 @@
 /*!
- * @project        Instant Analytics
+ * @project        instantanalytics
  * @name           styles.css
  * @author         Andrew Welch
- * @build          Fri, Sep 27, 2019 3:21 PM ET
- * @release        c6d4c630545356560416d7b29aa1e4c766eae39c [develop]
- * @copyright      Copyright (c) 2019 nystudio107
+ * @build          Mon Feb 15 2021 03:58:20 GMT+0000 (Coordinated Universal Time)
+ * @copyright      Copyright (c) 2021 ©2020 nystudio107.com
  *
- */.block{display:block}
-/*# sourceMappingURL=styles.css.map */
+ */.block{display:block}.table{display:table}@-webkit-keyframes spin{to{-webkit-transform:rotate(1turn);transform:rotate(1turn)}}@keyframes spin{to{-webkit-transform:rotate(1turn);transform:rotate(1turn)}}@-webkit-keyframes ping{75%,to{-webkit-transform:scale(2);transform:scale(2);opacity:0}}@keyframes ping{75%,to{-webkit-transform:scale(2);transform:scale(2);opacity:0}}@-webkit-keyframes pulse{50%{opacity:.5}}@keyframes pulse{50%{opacity:.5}}@-webkit-keyframes bounce{0%,to{-webkit-transform:translateY(-25%);transform:translateY(-25%);-webkit-animation-timing-function:cubic-bezier(.8,0,1,1);animation-timing-function:cubic-bezier(.8,0,1,1)}50%{-webkit-transform:none;transform:none;-webkit-animation-timing-function:cubic-bezier(0,0,.2,1);animation-timing-function:cubic-bezier(0,0,.2,1)}}@keyframes bounce{0%,to{-webkit-transform:translateY(-25%);transform:translateY(-25%);-webkit-animation-timing-function:cubic-bezier(.8,0,1,1);animation-timing-function:cubic-bezier(.8,0,1,1)}50%{-webkit-transform:none;transform:none;-webkit-animation-timing-function:cubic-bezier(0,0,.2,1);animation-timing-function:cubic-bezier(0,0,.2,1)}}
