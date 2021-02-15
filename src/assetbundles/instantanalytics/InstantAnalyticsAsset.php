@@ -12,6 +12,7 @@ namespace nystudio107\instantanalytics\assetbundles\instantanalytics;
 
 use craft\web\AssetBundle;
 use craft\web\assets\cp\CpAsset;
+use craft\web\assets\vue\VueAsset;
 
 class InstantAnalyticsAsset extends AssetBundle
 {
@@ -29,6 +30,7 @@ class InstantAnalyticsAsset extends AssetBundle
         // define the dependencies
         $this->depends = [
             CpAsset::class,
+            VueAsset::class,
         ];
 
         parent::init();

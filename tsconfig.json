@@ -1,0 +1,39 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "buildchain/node_modules",
+    "declaration": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "noEmit": true,
+    "noImplicitAny": true,
+    "outDir": "./src/assetbundles/instantanalytics/dist/",
+    "paths": {
+      "@/*": [
+        "./src/assetbundles/instantanalytics/src/*"
+      ]
+    },
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strict": true,
+    "strictBindCallApply": true,
+    "strictFunctionTypes": true,
+    "strictNullChecks": true,
+    "target": "esnext",
+    "typeRoots": [
+      "buildchain/node_modules/@types"
+    ]
+  },
+  "include": [
+    "./src/assetbundles/instantanalytics/src/**/*.ts",
+    "./src/assetbundles/instantanalytics/src/**/*.vue"
+  ],
+  "exclude": [
+    "./node_modules"
+  ]
+}
