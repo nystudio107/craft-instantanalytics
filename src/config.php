@@ -41,7 +41,7 @@ return [
     /**
      * If you plan to use Instant Analytics in conjunction with frontend JavaScript, this setting should be on, so that Instant Analytics requires a `clientId` from the frontend-set GA cookie before it will send analytics data.
      */
-    '$requireGaCookieClientId' => true,
+    'requireGaCookieClientId' => true,
 
     /**
      * Should the GCLID cookie be created if it doesn't exist?
