@@ -279,7 +279,7 @@ class Manifest
      */
     protected static function getJsonFile(string $path)
     {
-        return self::getFileFromUri($path, [self::class, 'jsonFileDecode']);
+        return self::getFileFromUri($path, [JsonHelper::class, 'decodeIfJson']);
     }
 
     /**
@@ -414,19 +414,6 @@ class Manifest
             throw new NotFoundHttpException($error);
         }
         Craft::error($error, __METHOD__);
-    }
-
-    // Private Static Methods
-    // =========================================================================
-
-    /**
-     * @param $string
-     *
-     * @return mixed
-     */
-    private static function jsonFileDecode($string)
-    {
-        return JsonHelper::decodeIfJson($string);
     }
 }
 
