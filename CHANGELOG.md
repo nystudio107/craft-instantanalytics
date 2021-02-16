@@ -1,6 +1,6 @@
 # Instant Analytics Changelog
 
-## 1.1.10 - UNRELEASED
+## 1.1.10 - 2021.02.15
 ### Changed
 * Verify if purchasable exists before getting its title
 * Updated to webpack 5 buildchain
