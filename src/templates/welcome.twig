@@ -38,5 +38,7 @@
     </div>
     {# include our JavaScript modules #}
     {{ parent() }}
-    {{ craft.instantAnalytics.includeJsModule("welcome.js", false) }}
+    {{ craft.instantAnalytics.registerJsModules([
+        'welcome.js',
+    ]) }}
 {% endblock %}

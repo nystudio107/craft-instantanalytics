@@ -11,6 +11,9 @@
 
 namespace nystudio107\instantanalytics\helpers;
 
+use nystudio107\instantanalytics\assetbundles\instantanalytics\InstantAnalyticsAsset;
+use nystudio107\instantanalytics\helpers\Manifest as ManifestHelper;
+
 use Craft;
 use craft\helpers\Json as JsonHelper;
 use craft\helpers\UrlHelper;
@@ -29,13 +32,43 @@ class Manifest
     // Constants
     // =========================================================================
 
-    const CACHE_KEY = 'twigpack-instant-analytics';
-    const CACHE_TAG = 'twigpack-instant-analytics';
+    const ASSET_CLASS = InstantAnalyticsAsset::class;
+
+    const CACHE_KEY = 'twigpack-' . self::ASSET_CLASS;
+    const CACHE_TAG = 'twigpack-' . self::ASSET_CLASS;
 
     const DEVMODE_CACHE_DURATION = 1;
 
+    const SUPPRESS_ERRORS_FOR_MODULES = [
+        'styles.js',
+        'commons.js',
+        'vendors.js',
+        'vendors.css',
+        'styles.css',
+    ];
+
     // Protected Static Properties
     // =========================================================================
+
+    protected static $config = [
+        // If `devMode` is on, use webpack-dev-server to all for HMR (hot module reloading)
+        'useDevServer' => false,
+        // Manifest names
+        'manifest' => [
+            'legacy' => 'manifest.json',
+            'modern' => 'manifest.json',
+        ],
+        // Public server config
+        'server' => [
+            'manifestPath' => '/',
+            'publicPath' => '/',
+        ],
+        // webpack-dev-server config
+        'devServer' => [
+            'manifestPath' => 'http://127.0.0.1:8080',
+            'publicPath' => '/',
+        ],
+    ];
 
     /**
      * @var array
@@ -51,120 +84,70 @@ class Manifest
     // =========================================================================
 
     /**
-     * @param array  $config
-     * @param string $moduleName
-     * @param bool   $async
+     * Simulate a static constructor
      *
-     * @return string
+     * ManifestVariable constructor.
+     * @noinspection MagicMethodsValidityInspection
+     */
+    public static function __constructStatic()
+    {
+        ManifestHelper::invalidateCaches();
+        $assetClass = self::ASSET_CLASS;
+        $bundle = new $assetClass;
+        $baseAssetsUrl = Craft::$app->assetManager->getPublishedUrl(
+            $bundle->sourcePath,
+            true
+        );
+        self::$config['server']['manifestPath'] = Craft::getAlias($bundle->sourcePath);
+        self::$config['server']['publicPath'] = $baseAssetsUrl;
+        $useDevServer = getenv('NYS_PLUGIN_DEVSERVER');
+        if ($useDevServer !== false) {
+            self::$config['useDevServer'] = (bool)$useDevServer;
+        }
+    }
+
+    /**
+     * Get the passed in JS modules from the manifest, and register them in the current Craft view
+     *
+     * @param array $modules
      * @throws NotFoundHttpException
+     * @throws \yii\base\InvalidConfigException
      */
-    public static function getCssModuleTags(array $config, string $moduleName, bool $async): string
+    public static function registerJsModules(array $modules)
     {
-        $legacyModule = self::getModule($config, $moduleName, 'legacy', true);
-        if ($legacyModule === null) {
-            return '';
-        }
-        $lines = [];
-        if ($async) {
-            $lines[] = "<link rel=\"preload\" href=\"{$legacyModule}\" as=\"style\" onload=\"this.onload=null;this.rel='stylesheet'\" />";
-            $lines[] = "<noscript><link rel=\"stylesheet\" href=\"{$legacyModule}\"></noscript>";
-        } else {
-            $lines[] = "<link rel=\"stylesheet\" href=\"{$legacyModule}\" />";
-        }
-
-        return implode("\r\n", $lines);
-    }
-
-    /**
-     * @param string $path
-     *
-     * @return string
-     */
-    public static function getCssInlineTags(string $path): string
-    {
-        $result = self::getFile($path);
-        if ($result) {
-            $result = "<style>\r\n".$result."</style>\r\n";
-            return $result;
-        }
-
-        return '';
-    }
-
-    /**
-     * Returns the uglified loadCSS rel=preload Polyfill as per:
-     * https://github.com/filamentgroup/loadCSS#how-to-use-loadcss-recommended-example
-     *
-     * @return string
-     */
-    public static function getCssRelPreloadPolyfill(): string
-    {
-        return <<<EOT
-<script>
-/*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
-!function(t){"use strict";t.loadCSS||(t.loadCSS=function(){});var e=loadCSS.relpreload={};if(e.support=function(){var e;try{e=t.document.createElement("link").relList.supports("preload")}catch(t){e=!1}return function(){return e}}(),e.bindMediaToggle=function(t){var e=t.media||"all";function a(){t.media=e}t.addEventListener?t.addEventListener("load",a):t.attachEvent&&t.attachEvent("onload",a),setTimeout(function(){t.rel="stylesheet",t.media="only x"}),setTimeout(a,3e3)},e.poly=function(){if(!e.support())for(var a=t.document.getElementsByTagName("link"),n=0;n<a.length;n++){var o=a[n];"preload"!==o.rel||"style"!==o.getAttribute("as")||o.getAttribute("data-loadcss")||(o.setAttribute("data-loadcss",!0),e.bindMediaToggle(o))}},!e.support()){e.poly();var a=t.setInterval(e.poly,500);t.addEventListener?t.addEventListener("load",function(){e.poly(),t.clearInterval(a)}):t.attachEvent&&t.attachEvent("onload",function(){e.poly(),t.clearInterval(a)})}"undefined"!=typeof exports?exports.loadCSS=loadCSS:t.loadCSS=loadCSS}("undefined"!=typeof global?global:this);
-</script>
-EOT;
-    }
-
-    /**
-     * @param array  $config
-     * @param string $moduleName
-     * @param bool   $async
-     *
-     * @return null|string
-     * @throws NotFoundHttpException
-     */
-    public static function getJsModuleTags(array $config, string $moduleName, bool $async)
-    {
-        $legacyModule = self::getModule($config, $moduleName, 'legacy');
-        if ($legacyModule === null) {
-            return '';
-        }
-        if ($async) {
-            $modernModule = self::getModule($config, $moduleName, 'modern');
-            if ($modernModule === null) {
-                return '';
+        $view = Craft::$app->getView();
+        foreach($modules as $module) {
+            $jsModule = self::getModule(self::$config, $module, 'modern');
+            if ($jsModule) {
+                $view->registerJsFile($jsModule, [
+                    'depends' => self::ASSET_CLASS
+                ]);
             }
         }
-        $lines = [];
-        if ($async) {
-            $lines[] = "<script type=\"module\" src=\"{$modernModule}\"></script>";
-            $lines[] = "<script nomodule src=\"{$legacyModule}\"></script>";
-        } else {
-            $lines[] = "<script src=\"{$legacyModule}\"></script>";
-        }
-
-        return implode("\r\n", $lines);
     }
 
     /**
-     * Safari 10.1 supports modules, but does not support the `nomodule`
-     * attribute - it will load <script nomodule> anyway. This snippet solve
-     * this problem, but only for script tags that load external code, e.g.:
-     * <script nomodule src="nomodule.js"></script>
+     * Get the passed in CS modules from the manifest, and register them in the current Craft view
      *
-     * Again: this will **not* # prevent inline script, e.g.:
-     * <script nomodule>alert('no modules');</script>.
-     *
-     * This workaround is possible because Safari supports the non-standard
-     * 'beforeload' event. This allows us to trap the module and nomodule load.
-     *
-     * Note also that `nomodule` is supported in later versions of Safari -
-     * it's just 10.1 that omits this attribute.
-     *
-     * c.f.: https://gist.github.com/samthor/64b114e4a4f539915a95b91ffd340acc
-     *
-     * @return string
+     * @param array $modules
+     * @throws NotFoundHttpException
+     * @throws \yii\base\InvalidConfigException
      */
-    public static function getSafariNomoduleFix(): string
+    public static function registerCssModules(array $modules)
     {
-        return <<<EOT
-<script>
-!function(){var e=document,t=e.createElement("script");if(!("noModule"in t)&&"onbeforeload"in t){var n=!1;e.addEventListener("beforeload",function(e){if(e.target===t)n=!0;else if(!e.target.hasAttribute("nomodule")||!n)return;e.preventDefault()},!0),t.type="module",t.src=".",e.head.appendChild(t),t.remove()}}();
-</script>
-EOT;
+        $view = Craft::$app->getView();
+        foreach($modules as $module) {
+            $cssModule = self::getModule(self::$config, $module, 'legacy');
+            if ($cssModule) {
+                $view->registerCssFile($cssModule, [
+                    'depends' => self::ASSET_CLASS
+                ]);
+            }
+        }
     }
+
+    // Protected Static Methods
+    // =========================================================================
 
     /**
      * Return the URI to a module
@@ -177,7 +160,7 @@ EOT;
      * @return null|string
      * @throws NotFoundHttpException
      */
-    public static function getModule(array $config, string $moduleName, string $type = 'modern', bool $soft = false)
+    protected static function getModule(array $config, string $moduleName, string $type = 'modern', bool $soft = false)
     {
         // Get the module entry
         $module = self::getModuleEntry($config, $moduleName, $type, $soft);
@@ -218,7 +201,7 @@ EOT;
      * @return null|string
      * @throws NotFoundHttpException
      */
-    public static function getModuleEntry(array $config, string $moduleName, string $type = 'modern', bool $soft = false)
+    protected static function getModuleEntry(array $config, string $moduleName, string $type = 'modern', bool $soft = false)
     {
         $module = null;
         // Get the manifest file
@@ -226,11 +209,14 @@ EOT;
         if ($manifest !== null) {
             // Make sure it exists in the manifest
             if (empty($manifest[$moduleName])) {
-                self::reportError(Craft::t(
-                    'instant-analytics',
-                    'Module does not exist in the manifest: {moduleName}',
-                    ['moduleName' => $moduleName]
-                ), $soft);
+                // Don't report errors for any files in SUPPRESS_ERRORS_FOR_MODULES
+                if (!in_array($moduleName, self::SUPPRESS_ERRORS_FOR_MODULES)) {
+                    self::reportError(Craft::t(
+                        'instant-analytics',
+                        'Module does not exist in the manifest: {moduleName}',
+                        ['moduleName' => $moduleName]
+                    ), $soft);
+                }
 
                 return null;
             }
@@ -249,7 +235,7 @@ EOT;
      * @return null|array
      * @throws NotFoundHttpException
      */
-    public static function getManifestFile(array $config, string $type = 'modern')
+    protected static function getManifestFile(array $config, string $type = 'modern')
     {
         $manifest = null;
         // Determine whether we should use the devServer for HMR or not
@@ -285,44 +271,6 @@ EOT;
     }
 
     /**
-     * Returns the contents of a file from a URI path
-     *
-     * @param string $path
-     *
-     * @return string
-     */
-    public static function getFile(string $path): string
-    {
-        return self::getFileFromUri($path, null) ?? '';
-    }
-
-    /**
-     * @param array  $config
-     * @param string $fileName
-     * @param string $type
-     *
-     * @return string
-     */
-    public static function getFileFromManifest(array $config, string $fileName, string $type = 'legacy'): string
-    {
-        try {
-            $path = self::getModuleEntry($config, $fileName, $type, true);
-        } catch (NotFoundHttpException $e) {
-            Craft::error($e->getMessage(), __METHOD__);
-        }
-        if ($path !== null) {
-            $path = self::combinePaths(
-                $config['localFiles']['basePath'],
-                $path
-            );
-
-            return self::getFileFromUri($path, null) ?? '';
-        }
-
-        return '';
-    }
-
-    /**
      * Return the contents of a JSON file from a URI path
      *
      * @param string $path
@@ -331,7 +279,7 @@ EOT;
      */
     protected static function getJsonFile(string $path)
     {
-        return self::getFileFromUri($path, [self::class, 'jsonFileDecode']);
+        return self::getFileFromUri($path, [JsonHelper::class, 'decodeIfJson']);
     }
 
     /**
@@ -343,9 +291,6 @@ EOT;
         TagDependency::invalidate($cache, self::CACHE_TAG);
         Craft::info('All manifest caches cleared', __METHOD__);
     }
-
-    // Protected Static Methods
-    // =========================================================================
 
     /**
      * Return the contents of a file from a URI path
@@ -470,17 +415,7 @@ EOT;
         }
         Craft::error($error, __METHOD__);
     }
-
-    // Private Static Methods
-    // =========================================================================
-
-    /**
-     * @param $string
-     *
-     * @return mixed
-     */
-    private static function jsonFileDecode($string)
-    {
-        return JsonHelper::decodeIfJson($string);
-    }
 }
+
+// Simulate a static constructor
+Manifest::__constructStatic();

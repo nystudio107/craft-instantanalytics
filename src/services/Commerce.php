@@ -109,7 +109,7 @@ class Commerce extends Component
         $order = null, $lineItem = null
     ) {
         if ($lineItem) {
-            $title = $lineItem->purchasable->title;
+            $title = $lineItem->purchasable->title ?? $lineItem->description;
             $quantity = $lineItem->qty;
             $analytics = InstantAnalytics::$plugin->ia->eventAnalytics(
                 'Commerce',
@@ -187,7 +187,7 @@ class Commerce extends Component
             //This is the same for both variant and non variant products
             $productData = [
                 'name' => $purchasable->title ?? $lineItem->description,
-                'sku' => $purchasable->sku,
+                'sku' => $purchasable->sku ?? $lineItem->sku,
                 'price' => $lineItem->salePrice,
                 'quantity' => $lineItem->qty,
             ];

@@ -1,5 +1,10 @@
 # Instant Analytics Changelog
 
+## 1.1.10 - 2021.02.15
+### Changed
+* Verify if purchasable exists before getting its title
+* Updated to webpack 5 buildchain
+
 ## 1.1.9 - 2020.09.02
 ### Added
 * Stash the various `utm` settings in local storage to allow proper attribution from Commerce events
