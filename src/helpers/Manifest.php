@@ -12,13 +12,13 @@
 namespace nystudio107\instantanalytics\helpers;
 
 use nystudio107\instantanalytics\assetbundles\instantanalytics\InstantAnalyticsAsset;
-use nystudio107\instantanalytics\helpers\Manifest as ManifestHelper;
 
 use Craft;
 use craft\helpers\Json as JsonHelper;
 use craft\helpers\UrlHelper;
 
 use yii\base\Exception;
+use yii\base\InvalidConfigException;
 use yii\caching\TagDependency;
 use yii\web\NotFoundHttpException;
 
@@ -91,7 +91,7 @@ class Manifest
      */
     public static function __constructStatic()
     {
-        ManifestHelper::invalidateCaches();
+        self::invalidateCaches();
         $assetClass = self::ASSET_CLASS;
         $bundle = new $assetClass;
         $baseAssetsUrl = Craft::$app->assetManager->getPublishedUrl(
@@ -111,7 +111,7 @@ class Manifest
      *
      * @param array $modules
      * @throws NotFoundHttpException
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      */
     public static function registerJsModules(array $modules)
     {
@@ -131,7 +131,7 @@ class Manifest
      *
      * @param array $modules
      * @throws NotFoundHttpException
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      */
     public static function registerCssModules(array $modules)
     {
@@ -305,7 +305,7 @@ class Manifest
         // Resolve any aliases
         $alias = Craft::getAlias($path, false);
         if ($alias) {
-            $path = $alias;
+            $path = (string)$alias;
         }
         // Make sure it's a full URL
         if (!UrlHelper::isAbsoluteUrl($path) && !is_file($path)) {
@@ -377,7 +377,7 @@ class Manifest
      */
     protected static function combinePaths(string ...$paths): string
     {
-        $last_key = \count($paths) - 1;
+        $last_key = count($paths) - 1;
         array_walk($paths, function (&$val, $key) use ($last_key) {
             switch ($key) {
                 case 0:
