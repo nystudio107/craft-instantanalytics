@@ -7,7 +7,7 @@ const path = require('path');
 // settings
 module.exports = {
     alias: {
-        '@css': path.resolve('../src/assetbundles/instantanalytics/src//css'),
+        '@css': path.resolve('../src/assetbundles/instantanalytics/src/css'),
         '@img': path.resolve('../src/assetbundles/instantanalytics/src/img'),
         '@js': path.resolve('../src/assetbundles/instantanalytics/src/js'),
         '@vue': path.resolve('../src/assetbundles/instantanalytics/src/vue'),
