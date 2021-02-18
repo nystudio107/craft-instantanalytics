@@ -1,5 +1,9 @@
 # Instant Analytics Changelog
 
+## 1.1.11 - UNRELEASED
+### Changed
+* Updated build system infra
+
 ## 1.1.10 - 2021.02.15
 ### Changed
 * Verify if purchasable exists before getting its title
