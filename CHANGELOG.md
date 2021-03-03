@@ -1,6 +1,6 @@
 # Instant Analytics Changelog
 
-## 1.1.11 - UNRELEASED
+## 1.1.11 - 2021.03.03
 ### Changed
 * Dockerized the buildchain, using `craft-plugin-manifest` for the webpack HMR bridge
 
