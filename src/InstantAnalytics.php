@@ -10,6 +10,7 @@
 
 namespace nystudio107\instantanalytics;
 
+use nystudio107\instantanalytics\assetbundles\instantanalytics\InstantAnalyticsAsset;
 use nystudio107\instantanalytics\helpers\IAnalytics;
 use nystudio107\instantanalytics\helpers\Field as FieldHelper;
 use nystudio107\instantanalytics\models\Settings;
@@ -17,6 +18,10 @@ use nystudio107\instantanalytics\services\Commerce as CommerceService;
 use nystudio107\instantanalytics\services\IA as IAService;
 use nystudio107\instantanalytics\variables\InstantAnalyticsVariable;
 use nystudio107\instantanalytics\twigextensions\InstantAnalyticsTwigExtension;
+
+use nystudio107\pluginmanifest\services\ManifestService;
+
+use nystudio107\seomatic\Seomatic;
 
 use Craft;
 use craft\base\Plugin;
@@ -33,8 +38,6 @@ use craft\commerce\Plugin as Commerce;
 use craft\commerce\elements\Order;
 use craft\commerce\events\LineItemEvent;
 
-use nystudio107\seomatic\Seomatic;
-
 use Twig\Error\LoaderError;
 
 use yii\base\Event;
@@ -48,6 +51,7 @@ use yii\base\Event;
  *
  * @property  IAService $ia
  * @property  CommerceService $commerce
+ * @property ManifestService         $manifest
  */
 class InstantAnalytics extends Plugin
 {
@@ -189,6 +193,13 @@ class InstantAnalytics extends Plugin
      */
     protected function addComponents()
     {
+        // Register the manifest service
+        $this->set('manifest', [
+            'class' => ManifestService::class,
+            'assetClass' => InstantAnalyticsAsset::class,
+            'devServerManifestPath' => 'http://instantanalytics-buildchain:8080/',
+            'devServerPublicPath' => 'http://instantanalytics-buildchain:8080/',
+        ]);
         $view = Craft::$app->getView();
         // Add in our Twig extensions
         $view->registerTwigExtension(new InstantAnalyticsTwigExtension());
@@ -201,7 +212,10 @@ class InstantAnalytics extends Plugin
             function (Event $event) {
                 /** @var CraftVariable $variable */
                 $variable = $event->sender;
-                $variable->set('instantAnalytics', InstantAnalyticsVariable::class);
+                $variable->set('instantAnalytics', [
+                    'class' => InstantAnalyticsVariable::class,
+                    'manifestService' => $this->manifest,
+                ]);
             }
         );
     }
