@@ -1,6 +1,6 @@
 TAG?=12-alpine
 CONTAINER?=instantanalytics-buildchain
-DEST?=../../sites/nystudio107/web/docs/instant-analytice
+DEST?=../../sites/nystudio107/web/docs/instant-analytics
 
 .PHONY: dist docker docs install npm
 
