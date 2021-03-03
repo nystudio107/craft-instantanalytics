@@ -27,6 +27,7 @@
     ],
     "require": {
         "craftcms/cms": "^3.0.0",
+        "nystudio107/craft-plugin-manifest": "^1.0.0",
         "theiconic/php-ga-measurement-protocol": "^2.5.1",
         "jaybizzle/crawler-detect": "^1.2.37"
     },
