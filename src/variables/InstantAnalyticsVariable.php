@@ -13,6 +13,8 @@ namespace nystudio107\instantanalytics\variables;
 use nystudio107\instantanalytics\InstantAnalytics;
 use nystudio107\instantanalytics\helpers\IAnalytics;
 
+use nystudio107\pluginmanifest\variables\ManifestVariable;
+
 use craft\helpers\Template;
 
 use \Twig\Markup;

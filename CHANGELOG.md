@@ -1,5 +1,9 @@
 # Instant Analytics Changelog
 
+## 1.1.11 - 2021.03.03
+### Changed
+* Dockerized the buildchain, using `craft-plugin-manifest` for the webpack HMR bridge
+
 ## 1.1.10 - 2021.02.15
 ### Changed
 * Verify if purchasable exists before getting its title
