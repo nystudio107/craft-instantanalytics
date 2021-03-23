@@ -49,9 +49,9 @@ use yii\base\Event;
  * @package   InstantAnalytics
  * @since     1.0.0
  *
- * @property  IAService $ia
- * @property  CommerceService $commerce
- * @property ManifestService         $manifest
+ * @property IAService          $ia
+ * @property CommerceService    $commerce
+ * @property ManifestService    $manifest
  */
 class InstantAnalytics extends Plugin
 {
@@ -197,8 +197,8 @@ class InstantAnalytics extends Plugin
         $this->set('manifest', [
             'class' => ManifestService::class,
             'assetClass' => InstantAnalyticsAsset::class,
-            'devServerManifestPath' => 'http://instantanalytics-buildchain:8080/',
-            'devServerPublicPath' => 'http://instantanalytics-buildchain:8080/',
+            'devServerManifestPath' => 'http://craft-instantanalytics-buildchain:8080/',
+            'devServerPublicPath' => 'http://craft-instantanalytics-buildchain:8080/',
         ]);
         $view = Craft::$app->getView();
         // Add in our Twig extensions
