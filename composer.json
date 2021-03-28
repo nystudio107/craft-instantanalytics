@@ -45,14 +45,7 @@
     "extra": {
         "name": "Instant Analytics",
         "handle": "instant-analytics",
-        "schemaVersion": "1.0.0",
-        "hasCpSettings": true,
-        "hasCpSection": false,
         "changelogUrl": "https://raw.githubusercontent.com/nystudio107/craft-instantanalytics/v1/CHANGELOG.md",
-        "components": {
-            "ia": "nystudio107\\instantanalytics\\services\\IA",
-            "commerce": "nystudio107\\instantanalytics\\services\\Commerce"
-        },
         "class": "nystudio107\\instantanalytics\\InstantAnalytics"
     }
 }
