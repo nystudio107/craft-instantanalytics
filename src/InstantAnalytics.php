@@ -99,6 +99,47 @@ class InstantAnalytics extends Plugin
      */
     public static $craft31 = false;
 
+    // Static Methods
+    // =========================================================================
+
+    /**
+     * @inheritdoc
+     */
+    public function __construct($id, $parent = null, array $config = [])
+    {
+        $config['components'] = [
+            'ia' => IAService::class,
+            'commerce' => CommerceService::class,
+            // Register the manifest service
+            'manifest' => [
+                'class' => ManifestService::class,
+                'assetClass' => InstantAnalyticsAsset::class,
+                'devServerManifestPath' => 'http://craft-instantanalytics-buildchain:8080/',
+                'devServerPublicPath' => 'http://craft-instantanalytics-buildchain:8080/',
+            ],
+        ];
+
+        parent::__construct($id, $parent, $config);
+    }
+
+    // Public Properties
+    // =========================================================================
+
+    /**
+     * @var string
+     */
+    public $schemaVersion = '1.0.0';
+
+    /**
+     * @var bool
+     */
+    public $hasCpSection = false;
+
+    /**
+     * @var bool
+     */
+    public $hasCpSettings = true;
+
     // Public Methods
     // =========================================================================
 
@@ -193,13 +234,6 @@ class InstantAnalytics extends Plugin
      */
     protected function addComponents()
     {
-        // Register the manifest service
-        $this->set('manifest', [
-            'class' => ManifestService::class,
-            'assetClass' => InstantAnalyticsAsset::class,
-            'devServerManifestPath' => 'http://craft-instantanalytics-buildchain:8080/',
-            'devServerPublicPath' => 'http://craft-instantanalytics-buildchain:8080/',
-        ]);
         $view = Craft::$app->getView();
         // Add in our Twig extensions
         $view->registerTwigExtension(new InstantAnalyticsTwigExtension());
