@@ -1,11 +1,10 @@
 {
   "instantanalytics.js": "js/instantanalytics.js",
-  "instantanalytics.svg": "img/InstantAnalytics-icon.svg",
-  "instantanalytics.js.map": "js/instantanalytics.js.map",
   "welcome.js": "js/welcome.js",
-  "welcome.js.map": "js/welcome.js.map",
   "runtime.js": "js/runtime.js",
-  "runtime.js.map": "js/runtime.js.map",
   "styles.css": "css/styles.css",
-  "img/InstantAnalytics-icon.svg": "img/InstantAnalytics-icon.svg"
+  "img/InstantAnalytics-icon.svg": "img/InstantAnalytics-icon.svg",
+  "instantanalytics.js.map": "js/instantanalytics.js.map",
+  "welcome.js.map": "js/welcome.js.map",
+  "runtime.js.map": "js/runtime.js.map"
 }
