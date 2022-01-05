@@ -19,7 +19,7 @@ use nystudio107\instantanalytics\services\IA as IAService;
 use nystudio107\instantanalytics\variables\InstantAnalyticsVariable;
 use nystudio107\instantanalytics\twigextensions\InstantAnalyticsTwigExtension;
 
-use nystudio107\pluginmanifest\services\ManifestService;
+use nystudio107\pluginvite\services\VitePluginService;
 
 use nystudio107\seomatic\Seomatic;
 
@@ -51,7 +51,7 @@ use yii\base\Event;
  *
  * @property IAService          $ia
  * @property CommerceService    $commerce
- * @property ManifestService    $manifest
+ * @property VitePluginService  $vite
  */
 class InstantAnalytics extends Plugin
 {
@@ -110,12 +110,16 @@ class InstantAnalytics extends Plugin
         $config['components'] = [
             'ia' => IAService::class,
             'commerce' => CommerceService::class,
-            // Register the manifest service
-            'manifest' => [
-                'class' => ManifestService::class,
+            // Register the vite service
+            'vite' => [
+                'class' => VitePluginService::class,
                 'assetClass' => InstantAnalyticsAsset::class,
-                'devServerManifestPath' => 'http://craft-instantanalytics-buildchain:8080/',
-                'devServerPublicPath' => 'http://craft-instantanalytics-buildchain:8080/',
+                'useDevServer' => true,
+                'devServerPublic' => 'http://localhost:3001',
+                'serverPublic' => 'http://localhost:8000',
+                'errorEntry' => 'src/js/app.ts',
+                'devServerInternal' => 'http://craft-instantanalytics-buildchain:3001',
+                'checkDevServer' => true,
             ],
         ];
 
@@ -248,7 +252,7 @@ class InstantAnalytics extends Plugin
                 $variable = $event->sender;
                 $variable->set('instantAnalytics', [
                     'class' => InstantAnalyticsVariable::class,
-                    'manifestService' => $this->manifest,
+                    'viteService' => $this->vite,
                 ]);
             }
         );

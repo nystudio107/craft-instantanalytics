@@ -2,18 +2,10 @@
 
 {% block head %}
     {{ parent() }}
-    {{ craft.instantAnalytics.registerCssModules([
-        'vendors.css',
-        'styles.css',
-    ]) }}
-{% endblock %}
-
-{% block foot %}
-    {{ parent() }}
-    {{ craft.instantAnalytics.registerJsModules([
-        'runtime.js',
-        'vendors.js',
-        'commons.js',
-        'instantanalytics.js',
-    ]) }}
+    {% set tagOptions = {
+        'depends': [
+            'nystudio107\\instantanalytics\\assetbundles\\instantanalytics\\InstantAnalyticsAsset'
+        ],
+    } %}
+    {{ craft.instantAnalytics.register('src/js/app.ts', false, tagOptions, tagOptions) }}
 {% endblock %}

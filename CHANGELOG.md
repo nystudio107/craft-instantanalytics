@@ -1,5 +1,18 @@
 # Instant Analytics Changelog
 
+## 1.1.13 - 2022.01.05
+### Changed
+* Switch to Node 16 via `16-alpine` Docker tag by default
+* Update to Tailwind CSS `^3.0.0`
+* Switched buildchain to Vite & `craft-vite-plugin`
+* Refactor to use TypeScript
+* Switched documentation system to VitePress
+* Use Textlint for the documentation
+* Build documentation automatically via GitHub action
+
+### Fixed
+* Use `${CURDIR}` instead of `pwd` to be cross-platform compatible with Windows WSL2
+
 ## 1.1.12 - 2021.04.06
 ### Added
 * Added `make update` to update NPM packages

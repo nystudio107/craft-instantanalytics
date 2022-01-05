@@ -25,7 +25,7 @@ class InstantAnalyticsAsset extends AssetBundle
     public function init()
     {
         // define the path that your publishable resources live
-        $this->sourcePath = '@nystudio107/instantanalytics/assetbundles/instantanalytics/dist';
+        $this->sourcePath = '@nystudio107/instantanalytics/web/assets/dist';
 
         // define the dependencies
         $this->depends = [
