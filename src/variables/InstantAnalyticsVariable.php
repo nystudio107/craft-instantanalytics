@@ -13,7 +13,8 @@ namespace nystudio107\instantanalytics\variables;
 use nystudio107\instantanalytics\InstantAnalytics;
 use nystudio107\instantanalytics\helpers\IAnalytics;
 
-use nystudio107\pluginmanifest\variables\ManifestVariable;
+use nystudio107\pluginvite\variables\ViteVariableInterface;
+use nystudio107\pluginvite\variables\ViteVariableTrait;
 
 use craft\helpers\Template;
 
@@ -26,8 +27,10 @@ use \Twig\Markup;
  * @package   InstantAnalytics
  * @since     1.0.0
  */
-class InstantAnalyticsVariable extends ManifestVariable
+class InstantAnalyticsVariable implements ViteVariableInterface
 {
+    use ViteVariableTrait;
+
     // Public Methods
     // =========================================================================
 

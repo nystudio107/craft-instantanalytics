@@ -1,1 +1,0 @@
-{"version":3,"sources":["webpack://instantanalytics/../src/assetbundles/instantanalytics/src/img/InstantAnalytics-icon.svg"],"names":[],"mappings":";;;;;;;;wHAAe,M","file":"js/instantanalytics.js","sourcesContent":["export default __webpack_public_path__ + \"img/InstantAnalytics-icon.svg\";"],"sourceRoot":""}

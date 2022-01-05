@@ -7,17 +7,27 @@
 {% set linkGetStarted = url('settings/plugins/instant-analytics') %}
 
 {% do view.registerAssetBundle("nystudio107\\instantanalytics\\assetbundles\\instantanalytics\\InstantAnalyticsWelcomeAsset") %}
-{% set baseAssetsUrl = view.getAssetManager().getPublishedUrl('@nystudio107/instantanalytics/assetbundles/instantanalytics/dist', true) %}
+{% set baseAssetsUrl = view.getAssetManager().getPublishedUrl('@nystudio107/instantanalytics/web/assets/dist', true) %}
 
 {% set crumbs = [
     { label: "Instant Analytics", url: url('instant-analytics') },
     { label: "Welcome"|t, url: url('instant-analytics/welcome') },
 ] %}
 
+{% block head %}
+    {{ parent() }}
+    {% set tagOptions = {
+        'depends': [
+            'nystudio107\\instantanalytics\\assetbundles\\instantanalytics\\InstantAnalyticsAsset'
+        ],
+    } %}
+    {{ craft.instantAnalytics.register('src/js/welcome.ts', false, tagOptions, tagOptions) }}
+{% endblock %}
+
 {% block content %}
     <div id="cp-nav-content" class="readable" style="text-align:center; margin:0 auto; padding: 5% 10%;">
-        <confetti>
-        </confetti>
+        <div id="app-container">
+        </div>
         <img src="{{ baseAssetsUrl ~ '/img/InstantAnalytics-icon.svg' }}" width="30%" height="auto" />
         <h2>Thanks for using Instant Analytics!</h2>
         <p>Instant Analytics brings full Google Analytics support to your Twig templates and automatic Craft Commerce integration with Google Enhanced Ecommerce.</p>
@@ -36,9 +46,4 @@
             Brought to you by <a href="http://nystudio107.com" target="_blank" rel="noopener">nystudio107</a>
         </p>
     </div>
-    {# include our JavaScript modules #}
-    {{ parent() }}
-    {{ craft.instantAnalytics.registerJsModules([
-        'welcome.js',
-    ]) }}
 {% endblock %}
