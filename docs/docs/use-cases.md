@@ -2,15 +2,15 @@
 
 ## Simple Page Tracking
 
-If all you want is simple page tracking data sent to Google Analytics, Instant Analytics will do that for you automatically.  Instant Analytics uses the [Google Measurement Protocol](https://developers.google.com/analytics/devguides/collection/protocol/v1/) to send PageViews to your Google Analytics account the same way the Google Analytics Tracking Code Javascript tag does.
+If all you want is simple page tracking data sent to Google Analytics, Instant Analytics will do that for you automatically.  Instant Analytics uses the [Google Measurement Protocol](https://developers.google.com/analytics/devguides/collection/protocol/v1/) to send PageViews to your Google Analytics account the same way the Google Analytics Tracking Code JavaScript tag does.
 
 In addition, Instant Analytics injects an `instantAnalytics` object into your templates, which you can manipulate as you see fit, adding Google Analytics properties to be sent along with your PageView.
 
-It has the added benefit of not having to load any Javascript on the front-end to do this, which results in the following benefits:
+It has the added benefit of not having to load any JavaScript on the frontend to do this, which results in the following benefits:
 
 * Your pages will render quicker in-browser, with no external resources loaded just for PageView tracking
-* Pages will be tracked even if the client's browser has Javascript disabled or blocked
-* Javascript errors will not cause Google Analytics data to fail to be collected
+* Pages will be tracked even if the client’s browser has JavaScript disabled or blocked
+* JavaScript errors will not cause Google Analytics data to fail to be collected
 
 ## Craft Commerce 2 Integration with Google Enhanced Ecommerce
 
@@ -24,13 +24,13 @@ Additionally, you can add simple Twig tags to your templates to track Product Im
 
 ## Tracking Assets/Resources
 
-Instant Analytics lets you track assets/resources that you can't normally track.  For instance, you may have a collection of PDF documents that you'd like to know when they are viewed.
+Instant Analytics lets you track assets/resources that you can’t normally track.  For instance, you may have a collection of PDF documents that you’d like to know when they are viewed.
 
 Using a simple `pageViewTrackingUrl(myAsset.url, myAsset.title)` or `eventTrackingUrl(myAsset.url, myAsset.title, "action", "label", "value")` Twig function, Instant Analytics will generate a public URL that will register a PageView in Google Analytics for the asset/resource, and then display or download the asset/resource.
 
 ## Tracking RSS Feeds
 
-Getting actual tracking statistics on RSS feeds can be notoriously difficult, because they are often consumed by clients that are not web browsers, and therefor will not run Javascript tracking code.
+Getting actual tracking statistics on RSS feeds can be notoriously difficult, because they are often consumed by clients that are not web browsers, and therefor will not run JavaScript tracking code.
 
 With Instant Analytics, if your RSS feed is a Twig template, accesses will automatically be tracked.  Additionally, you can use the `pageViewTrackingUrl(myAsset.url, myAsset.title)` or `eventTrackingUrl(myAsset.url, myAsset.title, "action", "label", "value")` Twig functions to track individual episode accesses in Google Analytics.
 
