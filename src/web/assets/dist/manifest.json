@@ -1,6 +1,6 @@
 {
   "src/js/app.ts": {
-    "file": "assets/app.97171ffa.js",
+    "file": "assets/app.9353cce9.js",
     "src": "src/js/app.ts",
     "isEntry": true,
     "css": [
@@ -8,14 +8,14 @@
     ]
   },
   "src/js/welcome.ts": {
-    "file": "assets/welcome.364d4806.js",
+    "file": "assets/welcome.595579e0.js",
     "src": "src/js/welcome.ts",
     "isEntry": true,
     "imports": [
-      "_vendor.ac4fbd46.js"
+      "_vendor.d81cffb0.js"
     ]
   },
-  "_vendor.ac4fbd46.js": {
-    "file": "assets/vendor.ac4fbd46.js"
+  "_vendor.d81cffb0.js": {
+    "file": "assets/vendor.d81cffb0.js"
   }
 }
