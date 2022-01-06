@@ -1,7 +1,6 @@
 import vue from '@vitejs/plugin-vue'
 import ViteRestart from 'vite-plugin-restart';
 import eslintPlugin from 'vite-plugin-eslint';
-import StylelintPlugin from 'vite-plugin-stylelint';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import path from 'path';
 
@@ -35,7 +34,6 @@ export default ({ command }) => ({
     }),
     vue(),
     eslintPlugin(),
-    StylelintPlugin(),
   ],
   publicDir: '../src/web/assets/public',
   resolve: {
