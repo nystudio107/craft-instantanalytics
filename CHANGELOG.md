@@ -1,5 +1,12 @@
 # Instant Analytics Changelog
 
+## 1.1.14 - UNRELEASED
+### Added
+* Add `.gitattributes` & `CODEOWNERS`
+* Add linting to build
+* Add compression of assets
+* Add bundle visualizer
+
 ## 1.1.13 - 2022.01.05
 ### Changed
 * Switch to Node 16 via `16-alpine` Docker tag by default
