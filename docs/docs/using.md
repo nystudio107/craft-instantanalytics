@@ -2,9 +2,9 @@
 
 ## Simple Page Tracking
 
-Once you've entered your **Google Analytics Tracking ID**, Instant Analytics will automatically send PageViews to Google Analytics if you have **Auto Send PageViews** on (which it defaults to). There is no step 2.
+Once you’ve entered your **Google Analytics Tracking ID**, Instant Analytics will automatically send PageViews to Google Analytics if you have **Auto Send PageViews** on (which it defaults to). There is no step 2.
   
- If you need to control which pages Instant Analytics sends PageViews on, set **Auto Send PageViews** to `off`.  Then you just need to add a call to `{% hook 'iaSendPageView' %}` to your front-end templates to send PageView tracking to Google Analytics.  We recommend that you do this in a block at the bottom of your `layout.twig` template that other templates extend, right before the `</body>` tag, like this:
+ To control which pages Instant Analytics sends PageViews on, set **Auto Send PageViews** to `off`.  Then you just need to add a call to `{% hook 'iaSendPageView' %}` to your frontend templates to send PageView tracking to Google Analytics.  We recommend that you do this in a block at the bottom of your `layout.twig` template that other templates extend, right before the `</body>` tag, like this:
 
 ```twig
     {% block analytics %}
@@ -12,7 +12,7 @@ Once you've entered your **Google Analytics Tracking ID**, Instant Analytics wil
     {% endblock %}
 ```
 
-That's it!  Once you have added this hook, Instant Analytics will start sending PageViews to Google Analytics. It does not send any Google Analytics data if:
+That’s it!  Once you have added this hook, Instant Analytics will start sending PageViews to Google Analytics. It does not send any Google Analytics data if:
 
 * You have not entered a valid **Google Analytics Tracking ID:**
 * You are viewing templates in Live Preview
@@ -29,7 +29,7 @@ This is where the fun begins.  Instant Analytics injects an `instantAnalytics` o
 
 You can manipulate this object as you see fit, adding data to be sent to Google Analytics along with your PageView.
 
-For example, let's say that you want to add an `Affiliation`:
+For example, let’s say that you want to add an `Affiliation`:
 
 ```twig
     {% do instantAnalytics.setAffiliation("Brads for Men") %}
@@ -76,21 +76,21 @@ If you are using Craft Commerce, Instant Analytics will recognize this, and auto
 * **Remove from Cart** - When someone removes an item from your Craft Commerce store cart (requires Craft Commerce 1.2.x or later).  This will include data for the Product or Variant that was removed from the cart.
 * **Purchase** - When someone completes a purchase in your Craft Commerce store.  This will include all of the LineItems that were added to the cart, as well as the Order Reference, Revenue, Tax, Shipping, and Coupon Code used (if any).
 
-You simply need to enable Enhanced Ecommerce in your Google Analytics Admin area for your website's property:
+You simply need to enable Enhanced Ecommerce in your Google Analytics Admin area for your website’s property:
 
 ![Screenshot](./resources/screenshots/ia_screenshot04.png)
 
-That's it!  It'll just work.  In addition to the basic automatic tracking that Instant Analytics does, you can use the `instantAnalytics` object to send additional data to Google Analytics Enhanced Ecommerce:
+That’s it!  It’ll just work.  In addition to the basic automatic tracking that Instant Analytics does, you can use the `instantAnalytics` object to send additional data to Google Analytics Enhanced Ecommerce:
 
 * `{% do instantAnalytics.addCommerceProductImpression(PRODUCT_VARIANT, INDEX, LIST_NAME, LIST_INDEX) %}` - This will add an _impression_ for a given Craft Commerce `Product` or `Variant` (you can pass in either in `PRODUCT_VARIANT`).  `INDEX` must be a number between 1-200, and is the position in the list of products where this product appears. This should be used on product listing pages that show a number of products, to indicate that the user has been shown a particular product. `LIST_NAME` and `LIST_INDEX` are optional; they let you set the product list name, and the index of that list, which is a number from 1-200, and should be unique to the list. `LIST_NAME` defaults to `default` and `LIST_INDEX` defaults to `1` if not specified.
 *  `{% do instantAnalytics.addCommerceProductDetailView(PRODUCT_VARIANT) %}` - This will add a _product detail view_ for a given Craft Commerce `Product` or `Variant` (you can pass in either in `PRODUCT_VARIANT`).  This should be used when the user is shown the detail view of a product.
-*  `{% do instantAnalytics.addCommerceCheckoutStep(CART, STEP, OPTION) %}` - This will add a _checkout step_ for a given Craft Commerce `CART` (obtained via `craft.commerce.cart`).  The `STEP` parameter lets you specify which step in the checkout process you are on, and the `OPTION` parameter is optional information you can associate with this checkout step, e.g.: `Shipping Info` or `VISA`.
+*  `{% do instantAnalytics.addCommerceCheckoutStep(CART, STEP, OPTION) %}` - This will add a _checkout step_ for a given Craft Commerce `CART` (obtained via `craft.commerce.cart`).  The `STEP` parameter lets you specify which step in the checkout process you are on, and the `OPTION` parameter is optional information you can associate with this checkout step, for example: `Shipping Info` or `VISA`.
 
-You can set up names for each of the Checkout Steps in your Google Analytics Admin area for your website's property:
+You can set up names for each of the Checkout Steps in your Google Analytics Admin area for your website’s property:
 
 ![Screenshot](./resources/screenshots/ia_screenshot05.png)
 
-Note the`STEP` supplied to Instant Analytics must be in number form - to match the number of the step you have created in the Google Analytics Admin area.  So to record a customer reaching your checkout's shipping step, and the type of shipping they have chosen, you could do this:
+Note the`STEP` supplied to Instant Analytics must be in number form - to match the number of the step you have created in the Google Analytics Admin area.  So to record a customer reaching your checkout’s shipping step, and the type of shipping they have chosen, you could do this:
 
     {% do instantAnalytics.addCommerceCheckoutStep(cart, 2, "Standard Post") %}
 
@@ -149,7 +149,7 @@ A complete example might be:
 
 ## Tracking Assets/Resources
 
-Instant Analytics lets you track assets/resources that you can't normally track, by providing a tracking URL that you use in your front-end templates.
+Instant Analytics lets you track assets/resources that you can’t normally track, by providing a tracking URL that you use in your frontend templates.
 
 You can track as PageViews via either:
 
@@ -167,7 +167,7 @@ Or you can track as Events via either:
     {{ craft.instantAnalytics.eventTrackingUrl(URL, CATEGORY, ACTION, LABEL, VALUE) }}
 ```
 
-These can be wrapped around any URL, so you could wrap your tracking URL around an image, a PDF, or an externally linked file... whatever.
+These can be wrapped around any URL, so you could wrap your tracking URL around an image, a PDF, or an externally linked file... Whatever.
 
 What happens when the link is clicked on is Instant Analytics sends the tracking PageView or Event to Google Analytics, and then the original URL is seamlessly accessed.
 
@@ -179,7 +179,7 @@ The URL that Instant Analytics generates will look like this:
     http://yoursite.com/instantAnalytics/eventTrack/FILENAME.EXT?url=XXX&eventCategory=AAA&eventAction=BBB&eventLabel=CCC&eventValue=DDD
 ```
 
-It's done this way so that the URL can be directly used in RSS feeds for the media object URLs, which require that the filename is in the URL path.
+It’s done this way so that the URL can be directly used in RSS feeds for the media object URLs, which require that the filename is in the URL path.
 
 ## Custom Tracking via Twig or Plugin
 
@@ -210,7 +210,7 @@ In either case, you will be returned an `Analytics` object that is initialized w
 
 You are then free to change any of the parameters as you see fit via the [Google Analytics Measurement Protocol library for PHP](https://github.com/theiconic/php-ga-measurement-protocol)
 
-Here's a simple example where we send a PageView for a specific page (after adding an Affiliation):
+Here’s a simple example where we send a PageView for a specific page (after adding an Affiliation):
 
 Twig:
 
@@ -228,6 +228,6 @@ PHP via Plugin:
         ->sendPageview();
 ```
 
-The sky's the limit in either case, you can do anything from simple PageViews to complicated Google Enhanced eCommerce analytics tracking.
+The sky’s the limit in either case, you can do anything from simple PageViews to complicated Google Enhanced eCommerce analytics tracking.
 
 Brought to you by [nystudio107](http://nystudio107.com)
