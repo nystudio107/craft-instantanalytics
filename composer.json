@@ -1,51 +1,51 @@
 {
-    "name": "nystudio107/craft-instantanalytics",
-    "description": "Instant Analytics brings full Google Analytics support to your Twig templates and automatic Craft Commerce integration with Google Enhanced Ecommerce",
-    "type": "craft-plugin",
-    "version": "1.1.14",
-    "keywords": [
-        "craft",
-        "cms",
-        "craftcms",
-        "craft-plugin",
-        "instant analytics",
-        "google",
-        "measurement",
-        "protocol",
-        "analytics"
-    ],
-    "support": {
-        "docs": "https://nystudio107.com/plugins/instant-analytics/documentation",
-        "issues": "https://nystudio107.com/plugins/instant-analytics/support"
-    },
-    "license": "proprietary",
-    "authors": [
-        {
-            "name": "nystudio107",
-            "homepage": "https://nystudio107.com"
-        }
-    ],
-    "require": {
-        "craftcms/cms": "^3.0.0",
-        "nystudio107/craft-plugin-manifest": "^1.0.0",
-        "theiconic/php-ga-measurement-protocol": "^2.5.1",
-        "jaybizzle/crawler-detect": "^1.2.37"
-    },
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "https://asset-packagist.org"
-        }
-    ],
-    "autoload": {
-        "psr-4": {
-            "nystudio107\\instantanalytics\\": "src/"
-        }
-    },
-    "extra": {
-        "name": "Instant Analytics",
-        "handle": "instant-analytics",
-        "changelogUrl": "https://raw.githubusercontent.com/nystudio107/craft-instantanalytics/v1/CHANGELOG.md",
-        "class": "nystudio107\\instantanalytics\\InstantAnalytics"
+  "name": "nystudio107/craft-instantanalytics",
+  "description": "Instant Analytics brings full Google Analytics support to your Twig templates and automatic Craft Commerce integration with Google Enhanced Ecommerce",
+  "type": "craft-plugin",
+  "version": "1.1.15",
+  "keywords": [
+    "craft",
+    "cms",
+    "craftcms",
+    "craft-plugin",
+    "instant analytics",
+    "google",
+    "measurement",
+    "protocol",
+    "analytics"
+  ],
+  "support": {
+    "docs": "https://nystudio107.com/plugins/instant-analytics/documentation",
+    "issues": "https://nystudio107.com/plugins/instant-analytics/support"
+  },
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "nystudio107",
+      "homepage": "https://nystudio107.com"
     }
+  ],
+  "require": {
+    "craftcms/cms": "^3.0.0",
+    "nystudio107/craft-plugin-vite": "^1.0.20",
+    "theiconic/php-ga-measurement-protocol": "^2.5.1",
+    "jaybizzle/crawler-detect": "^1.2.37"
+  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://asset-packagist.org"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "nystudio107\\instantanalytics\\": "src/"
+    }
+  },
+  "extra": {
+    "name": "Instant Analytics",
+    "handle": "instant-analytics",
+    "changelogUrl": "https://raw.githubusercontent.com/nystudio107/craft-instantanalytics/v1/CHANGELOG.md",
+    "class": "nystudio107\\instantanalytics\\InstantAnalytics"
+  }
 }
