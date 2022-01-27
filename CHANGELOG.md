@@ -1,5 +1,12 @@
 # Instant Analytics Changelog
 
+## 1.1.15 - 2022.01.27
+
+### Fixed
+
+* Fixed an issue where `craft-plugin-vite` was not included as
+  required ([#65](https://github.com/nystudio107/craft-instantanalytics/issues/65))
+
 ## 1.1.14 - 2022.01.12
 
 ### Added
