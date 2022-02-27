@@ -1,6 +1,6 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/nystudio107/craft-instantanalytics/badges/quality-score.png?b=v1)](https://scrutinizer-ci.com/g/nystudio107/craft-instantanalytics/?branch=v1) [![Code Coverage](https://scrutinizer-ci.com/g/nystudio107/craft-instantanalytics/badges/coverage.png?b=v1)](https://scrutinizer-ci.com/g/nystudio107/craft-instantanalytics/?branch=v1) [![Build Status](https://scrutinizer-ci.com/g/nystudio107/craft-instantanalytics/badges/build.png?b=v1)](https://scrutinizer-ci.com/g/nystudio107/craft-instantanalytics/build-status/v1) [![Code Intelligence Status](https://scrutinizer-ci.com/g/nystudio107/craft-instantanalytics/badges/code-intelligence.svg?b=v1)](https://scrutinizer-ci.com/code-intelligence)
 
-# Instant Analytics plugin for Craft CMS 3.x
+# Instant Analytics plugin for Craft CMS 4.x
 
 Instant Analytics brings full Google Analytics support to your Twig templates and automatic Craft Commerce integration with Google Enhanced Ecommerce.
 
@@ -12,7 +12,7 @@ Related: [Instant Analytics for Craft 2.x](https://github.com/nystudio107/instan
 
 ## Requirements
 
-This plugin requires Craft CMS 3.0.0 or later. Commerce 2 is required for Google Analytics Enhanced eCommerce support.
+This plugin requires Craft CMS 4.0.0 or later. Commerce 4 is required for Google Analytics Enhanced eCommerce support.
 
 ## Installation
 
