@@ -10,12 +10,9 @@
 
 namespace nystudio107\instantanalytics\models;
 
-use nystudio107\instantanalytics\InstantAnalytics;
-
 use craft\base\Model;
 use craft\behaviors\EnvAttributeParserBehavior;
 use craft\validators\ArrayValidator;
-
 use yii\behaviors\AttributeTypecastBehavior;
 
 /**
@@ -33,32 +30,32 @@ class Settings extends Model
      *
      * @var string
      */
-    public $googleAnalyticsTracking = '';
+    public string $googleAnalyticsTracking = '';
 
     /**
      * Should the query string be stripped from the page tracking URL?
      *
      * @var bool
      */
-    public $stripQueryString = true;
+    public bool $stripQueryString = true;
 
     /**
      * Should page views be sent automatically when a page view happens?
      *
      * @var bool
      */
-    public $autoSendPageView = true;
+    public bool $autoSendPageView = true;
 
     /**
      * If you plan to use Instant Analytics in conjunction with frontend JavaScript, this setting should be on, so that Instant Analytics requires a `clientId` from the frontend-set GA cookie before it will send analytics data.
      * @var bool
      */
-    public $requireGaCookieClientId = true;
+    public bool $requireGaCookieClientId = true;
 
     /**
      * @var bool Should the GCLID cookie be created if it doesn't exist?
      */
-    public $createGclidCookie = true;
+    public bool $createGclidCookie = true;
 
     /**
      * The field in a Commerce Product Variant that should be used for the
@@ -66,42 +63,42 @@ class Settings extends Model
      *
      * @var string
      */
-    public $productCategoryField = '';
+    public string $productCategoryField = '';
 
     /**
      * The field in a Commerce Product Variant that should be used for the brand
      *
      * @var string
      */
-    public $productBrandField = '';
+    public string $productBrandField = '';
 
     /**
      * Whether add to cart events should be automatically sent
      *
      * @var bool
      */
-    public $autoSendAddToCart = true;
+    public bool $autoSendAddToCart = true;
 
     /**
      * Whether remove from cart events should be automatically sent
      *
      * @var bool
      */
-    public $autoSendRemoveFromCart = true;
+    public bool $autoSendRemoveFromCart = true;
 
     /**
      * Whether purchase complete events should be automatically sent
      *
      * @var bool
      */
-    public $autoSendPurchaseComplete = true;
+    public bool $autoSendPurchaseComplete = true;
 
     /**
      * Controls whether Instant Analytics will send analytics data.
      *
      * @var bool
      */
-    public $sendAnalyticsData = true;
+    public bool $sendAnalyticsData = true;
 
     /**
      * Controls whether Instant Analytics will send analytics data when
@@ -109,14 +106,14 @@ class Settings extends Model
      *
      * @var bool
      */
-    public $sendAnalyticsInDevMode = true;
+    public bool $sendAnalyticsInDevMode = true;
 
     /**
      * Controls whether we should filter out bot UserGents.
      *
      * @var bool
      */
-    public $filterBotUserAgents = true;
+    public bool $filterBotUserAgents = true;
 
     /**
      * Controls whether we should exclude users logged into an admin account
@@ -124,7 +121,7 @@ class Settings extends Model
      *
      * @var bool
      */
-    public $adminExclude = false;
+    public bool $adminExclude = false;
 
     /**
      * Controls whether analytics that blocked from being sent should be logged
@@ -132,7 +129,7 @@ class Settings extends Model
      *
      * @var bool
      */
-    public $logExcludedAnalytics = true;
+    public bool $logExcludedAnalytics = true;
 
     /**
      * Contains an array of Craft user group handles to exclude from Analytics
@@ -141,7 +138,7 @@ class Settings extends Model
      *
      * @var array
      */
-    public $groupExcludes = [
+    public array $groupExcludes = [
     ];
 
     /**
@@ -155,7 +152,7 @@ class Settings extends Model
      *
      * @var array
      */
-    public $serverExcludes = [
+    public array $serverExcludes = [
         'REMOTE_ADDR' => [
             '/^localhost$|^127(?:\.[0-9]+){0,2}\.[0-9]+$|^(?:0*\:)*?:?0*1$/',
         ],
@@ -164,11 +161,10 @@ class Settings extends Model
     // Public Methods
     // =========================================================================
 
-    /** @noinspection ReturnTypeCanBeDeclaredInspection */
     /**
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [
@@ -210,25 +206,19 @@ class Settings extends Model
     /**
      * @return array
      */
-    public function behaviors()
+    public function behaviors(): array
     {
-        $craft31Behaviors = [];
-        if (InstantAnalytics::$craft31) {
-            $craft31Behaviors = [
-                'parser' => [
-                    'class' => EnvAttributeParserBehavior::class,
-                    'attributes' => [
-                        'googleAnalyticsTracking',
-                    ],
-                ],
-            ];
-        }
-
-        return array_merge($craft31Behaviors, [
+        return [
             'typecast' => [
                 'class' => AttributeTypecastBehavior::class,
                 // 'attributeTypes' will be composed automatically according to `rules()`
             ],
-        ]);
+            'parser' => [
+                'class' => EnvAttributeParserBehavior::class,
+                'attributes' => [
+                    'googleAnalyticsTracking',
+                ],
+            ],
+        ];
     }
 }

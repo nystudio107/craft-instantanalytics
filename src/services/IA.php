@@ -10,20 +10,18 @@
 
 namespace nystudio107\instantanalytics\services;
 
-use craft\errors\MissingComponentException;
-use nystudio107\instantanalytics\InstantAnalytics;
-use nystudio107\instantanalytics\helpers\IAnalytics;
-
-use Jaybizzle\CrawlerDetect\CrawlerDetect;
-
 use Craft;
 use craft\base\Component;
 use craft\elements\User as UserElement;
+use craft\errors\MissingComponentException;
 use craft\helpers\UrlHelper;
-
+use Jaybizzle\CrawlerDetect\CrawlerDetect;
+use nystudio107\instantanalytics\helpers\IAnalytics;
+use nystudio107\instantanalytics\InstantAnalytics;
 use nystudio107\seomatic\Seomatic;
-
 use yii\base\Exception;
+use function array_slice;
+use function is_array;
 
 /** @noinspection MissingPropertyAnnotationsInspection */
 
@@ -106,7 +104,7 @@ class IA extends Component
      * @param string $eventCategory
      * @param string $eventAction
      * @param string $eventLabel
-     * @param int    $eventValue
+     * @param int $eventValue
      *
      * @return null|IAnalytics
      */
@@ -166,7 +164,7 @@ class IA extends Component
      * @param $title
      *
      * @return string
-     * @throws \yii\base\Exception
+     * @throws Exception
      */
     public function pageViewTrackingUrl($url, $title): string
     {
@@ -177,7 +175,7 @@ class IA extends Component
         $path = parse_url($url, PHP_URL_PATH);
         $pathFragments = explode('/', rtrim($path, '/'));
         $fileName = end($pathFragments);
-        $trackingUrl = UrlHelper::siteUrl('instantanalytics/pageViewTrack/'.$fileName, $urlParams);
+        $trackingUrl = UrlHelper::siteUrl('instantanalytics/pageViewTrack/' . $fileName, $urlParams);
         Craft::info(
             Craft::t(
                 'instant-analytics',
@@ -199,10 +197,10 @@ class IA extends Component
      * @param string $eventCategory
      * @param string $eventAction
      * @param string $eventLabel
-     * @param int    $eventValue
+     * @param int $eventValue
      *
      * @return string
-     * @throws \yii\base\Exception
+     * @throws Exception
      */
     public function eventTrackingUrl(
         $url,
@@ -210,7 +208,8 @@ class IA extends Component
         $eventAction = '',
         $eventLabel = '',
         $eventValue = 0
-    ): string {
+    ): string
+    {
         $urlParams = [
             'url' => $url,
             'eventCategory' => $eventCategory,
@@ -219,7 +218,7 @@ class IA extends Component
             'eventValue' => $eventValue,
         ];
         $fileName = pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_BASENAME);
-        $trackingUrl = UrlHelper::siteUrl('instantanalytics/eventTrack/'.$fileName, $urlParams);
+        $trackingUrl = UrlHelper::siteUrl('instantanalytics/eventTrack/' . $fileName, $urlParams);
         Craft::info(
             Craft::t(
                 'instant-analytics',
@@ -278,7 +277,7 @@ class IA extends Component
 
         // Check the $_SERVER[] super-global exclusions
         if (InstantAnalytics::$settings->serverExcludes !== null
-            && \is_array(InstantAnalytics::$settings->serverExcludes)) {
+            && is_array(InstantAnalytics::$settings->serverExcludes)) {
             foreach (InstantAnalytics::$settings->serverExcludes as $match => $matchArray) {
                 if (isset($_SERVER[$match])) {
                     foreach ($matchArray as $matchItem) {
@@ -315,7 +314,7 @@ class IA extends Component
             }
 
             if (InstantAnalytics::$settings->groupExcludes !== null
-                && \is_array(InstantAnalytics::$settings->groupExcludes)) {
+                && is_array(InstantAnalytics::$settings->groupExcludes)) {
                 foreach (InstantAnalytics::$settings->groupExcludes as $matchItem) {
                     if ($user->isInGroup($matchItem)) {
                         $this->logExclusion('groupExcludes');
@@ -371,7 +370,7 @@ class IA extends Component
             $urlParts = parse_url($url);
             $url = $urlParts['path'] ?? '/';
             if (isset($urlParts['query'])) {
-                $url = $url.'?'.$urlParts['query'];
+                $url = $url . '?' . $urlParts['query'];
             }
         }
 
@@ -406,7 +405,7 @@ class IA extends Component
         $analytics = null;
         $request = Craft::$app->getRequest();
         $trackingId = InstantAnalytics::$settings->googleAnalyticsTracking;
-        if (InstantAnalytics::$craft31 && !empty($trackingId)) {
+        if (!empty($trackingId)) {
             $trackingId = Craft::parseEnv($trackingId);
         }
         if (InstantAnalytics::$settings !== null
@@ -536,13 +535,13 @@ class IA extends Component
         if (isset($_COOKIE['_ga'])) {
             $parts = preg_split('[\.]', $_COOKIE['_ga'], 4);
             if ($parts !== false) {
-                $cid = implode('.', \array_slice($parts, 2));
+                $cid = implode('.', array_slice($parts, 2));
             }
         } elseif (isset($_COOKIE['_ia']) && $_COOKIE['_ia'] !== '') {
             $cid = $_COOKIE['_ia'];
         } else {
             // Only generate our own unique clientId if `requireGaCookieClientId` isn't true
-            if (!InstantAnalytics::$settings->requireGaCookieClientId)  {
+            if (!InstantAnalytics::$settings->requireGaCookieClientId) {
                 $cid = $this->gaGenUUID();
             }
         }

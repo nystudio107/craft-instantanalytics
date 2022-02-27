@@ -10,15 +10,13 @@
 
 namespace nystudio107\instantanalytics\variables;
 
-use nystudio107\instantanalytics\InstantAnalytics;
+use craft\helpers\Template;
 use nystudio107\instantanalytics\helpers\IAnalytics;
-
+use nystudio107\instantanalytics\InstantAnalytics;
 use nystudio107\pluginvite\variables\ViteVariableInterface;
 use nystudio107\pluginvite\variables\ViteVariableTrait;
-
-use craft\helpers\Template;
-
-use \Twig\Markup;
+use Twig\Markup;
+use yii\base\Exception;
 
 /**
  * Instant Analytics Variable
@@ -40,9 +38,9 @@ class InstantAnalyticsVariable implements ViteVariableInterface
      * @param string $url
      * @param string $title
      *
-     * @return null|IAnalytics object
+     * @return null|IAnalytics
      */
-    public function pageViewAnalytics($url = '', $title = '')
+    public function pageViewAnalytics(string $url = '', string $title = ''): ?IAnalytics
     {
         return InstantAnalytics::$plugin->ia->pageViewAnalytics($url, $title);
     }
@@ -53,11 +51,11 @@ class InstantAnalyticsVariable implements ViteVariableInterface
      * @param string $eventCategory
      * @param string $eventAction
      * @param string $eventLabel
-     * @param int    $eventValue
+     * @param int $eventValue
      *
      * @return null|IAnalytics
      */
-    public function eventAnalytics($eventCategory = '', $eventAction = '', $eventLabel = '', $eventValue = 0)
+    public function eventAnalytics(string $eventCategory = '', string $eventAction = '', string $eventLabel = '', int $eventValue = 0): ?IAnalytics
     {
         return InstantAnalytics::$plugin->ia->eventAnalytics($eventCategory, $eventAction, $eventLabel, $eventValue);
     }
@@ -67,7 +65,7 @@ class InstantAnalyticsVariable implements ViteVariableInterface
      *
      * @return null|IAnalytics
      */
-    public function analytics()
+    public function analytics(): ?IAnalytics
     {
         return InstantAnalytics::$plugin->ia->analytics();
     }
@@ -79,7 +77,7 @@ class InstantAnalyticsVariable implements ViteVariableInterface
      * @param $title
      *
      * @return Markup
-     * @throws \yii\base\Exception
+     * @throws Exception
      */
     public function pageViewTrackingUrl($url, $title): Markup
     {
@@ -89,22 +87,23 @@ class InstantAnalyticsVariable implements ViteVariableInterface
     /**
      * Get an Event tracking URL
      *
-     * @param        $url
+     * @param string $url
      * @param string $eventCategory
      * @param string $eventAction
      * @param string $eventLabel
-     * @param int    $eventValue
+     * @param int $eventValue
      *
      * @return Markup
-     * @throws \yii\base\Exception
+     * @throws Exception
      */
     public function eventTrackingUrl(
-        $url,
-        $eventCategory = '',
-        $eventAction = '',
-        $eventLabel = '',
-        $eventValue = 0
-    ): Markup {
+        string $url,
+        string $eventCategory = '',
+        string $eventAction = '',
+        string $eventLabel = '',
+        int    $eventValue = 0
+    ): Markup
+    {
         return Template::raw(InstantAnalytics::$plugin->ia->eventTrackingUrl(
             $url,
             $eventCategory,
@@ -112,15 +111,5 @@ class InstantAnalyticsVariable implements ViteVariableInterface
             $eventLabel,
             $eventValue
         ));
-    }
-
-    /**
-     * Return whether we are running Craft 3.1 or later
-     *
-     * @return bool
-     */
-    public function craft31(): bool
-    {
-        return InstantAnalytics::$craft31;
     }
 }

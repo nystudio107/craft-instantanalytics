@@ -10,9 +10,8 @@
 
 namespace nystudio107\instantanalytics\controllers;
 
-use nystudio107\instantanalytics\InstantAnalytics;
-
 use craft\web\Controller;
+use nystudio107\instantanalytics\InstantAnalytics;
 
 /**
  * TrackController
@@ -44,12 +43,10 @@ class TrackController extends Controller
      * @param string $url
      * @param string $title
      */
-    public function actionTrackPageViewUrl(string $url, string $title)
+    public function actionTrackPageViewUrl(string $url, string $title): void
     {
         $analytics = InstantAnalytics::$plugin->ia->pageViewAnalytics($url, $title);
-        if ($analytics !== null) {
-            $analytics->sendPageview();
-        }
+        $analytics?->sendPageview();
         $this->redirect($url, 200);
     }
 
@@ -58,15 +55,16 @@ class TrackController extends Controller
      * @param string $eventCategory
      * @param string $eventAction
      * @param string $eventLabel
-     * @param int    $eventValue
+     * @param int $eventValue
      */
     public function actionTrackEventUrl(
         string $url,
         string $eventCategory,
         string $eventAction,
         string $eventLabel,
-        int $eventValue
-    ) {
+        int    $eventValue
+    ): void
+    {
         $analytics = InstantAnalytics::$plugin->ia->eventAnalytics(
             $eventCategory,
             $eventAction,
@@ -75,10 +73,8 @@ class TrackController extends Controller
         );
         // Get the file name
         $path = parse_url($url, PHP_URL_PATH);
-        if ($analytics !== null) {
-            $analytics->setDocumentPath($path)
-                ->sendEvent();
-        }
+        $analytics?->setDocumentPath($path)
+            ->sendEvent();
         $this->redirect($url, 200);
     }
 }

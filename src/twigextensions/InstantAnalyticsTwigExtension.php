@@ -10,17 +10,16 @@
 
 namespace nystudio107\instantanalytics\twigextensions;
 
-use nystudio107\instantanalytics\InstantAnalytics;
-use nystudio107\instantanalytics\helpers\IAnalytics;
-
 use Craft;
 use craft\helpers\Template;
-
+use nystudio107\instantanalytics\helpers\IAnalytics;
+use nystudio107\instantanalytics\InstantAnalytics;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
 use Twig\Markup;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
+use yii\base\Exception;
 
 /**
  * Twig can be extended in many ways; you can add extra tags, filters, tests,
@@ -41,16 +40,15 @@ class InstantAnalyticsTwigExtension extends AbstractExtension implements Globals
     /**
      * @inheritdoc
      */
-    public function getName()
+    public function getName(): string
     {
         return 'InstantAnalytics';
     }
 
-    /** @noinspection ReturnTypeCanBeDeclaredInspection */
     /**
-     * @@inheritdoc
+     * @inheritdoc
      */
-    public function getGlobals()
+    public function getGlobals(): array
     {
         $globals = [];
         $view = Craft::$app->getView();
@@ -70,7 +68,7 @@ class InstantAnalyticsTwigExtension extends AbstractExtension implements Globals
     /**
      * @inheritdoc
      */
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             new TwigFilter('pageViewAnalytics', [$this, 'pageViewAnalytics']),
@@ -83,7 +81,7 @@ class InstantAnalyticsTwigExtension extends AbstractExtension implements Globals
     /**
      * @inheritdoc
      */
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('pageViewAnalytics', [$this, 'pageViewAnalytics']),
@@ -101,7 +99,7 @@ class InstantAnalyticsTwigExtension extends AbstractExtension implements Globals
      *
      * @return null|IAnalytics object
      */
-    public function pageViewAnalytics($url = '', $title = '')
+    public function pageViewAnalytics(string $url = '', string $title = ''): ?IAnalytics
     {
         return InstantAnalytics::$plugin->ia->pageViewAnalytics($url, $title);
     }
@@ -112,11 +110,11 @@ class InstantAnalyticsTwigExtension extends AbstractExtension implements Globals
      * @param string $eventCategory
      * @param string $eventAction
      * @param string $eventLabel
-     * @param int    $eventValue
+     * @param int $eventValue
      *
      * @return null|IAnalytics
      */
-    public function eventAnalytics($eventCategory = '', $eventAction = '', $eventLabel = '', $eventValue = 0)
+    public function eventAnalytics(string $eventCategory = '', string $eventAction = '', string $eventLabel = '', int $eventValue = 0): ?IAnalytics
     {
         return InstantAnalytics::$plugin->ia->eventAnalytics($eventCategory, $eventAction, $eventLabel, $eventValue);
     }
@@ -126,7 +124,7 @@ class InstantAnalyticsTwigExtension extends AbstractExtension implements Globals
      *
      * @return null|IAnalytics
      */
-    public function analytics()
+    public function analytics(): ?IAnalytics
     {
         return InstantAnalytics::$plugin->ia->analytics();
     }
@@ -138,7 +136,7 @@ class InstantAnalyticsTwigExtension extends AbstractExtension implements Globals
      * @param $title
      *
      * @return Markup
-     * @throws \yii\base\Exception
+     * @throws Exception
      */
     public function pageViewTrackingUrl($url, $title): Markup
     {
@@ -148,22 +146,23 @@ class InstantAnalyticsTwigExtension extends AbstractExtension implements Globals
     /**
      * Get an Event tracking URL
      *
-     * @param        $url
+     * @param string $url
      * @param string $eventCategory
      * @param string $eventAction
      * @param string $eventLabel
-     * @param int    $eventValue
+     * @param int $eventValue
      *
      * @return Markup
-     * @throws \yii\base\Exception
+     * @throws Exception
      */
     public function eventTrackingUrl(
-        $url,
-        $eventCategory = '',
-        $eventAction = '',
-        $eventLabel = '',
-        $eventValue = 0
-    ): Markup {
+        string $url,
+        string $eventCategory = '',
+        string $eventAction = '',
+        string $eventLabel = '',
+        int    $eventValue = 0
+    ): Markup
+    {
         return Template::raw(InstantAnalytics::$plugin->ia->eventTrackingUrl(
             $url,
             $eventCategory,

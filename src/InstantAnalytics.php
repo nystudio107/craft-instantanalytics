@@ -10,21 +10,12 @@
 
 namespace nystudio107\instantanalytics;
 
-use nystudio107\instantanalytics\assetbundles\instantanalytics\InstantAnalyticsAsset;
-use nystudio107\instantanalytics\helpers\IAnalytics;
-use nystudio107\instantanalytics\helpers\Field as FieldHelper;
-use nystudio107\instantanalytics\models\Settings;
-use nystudio107\instantanalytics\services\Commerce as CommerceService;
-use nystudio107\instantanalytics\services\IA as IAService;
-use nystudio107\instantanalytics\variables\InstantAnalyticsVariable;
-use nystudio107\instantanalytics\twigextensions\InstantAnalyticsTwigExtension;
-
-use nystudio107\pluginvite\services\VitePluginService;
-
-use nystudio107\seomatic\Seomatic;
-
 use Craft;
+use craft\base\Model;
 use craft\base\Plugin;
+use craft\commerce\elements\Order;
+use craft\commerce\events\LineItemEvent;
+use craft\commerce\Plugin as Commerce;
 use craft\events\PluginEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\events\TemplateEvent;
@@ -33,14 +24,19 @@ use craft\services\Plugins;
 use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
 use craft\web\View;
-
-use craft\commerce\Plugin as Commerce;
-use craft\commerce\elements\Order;
-use craft\commerce\events\LineItemEvent;
-
-use Twig\Error\LoaderError;
-
+use Exception;
+use nystudio107\instantanalytics\assetbundles\instantanalytics\InstantAnalyticsAsset;
+use nystudio107\instantanalytics\helpers\Field as FieldHelper;
+use nystudio107\instantanalytics\helpers\IAnalytics;
+use nystudio107\instantanalytics\models\Settings;
+use nystudio107\instantanalytics\services\Commerce as CommerceService;
+use nystudio107\instantanalytics\services\IA as IAService;
+use nystudio107\instantanalytics\twigextensions\InstantAnalyticsTwigExtension;
+use nystudio107\instantanalytics\variables\InstantAnalyticsVariable;
+use nystudio107\pluginvite\services\VitePluginService;
+use nystudio107\seomatic\Seomatic;
 use yii\base\Event;
+use function array_merge;
 
 /** @noinspection MissingPropertyAnnotationsInspection */
 
@@ -49,58 +45,67 @@ use yii\base\Event;
  * @package   InstantAnalytics
  * @since     1.0.0
  *
- * @property IAService          $ia
- * @property CommerceService    $commerce
- * @property VitePluginService  $vite
+ * @property IAService $ia
+ * @property CommerceService $commerce
+ * @property VitePluginService $vite
  */
 class InstantAnalytics extends Plugin
 {
     // Constants
     // =========================================================================
 
-    const COMMERCE_PLUGIN_HANDLE = 'commerce';
-    const SEOMATIC_PLUGIN_HANDLE = 'seomatic';
+    protected const COMMERCE_PLUGIN_HANDLE = 'commerce';
+    protected const SEOMATIC_PLUGIN_HANDLE = 'seomatic';
 
     // Static Properties
     // =========================================================================
 
     /**
-     * @var InstantAnalytics
+     * @var null|InstantAnalytics
      */
-    public static $plugin;
+    public static ?InstantAnalytics $plugin;
 
     /**
-     * @var Settings
+     * @var null|Settings
      */
-    public static $settings;
+    public static ?Settings $settings;
 
     /**
-     * @var Commerce|null
+     * @var null|Commerce
      */
-    public static $commercePlugin;
+    public static ?Commerce $commercePlugin;
 
     /**
-     * @var Seomatic|null
+     * @var null|Seomatic
      */
-    public static $seomaticPlugin;
+    public static ?Seomatic $seomaticPlugin;
 
     /**
      * @var string
      */
-    public static $currentTemplate = '';
+    public static string $currentTemplate = '';
 
     /**
      * @var bool
      */
-    public static $pageViewSent = false;
+    public static bool $pageViewSent = false;
 
-    /**
-     * @var bool
-     */
-    public static $craft31 = false;
-
-    // Static Methods
+    // Public Properties
     // =========================================================================
+
+    /**
+     * @var string
+     */
+    public string $schemaVersion = '1.0.0';
+
+    /**
+     * @var bool
+     */
+    public bool $hasCpSection = false;
+    /**
+     * @var bool
+     */
+    public bool $hasCpSettings = true;
 
     /**
      * @inheritdoc
@@ -126,36 +131,17 @@ class InstantAnalytics extends Plugin
         parent::__construct($id, $parent, $config);
     }
 
-    // Public Properties
-    // =========================================================================
-
-    /**
-     * @var string
-     */
-    public $schemaVersion = '1.0.0';
-
-    /**
-     * @var bool
-     */
-    public $hasCpSection = false;
-
-    /**
-     * @var bool
-     */
-    public $hasCpSettings = true;
-
     // Public Methods
     // =========================================================================
 
     /**
      * @inheritdoc
      */
-    public function init()
+    public function init(): void
     {
         parent::init();
         self::$plugin = $this;
         self::$settings = $this->getSettings();
-        self::$craft31 = version_compare(Craft::$app->getVersion(), '3.1', '>=');
 
         // Determine if Craft Commerce is installed & enabled
         self::$commercePlugin = Craft::$app->getPlugins()->getPlugin(self::COMMERCE_PLUGIN_HANDLE);
@@ -179,7 +165,7 @@ class InstantAnalytics extends Plugin
     /**
      * @inheritdoc
      */
-    public function settingsHtml()
+    public function settingsHtml(): ?string
     {
         $commerceFields = [];
 
@@ -189,11 +175,11 @@ class InstantAnalytics extends Plugin
             foreach ($productTypes as $productType) {
                 $productFields = $this->getPullFieldsFromLayoutId($productType->fieldLayoutId);
                 /** @noinspection SlowArrayOperationsInLoopInspection */
-                $commerceFields = \array_merge($commerceFields, $productFields);
+                $commerceFields = array_merge($commerceFields, $productFields);
                 if ($productType->hasVariants) {
                     $variantFields = $this->getPullFieldsFromLayoutId($productType->variantFieldLayoutId);
                     /** @noinspection SlowArrayOperationsInLoopInspection */
-                    $commerceFields = \array_merge($commerceFields, $variantFields);
+                    $commerceFields = array_merge($commerceFields, $variantFields);
                 }
             }
         }
@@ -207,9 +193,7 @@ class InstantAnalytics extends Plugin
                     'commerceFields' => $commerceFields,
                 ]
             );
-        } catch (LoaderError $e) {
-            Craft::error($e->getMessage(), __METHOD__);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Craft::error($e->getMessage(), __METHOD__);
         }
 
@@ -221,9 +205,9 @@ class InstantAnalytics extends Plugin
      *
      * @param array &$context
      *
-     * @return string|null
+     * @return string
      */
-    public function iaSendPageView(/** @noinspection PhpUnusedParameterInspection */ array &$context)
+    public function iaSendPageView(/** @noinspection PhpUnusedParameterInspection */ array &$context): string
     {
         $this->sendPageView();
 
@@ -236,7 +220,7 @@ class InstantAnalytics extends Plugin
     /**
      * Add in our Craft components
      */
-    protected function addComponents()
+    protected function addComponents(): void
     {
         $view = Craft::$app->getView();
         // Add in our Twig extensions
@@ -261,7 +245,7 @@ class InstantAnalytics extends Plugin
     /**
      * Install our event listeners
      */
-    protected function installEventListeners()
+    protected function installEventListeners(): void
     {
         // Handler: Plugins::EVENT_AFTER_INSTALL_PLUGIN
         Event::on(
@@ -290,7 +274,7 @@ class InstantAnalytics extends Plugin
     /**
      * Install site event listeners for site requests only
      */
-    protected function installSiteEventListeners()
+    protected function installSiteEventListeners(): void
     {
         // Handler: UrlManager::EVENT_REGISTER_SITE_URL_RULES
         Event::on(
@@ -312,7 +296,7 @@ class InstantAnalytics extends Plugin
         Event::on(
             View::class,
             View::EVENT_BEFORE_RENDER_PAGE_TEMPLATE,
-            function (TemplateEvent $event) {
+            static function (TemplateEvent $event) {
                 self::$currentTemplate = $event->template;
             }
         );
@@ -357,7 +341,7 @@ class InstantAnalytics extends Plugin
     /**
      * Install site event listeners for Control Panel requests only
      */
-    protected function installCpEventListeners()
+    protected function installCpEventListeners(): void
     {
     }
 
@@ -379,7 +363,7 @@ class InstantAnalytics extends Plugin
     /**
      * @inheritdoc
      */
-    protected function createSettingsModel()
+    protected function createSettingsModel(): ?Model
     {
         return new Settings();
     }
@@ -390,7 +374,7 @@ class InstantAnalytics extends Plugin
     /**
      * Send a page view with the pre-loaded IAnalytics object
      */
-    private function sendPageView()
+    private function sendPageView(): void
     {
         $request = Craft::$app->getRequest();
         if ($request->getIsSiteRequest() && !$request->getIsConsoleRequest() && !self::$pageViewSent) {
@@ -431,9 +415,9 @@ class InstantAnalytics extends Plugin
     /**
      * If SEOmatic is installed, set the page title from it
      *
-     * @param $analytics
+     * @param IAnalytics $analytics
      */
-    private function setTitleFromSeomatic(IAnalytics $analytics)
+    private function setTitleFromSeomatic(IAnalytics $analytics): void
     {
         if (self::$seomaticPlugin && Seomatic::$settings->renderEnabled) {
             $titleTag = Seomatic::$plugin->title->get('title');

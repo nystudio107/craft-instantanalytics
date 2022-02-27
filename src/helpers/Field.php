@@ -14,19 +14,18 @@ namespace nystudio107\instantanalytics\helpers;
 use Craft;
 use craft\base\Element;
 use craft\base\Field as BaseField;
-use craft\base\Volume;
-use craft\elements\User;
 use craft\ckeditor\Field as CKEditorField;
 use craft\elements\MatrixBlock;
+use craft\elements\User;
 use craft\fields\Assets as AssetsField;
 use craft\fields\Categories as CategoriesField;
 use craft\fields\Matrix as MatrixField;
 use craft\fields\PlainText as PlainTextField;
 use craft\fields\Tags as TagsField;
 use craft\models\FieldLayout;
+use craft\models\Volume;
 use craft\redactor\Field as RedactorField;
-
-use yii\base\InvalidConfigException;
+use Exception;
 
 /**
  * @author    nystudio107
@@ -38,12 +37,12 @@ class Field
     // Constants
     // =========================================================================
 
-    const TEXT_FIELD_CLASS_KEY = 'text';
-    const ASSET_FIELD_CLASS_KEY = 'asset';
-    const BLOCK_FIELD_CLASS_KEY = 'block';
+    public const TEXT_FIELD_CLASS_KEY = 'text';
+    public const ASSET_FIELD_CLASS_KEY = 'asset';
+    public const BLOCK_FIELD_CLASS_KEY = 'block';
 
-    const FIELD_CLASSES = [
-        self::TEXT_FIELD_CLASS_KEY  => [
+    protected const FIELD_CLASSES = [
+        self::TEXT_FIELD_CLASS_KEY => [
             CKEditorField::class,
             PlainTextField::class,
             RedactorField::class,
@@ -62,20 +61,21 @@ class Field
     // =========================================================================
 
     /**
-     * Return all of the fields from the $layout that are of the type
+     * Return all the fields from the $layout that are of the type
      * $fieldClassKey
      *
-     * @param string      $fieldClassKey
+     * @param string $fieldClassKey
      * @param FieldLayout $layout
-     * @param bool        $keysOnly
+     * @param bool $keysOnly
      *
      * @return array
      */
     public static function fieldsOfTypeFromLayout(
-        string $fieldClassKey,
+        string      $fieldClassKey,
         FieldLayout $layout,
-        bool $keysOnly = true
-    ): array {
+        bool        $keysOnly = true
+    ): array
+    {
         $foundFields = [];
         if (!empty(self::FIELD_CLASSES[$fieldClassKey])) {
             $fieldClasses = self::FIELD_CLASSES[$fieldClassKey];
@@ -103,16 +103,17 @@ class Field
      * Return all of the fields in the $element of the type $fieldClassKey
      *
      * @param Element $element
-     * @param string  $fieldClassKey
-     * @param bool    $keysOnly
+     * @param string $fieldClassKey
+     * @param bool $keysOnly
      *
      * @return array
      */
     public static function fieldsOfTypeFromElement(
         Element $element,
-        string $fieldClassKey,
-        bool $keysOnly = true
-    ): array {
+        string  $fieldClassKey,
+        bool    $keysOnly = true
+    ): array
+    {
         $foundFields = [];
         $layout = $element->getFieldLayout();
         if ($layout !== null) {
@@ -125,8 +126,8 @@ class Field
     /**
      * Return all of the fields from Users layout of the type $fieldClassKey
      *
-     * @param string  $fieldClassKey
-     * @param bool    $keysOnly
+     * @param string $fieldClassKey
+     * @param bool $keysOnly
      *
      * @return array
      */
@@ -138,11 +139,11 @@ class Field
     }
 
     /**
-     * Return all of the fields from all Asset Volume layouts of the type
+     * Return all the fields from all Asset Volume layouts of the type
      * $fieldClassKey
      *
      * @param string $fieldClassKey
-     * @param bool   $keysOnly
+     * @param bool $keysOnly
      *
      * @return array
      */
@@ -154,7 +155,7 @@ class Field
             /** @var Volume $volume */
             try {
                 $layout = $volume->getFieldLayout();
-            } catch (InvalidConfigException $e) {
+            } catch (Exception $e) {
                 $layout = null;
             }
             if ($layout) {
@@ -170,11 +171,11 @@ class Field
     }
 
     /**
-     * Return all of the fields from all Global Set layouts of the type
+     * Return all the fields from all Global Set layouts of the type
      * $fieldClassKey
      *
      * @param string $fieldClassKey
-     * @param bool   $keysOnly
+     * @param bool $keysOnly
      *
      * @return array
      */
@@ -189,8 +190,8 @@ class Field
                 // Prefix the keys with the global set name
                 $prefix = $global->handle;
                 $fields = array_combine(
-                    array_map(function ($key) use ($prefix) {
-                        return $prefix.'.'.$key;
+                    array_map(static function ($key) use ($prefix) {
+                        return $prefix . '.' . $key;
                     }, array_keys($fields)),
                     $fields
                 );
@@ -207,11 +208,11 @@ class Field
     }
 
     /**
-     * Return all of the fields in the $matrixBlock of the type $fieldType class
+     * Return all the fields in the $matrixBlock of the type $fieldType class
      *
      * @param MatrixBlock $matrixBlock
-     * @param string      $fieldType
-     * @param bool        $keysOnly
+     * @param string $fieldType
+     * @param bool $keysOnly
      *
      * @return array
      */
@@ -221,11 +222,11 @@ class Field
 
         try {
             $matrixBlockTypeModel = $matrixBlock->getType();
-        } catch (InvalidConfigException $e) {
+        } catch (Exception $e) {
             $matrixBlockTypeModel = null;
         }
         if ($matrixBlockTypeModel) {
-            $fields = $matrixBlockTypeModel->getFields();
+            $fields = $matrixBlockTypeModel->getCustomFields();
             /** @var  $field BaseField */
             foreach ($fields as $field) {
                 if ($field instanceof $fieldType) {

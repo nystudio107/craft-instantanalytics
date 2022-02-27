@@ -11,13 +11,11 @@
 
 namespace nystudio107\instantanalytics\helpers;
 
-use nystudio107\instantanalytics\InstantAnalytics;
-use nystudio107\instantanalytics\models\Settings;
-
 use Craft;
-
-use \TheIconic\Tracking\GoogleAnalytics\Analytics;
-use \TheIconic\Tracking\GoogleAnalytics\AnalyticsResponseInterface;
+use Exception;
+use nystudio107\instantanalytics\InstantAnalytics;
+use TheIconic\Tracking\GoogleAnalytics\Analytics;
+use TheIconic\Tracking\GoogleAnalytics\AnalyticsResponseInterface;
 
 /**
  * @author    nystudio107
@@ -27,7 +25,7 @@ use \TheIconic\Tracking\GoogleAnalytics\AnalyticsResponseInterface;
 class IAnalytics extends Analytics
 {
 
-    protected $shouldSendAnalytics = null;
+    protected bool $shouldSendAnalytics = false;
 
     /**
      * @inheritdoc
@@ -53,17 +51,18 @@ class IAnalytics extends Analytics
     /**
      * Add a product impression to the Analytics object
      *
-     * @param string $productVariant
-     * @param int    $index
+     * @param ?string $productVariant
+     * @param int $index
      * @param string $listName
-     * @param int    $listIndex
+     * @param int $listIndex
      */
     public function addCommerceProductImpression(
-        $productVariant = null,
-        $index = 0,
-        $listName = 'default',
-        $listIndex = 1
-    ) {
+        ?string $productVariant = null,
+        int     $index = 0,
+        string  $listName = 'default',
+        int     $listIndex = 1
+    ): void
+    {
 
         if (InstantAnalytics::$commercePlugin) {
             if ($productVariant) {
@@ -89,9 +88,9 @@ class IAnalytics extends Analytics
     /**
      * Add a product detail view to the Analytics object
      *
-     * @param string $productVariant
+     * @param ?string $productVariant
      */
-    public function addCommerceProductDetailView($productVariant = null)
+    public function addCommerceProductDetailView(?string $productVariant = null): void
     {
         if (InstantAnalytics::$commercePlugin) {
             if ($productVariant) {
@@ -112,10 +111,10 @@ class IAnalytics extends Analytics
      * Add a checkout step to the Analytics object
      *
      * @param        $orderModel
-     * @param int    $step
+     * @param int $step
      * @param string $option
      */
-    public function addCommerceCheckoutStep($orderModel = null, $step = 1, $option = "")
+    public function addCommerceCheckoutStep($orderModel = null, $step = 1, $option = ""): void
     {
         if (InstantAnalytics::$commercePlugin) {
             if ($orderModel) {
@@ -151,7 +150,7 @@ class IAnalytics extends Analytics
                     );
 
                     return parent::sendHit($methodName);
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     if (InstantAnalytics::$settings->logExcludedAnalytics) {
                         Craft::info(
                             '*** sendHit(): error sending analytics: ' . $e->getMessage(),
@@ -161,13 +160,13 @@ class IAnalytics extends Analytics
                 }
             } elseif (InstantAnalytics::$settings->logExcludedAnalytics) {
                 Craft::info(
-                    '*** sendHit(): analytics not sent for '.$requestIp. ' because no clientId or userId is set',
+                    '*** sendHit(): analytics not sent for ' . $requestIp . ' because no clientId or userId is set',
                     __METHOD__
                 );
             }
         } elseif (InstantAnalytics::$settings->logExcludedAnalytics) {
             Craft::info(
-                '*** sendHit(): analytics not sent for '.$requestIp,
+                '*** sendHit(): analytics not sent for ' . $requestIp,
                 __METHOD__
             );
         }
