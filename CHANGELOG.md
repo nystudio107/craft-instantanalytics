@@ -1,5 +1,11 @@
 # Instant Analytics Changelog
 
+## 4.0.0-beta.1 - 2022.02.26
+
+### Added
+
+* Initial Craft CMS 4 compatibility
+
 ## 1.1.15 - 2022.01.27
 
 ### Fixed
