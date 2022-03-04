@@ -31,7 +31,7 @@ class TrackController extends Controller
      *         The actions must be in 'kebab-case'
      * @access protected
      */
-    protected $allowAnonymous = [
+    protected array|bool|int $allowAnonymous = [
         'track-page-view-url',
         'track-event-url'
     ];
