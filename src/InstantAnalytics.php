@@ -53,8 +53,14 @@ class InstantAnalytics extends Plugin
 {
     // Constants
     // =========================================================================
-
+    /**
+     * @var string
+     */
     protected const COMMERCE_PLUGIN_HANDLE = 'commerce';
+
+    /**
+     * @var string
+     */
     protected const SEOMATIC_PLUGIN_HANDLE = 'seomatic';
 
     // Static Properties
@@ -63,22 +69,22 @@ class InstantAnalytics extends Plugin
     /**
      * @var null|InstantAnalytics
      */
-    public static ?InstantAnalytics $plugin;
+    public static ?InstantAnalytics $plugin = null;
 
     /**
      * @var null|Settings
      */
-    public static ?Settings $settings;
+    public static ?Settings $settings = null;
 
     /**
      * @var null|Commerce
      */
-    public static ?Commerce $commercePlugin;
+    public static ?Commerce $commercePlugin = null;
 
     /**
      * @var null|Seomatic
      */
-    public static ?Seomatic $seomaticPlugin;
+    public static ?Seomatic $seomaticPlugin = null;
 
     /**
      * @var string
@@ -102,6 +108,7 @@ class InstantAnalytics extends Plugin
      * @var bool
      */
     public bool $hasCpSection = false;
+
     /**
      * @var bool
      */
@@ -165,11 +172,11 @@ class InstantAnalytics extends Plugin
     /**
      * @inheritdoc
      */
-    public function settingsHtml(): ?string
+    protected function settingsHtml(): ?string
     {
         $commerceFields = [];
 
-        if (self::$commercePlugin) {
+        if (self::$commercePlugin !== null) {
             $productTypes = self::$commercePlugin->getProductTypes()->getAllProductTypes();
 
             foreach ($productTypes as $productType) {
@@ -193,8 +200,8 @@ class InstantAnalytics extends Plugin
                     'commerceFields' => $commerceFields,
                 ]
             );
-        } catch (Exception $e) {
-            Craft::error($e->getMessage(), __METHOD__);
+        } catch (Exception $exception) {
+            Craft::error($exception->getMessage(), __METHOD__);
         }
 
         return '';
@@ -203,9 +210,7 @@ class InstantAnalytics extends Plugin
     /**
      * Handle the `{% hook iaSendPageView %}`
      *
-     * @param array &$context
      *
-     * @return string
      */
     public function iaSendPageView(/** @noinspection PhpUnusedParameterInspection */ array &$context): string
     {
@@ -226,12 +231,12 @@ class InstantAnalytics extends Plugin
         // Add in our Twig extensions
         $view->registerTwigExtension(new InstantAnalyticsTwigExtension());
         // Install our template hook
-        $view->hook('iaSendPageView', [$this, 'iaSendPageView']);
+        $view->hook('iaSendPageView', fn(array $context): string => $this->iaSendPageView($context));
         // Register our variables
         Event::on(
             CraftVariable::class,
             CraftVariable::EVENT_INIT,
-            function (Event $event) {
+            function (Event $event): void {
                 /** @var CraftVariable $variable */
                 $variable = $event->sender;
                 $variable->set('instantAnalytics', [
@@ -251,7 +256,7 @@ class InstantAnalytics extends Plugin
         Event::on(
             Plugins::class,
             Plugins::EVENT_AFTER_INSTALL_PLUGIN,
-            function (PluginEvent $event) {
+            function (PluginEvent $event): void {
                 if ($event->plugin === $this) {
                     $request = Craft::$app->getRequest();
                     if ($request->isCpRequest) {
@@ -265,6 +270,7 @@ class InstantAnalytics extends Plugin
         if ($request->getIsSiteRequest() && !$request->getIsConsoleRequest()) {
             $this->installSiteEventListeners();
         }
+
         // Install only for non-console Control Panel requests
         if ($request->getIsCpRequest() && !$request->getIsConsoleRequest()) {
             $this->installCpEventListeners();
@@ -280,7 +286,7 @@ class InstantAnalytics extends Plugin
         Event::on(
             UrlManager::class,
             UrlManager::EVENT_REGISTER_SITE_URL_RULES,
-            function (RegisterUrlRulesEvent $event) {
+            function (RegisterUrlRulesEvent $event): void {
                 Craft::debug(
                     'UrlManager::EVENT_REGISTER_SITE_URL_RULES',
                     __METHOD__
@@ -296,7 +302,7 @@ class InstantAnalytics extends Plugin
         Event::on(
             View::class,
             View::EVENT_BEFORE_RENDER_PAGE_TEMPLATE,
-            static function (TemplateEvent $event) {
+            static function (TemplateEvent $event): void {
                 self::$currentTemplate = $event->template;
             }
         );
@@ -304,22 +310,22 @@ class InstantAnalytics extends Plugin
         Event::on(
             View::class,
             View::EVENT_AFTER_RENDER_PAGE_TEMPLATE,
-            function (TemplateEvent $event) {
+            function (TemplateEvent $event): void {
                 if (self::$settings->autoSendPageView) {
                     $this->sendPageView();
                 }
             }
         );
         // Commerce-specific hooks
-        if (self::$commercePlugin) {
-            Event::on(Order::class, Order::EVENT_AFTER_COMPLETE_ORDER, function (Event $e) {
+        if (self::$commercePlugin !== null) {
+            Event::on(Order::class, Order::EVENT_AFTER_COMPLETE_ORDER, function (Event $e): void {
                 $order = $e->sender;
                 if (self::$settings->autoSendPurchaseComplete) {
                     $this->commerce->orderComplete($order);
                 }
             });
 
-            Event::on(Order::class, Order::EVENT_AFTER_ADD_LINE_ITEM, function (LineItemEvent $e) {
+            Event::on(Order::class, Order::EVENT_AFTER_ADD_LINE_ITEM, function (LineItemEvent $e): void {
                 $lineItem = $e->lineItem;
                 if (self::$settings->autoSendAddToCart) {
                     $this->commerce->addToCart($lineItem->order, $lineItem);
@@ -328,7 +334,7 @@ class InstantAnalytics extends Plugin
 
             // Check to make sure Order::EVENT_AFTER_REMOVE_LINE_ITEM is defined
             if (defined(Order::class . '::EVENT_AFTER_REMOVE_LINE_ITEM')) {
-                Event::on(Order::class, Order::EVENT_AFTER_REMOVE_LINE_ITEM, function (LineItemEvent $e) {
+                Event::on(Order::class, Order::EVENT_AFTER_REMOVE_LINE_ITEM, function (LineItemEvent $e): void {
                     $lineItem = $e->lineItem;
                     if (self::$settings->autoSendRemoveFromCart) {
                         $this->commerce->removeFromCart($lineItem->order, $lineItem);
@@ -348,7 +354,7 @@ class InstantAnalytics extends Plugin
     /**
      * Return the custom frontend routes
      *
-     * @return array
+     * @return array<string, string>
      */
     protected function customFrontendRoutes(): array
     {
@@ -379,12 +385,8 @@ class InstantAnalytics extends Plugin
         $request = Craft::$app->getRequest();
         if ($request->getIsSiteRequest() && !$request->getIsConsoleRequest() && !self::$pageViewSent) {
             self::$pageViewSent = true;
-            /** @var IAnalytics $analytics */
             $analytics = self::$plugin->ia->getGlobals(self::$currentTemplate);
-            // Bail if we have no analytics object
-            if ($analytics === null) {
-                return;
-            }
+
             // If SEOmatic is installed, set the page title from it
             $this->setTitleFromSeomatic($analytics);
             // Send the page view
@@ -414,14 +416,12 @@ class InstantAnalytics extends Plugin
 
     /**
      * If SEOmatic is installed, set the page title from it
-     *
-     * @param IAnalytics $analytics
      */
     private function setTitleFromSeomatic(IAnalytics $analytics): void
     {
         if (self::$seomaticPlugin && Seomatic::$settings->renderEnabled) {
             $titleTag = Seomatic::$plugin->title->get('title');
-            if ($titleTag) {
+            if ($titleTag !== null) {
                 $titleArray = $titleTag->renderAttributes();
                 if (!empty($titleArray['title'])) {
                     $analytics->setDocumentTitle($titleArray['title']);
@@ -433,7 +433,7 @@ class InstantAnalytics extends Plugin
     /**
      * @param $layoutId
      *
-     * @return array
+     * @return mixed[]|array<string, string>
      */
     private function getPullFieldsFromLayoutId($layoutId): array
     {
@@ -441,6 +441,7 @@ class InstantAnalytics extends Plugin
         if ($layoutId === null) {
             return $result;
         }
+
         $fieldLayout = Craft::$app->getFields()->getLayoutById($layoutId);
         if ($fieldLayout) {
             $result = FieldHelper::fieldsOfTypeFromLayout(FieldHelper::TEXT_FIELD_CLASS_KEY, $fieldLayout, false);
