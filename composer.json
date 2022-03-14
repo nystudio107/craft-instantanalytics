@@ -31,12 +31,6 @@
     "theiconic/php-ga-measurement-protocol": "^2.5.1",
     "jaybizzle/crawler-detect": "^1.2.37"
   },
-  "repositories": [
-    {
-      "type": "composer",
-      "url": "https://asset-packagist.org"
-    }
-  ],
   "autoload": {
     "psr-4": {
       "nystudio107\\instantanalytics\\": "src/"
