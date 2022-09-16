@@ -1,5 +1,9 @@
 # Instant Analytics Changelog
 
+## 1.1.16 - UNRELEASED
+### Changed
+*
+
 ## 1.1.15 - 2022.01.27
 
 ### Fixed
