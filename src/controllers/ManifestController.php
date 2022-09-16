@@ -1,6 +1,6 @@
 <?php
 /**
- * Instant Analytics plugin for Craft CMS 3.x
+ * Instant Analytics plugin for Craft CMS
  *
  * Instant Analytics brings full Google Analytics support to your Twig templates
  *
@@ -12,7 +12,6 @@ namespace nystudio107\instantanalytics\controllers;
 
 use Craft;
 use craft\web\Controller;
-
 use yii\web\Response;
 
 /**

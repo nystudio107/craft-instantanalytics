@@ -1,6 +1,6 @@
 <?php
 /**
- * Instant Analytics plugin for Craft CMS 3.x
+ * Instant Analytics plugin for Craft CMS
  *
  * Instant Analytics brings full Google Analytics support to your Twig templates
  *
@@ -10,12 +10,10 @@
 
 namespace nystudio107\instantanalytics\twigextensions;
 
-use nystudio107\instantanalytics\InstantAnalytics;
-use nystudio107\instantanalytics\helpers\IAnalytics;
-
 use Craft;
 use craft\helpers\Template;
-
+use nystudio107\instantanalytics\helpers\IAnalytics;
+use nystudio107\instantanalytics\InstantAnalytics;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
 use Twig\Markup;
@@ -112,7 +110,7 @@ class InstantAnalyticsTwigExtension extends AbstractExtension implements Globals
      * @param string $eventCategory
      * @param string $eventAction
      * @param string $eventLabel
-     * @param int    $eventValue
+     * @param int $eventValue
      *
      * @return null|IAnalytics
      */
@@ -152,7 +150,7 @@ class InstantAnalyticsTwigExtension extends AbstractExtension implements Globals
      * @param string $eventCategory
      * @param string $eventAction
      * @param string $eventLabel
-     * @param int    $eventValue
+     * @param int $eventValue
      *
      * @return Markup
      * @throws \yii\base\Exception
@@ -163,7 +161,8 @@ class InstantAnalyticsTwigExtension extends AbstractExtension implements Globals
         $eventAction = '',
         $eventLabel = '',
         $eventValue = 0
-    ): Markup {
+    ): Markup
+    {
         return Template::raw(InstantAnalytics::$plugin->ia->eventTrackingUrl(
             $url,
             $eventCategory,

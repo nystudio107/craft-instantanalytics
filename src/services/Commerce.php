@@ -1,6 +1,6 @@
 <?php
 /**
- * Instant Analytics plugin for Craft CMS 3.x
+ * Instant Analytics plugin for Craft CMS
  *
  * Instant Analytics brings full Google Analytics support to your Twig templates
  *
@@ -10,20 +10,18 @@
 
 namespace nystudio107\instantanalytics\services;
 
-use nystudio107\instantanalytics\InstantAnalytics;
-use nystudio107\instantanalytics\helpers\IAnalytics;
-
 use Craft;
 use craft\base\Component;
-use craft\elements\db\CategoryQuery;
-use craft\elements\db\MatrixBlockQuery;
-use craft\elements\db\TagQuery;
-
 use craft\commerce\base\Purchasable;
 use craft\commerce\elements\Order;
 use craft\commerce\elements\Product;
 use craft\commerce\elements\Variant;
 use craft\commerce\models\LineItem;
+use craft\elements\db\CategoryQuery;
+use craft\elements\db\MatrixBlockQuery;
+use craft\elements\db\TagQuery;
+use nystudio107\instantanalytics\helpers\IAnalytics;
+use nystudio107\instantanalytics\InstantAnalytics;
 
 /**
  * Commerce Service
@@ -70,13 +68,14 @@ class Commerce extends Component
     /**
      * Send analytics information for the item added to the cart
      *
-     * @param Order    $order    the Product or Variant
+     * @param Order $order the Product or Variant
      * @param LineItem $lineItem the line item that was added
      */
     public function addToCart(
         /** @noinspection PhpUnusedParameterInspection */
         $order = null, $lineItem = null
-    ) {
+    )
+    {
         if ($lineItem) {
             $title = $lineItem->purchasable->title ?? $lineItem->description;
             $quantity = $lineItem->qty;
@@ -101,13 +100,14 @@ class Commerce extends Component
     /**
      * Send analytics information for the item removed from the cart
      *
-     * @param Order|null    $order
+     * @param Order|null $order
      * @param LineItem|null $lineItem
      */
     public function removeFromCart(
         /** @noinspection PhpUnusedParameterInspection */
         $order = null, $lineItem = null
-    ) {
+    )
+    {
         if ($lineItem) {
             $title = $lineItem->purchasable->title ?? $lineItem->description;
             $quantity = $lineItem->qty;
@@ -139,7 +139,7 @@ class Commerce extends Component
      * Add a Craft Commerce OrderModel to an Analytics object
      *
      * @param IAnalytics $analytics the Analytics object
-     * @param Order      $order     the Product or Variant
+     * @param Order $order the Product or Variant
      */
     public function addCommerceOrderToAnalytics($analytics = null, $order = null)
     {
@@ -171,9 +171,9 @@ class Commerce extends Component
      * Add a Craft Commerce LineItem to an Analytics object
      *
      * @param IAnalytics|null $analytics
-     * @param LineItem|null   $lineItem
-     * @param int             $index
-     * @param string          $listName
+     * @param LineItem|null $lineItem
+     * @param int $index
+     * @param string $listName
      *
      * @return string the title of the product
      * @throws \yii\base\InvalidConfigException
@@ -244,12 +244,12 @@ class Commerce extends Component
     /**
      * Add a product impression from a Craft Commerce Product or Variant
      *
-     * @param IAnalytics      $analytics      the Analytics object
+     * @param IAnalytics $analytics the Analytics object
      * @param Product|Variant $productVariant the Product or Variant
-     * @param int             $index          Where the product appears in the
+     * @param int $index Where the product appears in the
      *                                        list
-     * @param string          $listName
-     * @param int             $listIndex
+     * @param string $listName
+     * @param int $listIndex
      *
      * @throws \yii\base\InvalidConfigException
      */
@@ -259,7 +259,8 @@ class Commerce extends Component
         $index = 0,
         $listName = 'default',
         $listIndex = 1
-    ) {
+    )
+    {
         if ($productVariant && $analytics) {
             $productData = $this->getProductDataFromProduct($productVariant);
 
@@ -288,7 +289,7 @@ class Commerce extends Component
     /**
      * Add a product detail view from a Craft Commerce Product or Variant
      *
-     * @param IAnalytics      $analytics      the Analytics object
+     * @param IAnalytics $analytics the Analytics object
      * @param Product|Variant $productVariant the Product or Variant
      *
      * @throws \yii\base\InvalidConfigException
@@ -316,9 +317,9 @@ class Commerce extends Component
      * Add a checkout step and option to an Analytics object
      *
      * @param IAnalytics $analytics the Analytics object
-     * @param Order      $order     the Product or Variant
-     * @param int        $step      the checkout step
-     * @param string     $option    the checkout option
+     * @param Order $order the Product or Variant
+     * @param int $step the checkout step
+     * @param string $option the checkout option
      */
     public function addCommerceCheckoutStep($analytics = null, $order = null, $step = 1, $option = '')
     {
@@ -459,8 +460,8 @@ class Commerce extends Component
 
     /**
      * @param Product|Variant|null $productVariant
-     * @param string               $fieldHandle
-     * @param bool                 $isBrand
+     * @param string $fieldHandle
+     * @param bool $isBrand
      *
      * @return string
      */
@@ -496,7 +497,7 @@ class Commerce extends Component
                             $name = $cat->title;
 
                             while ($cat = $cat->parent) {
-                                $name = $cat->title.'/'.$name;
+                                $name = $cat->title . '/' . $name;
                             }
 
                             $cats[] = $name;

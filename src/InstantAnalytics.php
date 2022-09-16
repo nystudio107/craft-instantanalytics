@@ -1,6 +1,6 @@
 <?php
 /**
- * Instant Analytics plugin for Craft CMS 3.x
+ * Instant Analytics plugin for Craft CMS
  *
  * Instant Analytics brings full Google Analytics support to your Twig templates
  *
@@ -10,21 +10,11 @@
 
 namespace nystudio107\instantanalytics;
 
-use nystudio107\instantanalytics\assetbundles\instantanalytics\InstantAnalyticsAsset;
-use nystudio107\instantanalytics\helpers\IAnalytics;
-use nystudio107\instantanalytics\helpers\Field as FieldHelper;
-use nystudio107\instantanalytics\models\Settings;
-use nystudio107\instantanalytics\services\Commerce as CommerceService;
-use nystudio107\instantanalytics\services\IA as IAService;
-use nystudio107\instantanalytics\variables\InstantAnalyticsVariable;
-use nystudio107\instantanalytics\twigextensions\InstantAnalyticsTwigExtension;
-
-use nystudio107\pluginvite\services\VitePluginService;
-
-use nystudio107\seomatic\Seomatic;
-
 use Craft;
 use craft\base\Plugin;
+use craft\commerce\elements\Order;
+use craft\commerce\events\LineItemEvent;
+use craft\commerce\Plugin as Commerce;
 use craft\events\PluginEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\events\TemplateEvent;
@@ -33,13 +23,14 @@ use craft\services\Plugins;
 use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
 use craft\web\View;
-
-use craft\commerce\Plugin as Commerce;
-use craft\commerce\elements\Order;
-use craft\commerce\events\LineItemEvent;
-
+use nystudio107\instantanalytics\helpers\Field as FieldHelper;
+use nystudio107\instantanalytics\helpers\IAnalytics;
+use nystudio107\instantanalytics\models\Settings;
+use nystudio107\instantanalytics\services\ServicesTrait;
+use nystudio107\instantanalytics\twigextensions\InstantAnalyticsTwigExtension;
+use nystudio107\instantanalytics\variables\InstantAnalyticsVariable;
+use nystudio107\seomatic\Seomatic;
 use Twig\Error\LoaderError;
-
 use yii\base\Event;
 
 /** @noinspection MissingPropertyAnnotationsInspection */
@@ -48,13 +39,14 @@ use yii\base\Event;
  * @author    nystudio107
  * @package   InstantAnalytics
  * @since     1.0.0
- *
- * @property IAService          $ia
- * @property CommerceService    $commerce
- * @property VitePluginService  $vite
  */
 class InstantAnalytics extends Plugin
 {
+    // Traits
+    // =========================================================================
+
+    use ServicesTrait;
+
     // Constants
     // =========================================================================
 
@@ -98,33 +90,6 @@ class InstantAnalytics extends Plugin
      * @var bool
      */
     public static $craft31 = false;
-
-    // Static Methods
-    // =========================================================================
-
-    /**
-     * @inheritdoc
-     */
-    public function __construct($id, $parent = null, array $config = [])
-    {
-        $config['components'] = [
-            'ia' => IAService::class,
-            'commerce' => CommerceService::class,
-            // Register the vite service
-            'vite' => [
-                'class' => VitePluginService::class,
-                'assetClass' => InstantAnalyticsAsset::class,
-                'useDevServer' => true,
-                'devServerPublic' => 'http://localhost:3001',
-                'serverPublic' => 'http://localhost:8000',
-                'errorEntry' => 'src/js/app.ts',
-                'devServerInternal' => 'http://craft-instantanalytics-buildchain:3001',
-                'checkDevServer' => true,
-            ],
-        ];
-
-        parent::__construct($id, $parent, $config);
-    }
 
     // Public Properties
     // =========================================================================
