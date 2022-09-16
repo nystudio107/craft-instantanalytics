@@ -2,7 +2,8 @@
 
 ## 1.1.16 - UNRELEASED
 ### Changed
-*
+* Updated how the Instant Analytics components are registered, to allow for overriding via plugin config ([#1989](https://github.com/craftcms/cms/issues/1989))
+* Update the buildchain to use Vite `^3.1.0` for building frontend assets
 
 ## 1.1.15 - 2022.01.27
 
