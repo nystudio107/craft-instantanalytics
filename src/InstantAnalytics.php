@@ -114,28 +114,31 @@ class InstantAnalytics extends Plugin
      */
     public bool $hasCpSettings = true;
 
+    // Public Static Methods
+    // =========================================================================
+
     /**
      * @inheritdoc
      */
-    public function __construct($id, $parent = null, array $config = [])
+    public static function config(): array
     {
-        $config['components'] = [
-            'ia' => IAService::class,
-            'commerce' => CommerceService::class,
-            // Register the vite service
-            'vite' => [
-                'class' => VitePluginService::class,
-                'assetClass' => InstantAnalyticsAsset::class,
-                'useDevServer' => true,
-                'devServerPublic' => 'http://localhost:3001',
-                'serverPublic' => 'http://localhost:8000',
-                'errorEntry' => 'src/js/app.ts',
-                'devServerInternal' => 'http://craft-instantanalytics-buildchain:3001',
-                'checkDevServer' => true,
-            ],
+        return [
+            'components' => [
+                'ia' => IAService::class,
+                'commerce' => CommerceService::class,
+                // Register the vite service
+                'vite' => [
+                    'class' => VitePluginService::class,
+                    'assetClass' => InstantAnalyticsAsset::class,
+                    'useDevServer' => true,
+                    'devServerPublic' => 'http://localhost:3001',
+                    'serverPublic' => 'http://localhost:8000',
+                    'errorEntry' => 'src/js/app.ts',
+                    'devServerInternal' => 'http://craft-instantanalytics-buildchain:3001',
+                    'checkDevServer' => true,
+                ],
+            ]
         ];
-
-        parent::__construct($id, $parent, $config);
     }
 
     // Public Methods
