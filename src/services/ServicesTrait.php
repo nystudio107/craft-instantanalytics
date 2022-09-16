@@ -87,7 +87,7 @@ trait ServicesTrait
      * @return VitePluginService The vite service
      * @throws InvalidConfigException
      */
-    public function getCoupons(): VitePluginService
+    public function getVite(): VitePluginService
     {
         return $this->get('vite');
     }
