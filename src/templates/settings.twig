@@ -1,6 +1,6 @@
 {#
 /**
- * Instant Analytics plugin for Craft CMS 3.x
+ * Instant Analytics plugin for Craft CMS
  *
  * Instant Analytics Settings.twig
  *
@@ -37,8 +37,7 @@
         instructions: "Enter your Google Analytics Tracking ID here. Only enter the ID, e.g.: UA-XXXXXX-XX, not the entire script code.",
         id: 'googleAnalyticsTracking',
         name: 'googleAnalyticsTracking',
-        value: settings['googleAnalyticsTracking']})
-    }}
+        value: settings['googleAnalyticsTracking']}) }}
 {% endif %}
 
 {{ forms.lightswitchField({
@@ -46,32 +45,28 @@
     instructions: "If this setting is on, the query string will be stripped from PageView URLs before being sent to Google Analytics.  e.g.: `/some/path?token=1235312` would be sent as just `/some/path`",
     id: 'stripQueryString',
     name: 'stripQueryString',
-    on: settings['stripQueryString']})
-}}
+    on: settings['stripQueryString']}) }}
 
 {{ forms.lightswitchField({
     label: 'Auto Send PageViews:',
     instructions: "If this setting is on, a PageView will automatically be sent to Google after a every page is rendered. If it is off, you'll need to send it manually using `{% hook 'iaSendPageView' %}`",
     id: 'autoSendPageView',
     name: 'autoSendPageView',
-    on: settings['autoSendPageView']})
-}}
+    on: settings['autoSendPageView']}) }}
 
 {{ forms.lightswitchField({
     label: 'Require GA Cookie clientId:',
     instructions: "If you plan to use Instant Analytics in conjunction with frontend GA JavaScript tracking, this setting should be on, so that Instant Analytics requires a `clientId` from the frontend-set GA cookie before it will send analytics data.",
     id: 'requireGaCookieClientId',
     name: 'requireGaCookieClientId',
-    on: settings['requireGaCookieClientId']})
-}}
+    on: settings['requireGaCookieClientId']}) }}
 
 {{ forms.lightswitchField({
     label: 'Create GCLID Cookie:',
     instructions: "Google Click Identifier (GCLID), is a unique tracking parameter that Google uses to transfer information between your Google Ads account and your Google Analytics account. If this setting is on, the GCLID will be created if it doesn't exist for the current request.",
     id: 'createGclidCookie',
     name: 'createGclidCookie',
-    on: settings['createGclidCookie']})
-}}
+    on: settings['createGclidCookie']}) }}
 
 {{ forms.lightswitchField({
     label: 'Auto Send "Add To Cart" Events:',
@@ -79,8 +74,7 @@
     id: 'autoSendAddToCart',
     name: 'autoSendAddToCart',
     disabled: (not commerceEnabled),
-    on: settings['autoSendAddToCart']})
-}}
+    on: settings['autoSendAddToCart']}) }}
 
 {{ forms.lightswitchField({
     label: 'Auto Send "Remove From Cart" Events:',
@@ -88,8 +82,7 @@
     id: 'autoSendRemoveFromCart',
     name: 'autoSendRemoveFromCart',
     disabled: (not commerceEnabled),
-    on: settings['autoSendRemoveFromCart']})
-}}
+    on: settings['autoSendRemoveFromCart']}) }}
 
 {{ forms.lightswitchField({
     label: 'Auto Send "Purchase Complete" Events:',
@@ -97,8 +90,7 @@
     id: 'autoSendPurchaseComplete',
     name: 'autoSendPurchaseComplete',
     disabled: (not commerceEnabled),
-    on: settings['autoSendPurchaseComplete']})
-}}
+    on: settings['autoSendPurchaseComplete']}) }}
 
 {{ forms.selectField({
     label: 'Commerce Product Category Field:',

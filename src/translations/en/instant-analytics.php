@@ -1,6 +1,6 @@
 <?php
 /**
- * Instant Analytics plugin for Craft CMS 3.x
+ * Instant Analytics plugin for Craft CMS
  *
  * Instant Analytics brings full Google Analytics support to your Twig templates
  *
@@ -21,7 +21,7 @@
  * @since     1.0.0
  */
 return [
-    '{name} plugin loaded'            => '{name} plugin loaded',
+    '{name} plugin loaded' => '{name} plugin loaded',
     'Craft Commerce is not installed' => 'Craft Commerce is not installed',
     'Created sendPageView for: {eventCategory} - {eventAction} - {eventLabel} - {eventValue}' => 'Created sendPageView for: {eventCategory} - {eventAction} - {eventLabel} - {eventValue}',
     'Created eventTrackingUrl for: {trackingUrl}' => 'Created eventTrackingUrl for: {trackingUrl}',

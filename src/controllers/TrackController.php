@@ -1,6 +1,6 @@
 <?php
 /**
- * Instant Analytics plugin for Craft CMS 3.x
+ * Instant Analytics plugin for Craft CMS
  *
  * Instant Analytics brings full Google Analytics support to your Twig templates
  *
@@ -10,9 +10,8 @@
 
 namespace nystudio107\instantanalytics\controllers;
 
-use nystudio107\instantanalytics\InstantAnalytics;
-
 use craft\web\Controller;
+use nystudio107\instantanalytics\InstantAnalytics;
 
 /**
  * TrackController
@@ -58,15 +57,16 @@ class TrackController extends Controller
      * @param string $eventCategory
      * @param string $eventAction
      * @param string $eventLabel
-     * @param int    $eventValue
+     * @param int $eventValue
      */
     public function actionTrackEventUrl(
         string $url,
         string $eventCategory,
         string $eventAction,
         string $eventLabel,
-        int $eventValue
-    ) {
+        int    $eventValue
+    )
+    {
         $analytics = InstantAnalytics::$plugin->ia->eventAnalytics(
             $eventCategory,
             $eventAction,

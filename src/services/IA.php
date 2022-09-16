@@ -1,6 +1,6 @@
 <?php
 /**
- * Instant Analytics plugin for Craft CMS 3.x
+ * Instant Analytics plugin for Craft CMS
  *
  * Instant Analytics brings full Google Analytics support to your Twig templates
  *
@@ -10,19 +10,15 @@
 
 namespace nystudio107\instantanalytics\services;
 
-use craft\errors\MissingComponentException;
-use nystudio107\instantanalytics\InstantAnalytics;
-use nystudio107\instantanalytics\helpers\IAnalytics;
-
-use Jaybizzle\CrawlerDetect\CrawlerDetect;
-
 use Craft;
 use craft\base\Component;
 use craft\elements\User as UserElement;
+use craft\errors\MissingComponentException;
 use craft\helpers\UrlHelper;
-
+use Jaybizzle\CrawlerDetect\CrawlerDetect;
+use nystudio107\instantanalytics\helpers\IAnalytics;
+use nystudio107\instantanalytics\InstantAnalytics;
 use nystudio107\seomatic\Seomatic;
-
 use yii\base\Exception;
 
 /** @noinspection MissingPropertyAnnotationsInspection */
@@ -106,7 +102,7 @@ class IA extends Component
      * @param string $eventCategory
      * @param string $eventAction
      * @param string $eventLabel
-     * @param int    $eventValue
+     * @param int $eventValue
      *
      * @return null|IAnalytics
      */
@@ -177,7 +173,7 @@ class IA extends Component
         $path = parse_url($url, PHP_URL_PATH);
         $pathFragments = explode('/', rtrim($path, '/'));
         $fileName = end($pathFragments);
-        $trackingUrl = UrlHelper::siteUrl('instantanalytics/pageViewTrack/'.$fileName, $urlParams);
+        $trackingUrl = UrlHelper::siteUrl('instantanalytics/pageViewTrack/' . $fileName, $urlParams);
         Craft::info(
             Craft::t(
                 'instant-analytics',
@@ -199,7 +195,7 @@ class IA extends Component
      * @param string $eventCategory
      * @param string $eventAction
      * @param string $eventLabel
-     * @param int    $eventValue
+     * @param int $eventValue
      *
      * @return string
      * @throws \yii\base\Exception
@@ -210,7 +206,8 @@ class IA extends Component
         $eventAction = '',
         $eventLabel = '',
         $eventValue = 0
-    ): string {
+    ): string
+    {
         $urlParams = [
             'url' => $url,
             'eventCategory' => $eventCategory,
@@ -219,7 +216,7 @@ class IA extends Component
             'eventValue' => $eventValue,
         ];
         $fileName = pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_BASENAME);
-        $trackingUrl = UrlHelper::siteUrl('instantanalytics/eventTrack/'.$fileName, $urlParams);
+        $trackingUrl = UrlHelper::siteUrl('instantanalytics/eventTrack/' . $fileName, $urlParams);
         Craft::info(
             Craft::t(
                 'instant-analytics',
@@ -371,7 +368,7 @@ class IA extends Component
             $urlParts = parse_url($url);
             $url = $urlParts['path'] ?? '/';
             if (isset($urlParts['query'])) {
-                $url = $url.'?'.$urlParts['query'];
+                $url = $url . '?' . $urlParts['query'];
             }
         }
 
@@ -542,7 +539,7 @@ class IA extends Component
             $cid = $_COOKIE['_ia'];
         } else {
             // Only generate our own unique clientId if `requireGaCookieClientId` isn't true
-            if (!InstantAnalytics::$settings->requireGaCookieClientId)  {
+            if (!InstantAnalytics::$settings->requireGaCookieClientId) {
                 $cid = $this->gaGenUUID();
             }
         }

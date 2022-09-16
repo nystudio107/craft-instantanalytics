@@ -1,6 +1,6 @@
 <?php
 /**
- * Instant Analytics plugin for Craft CMS 3.x
+ * Instant Analytics plugin for Craft CMS
  *
  * Instant Analytics brings full Google Analytics support to your Twig templates
  *
@@ -10,15 +10,12 @@
 
 namespace nystudio107\instantanalytics\variables;
 
-use nystudio107\instantanalytics\InstantAnalytics;
+use craft\helpers\Template;
 use nystudio107\instantanalytics\helpers\IAnalytics;
-
+use nystudio107\instantanalytics\InstantAnalytics;
 use nystudio107\pluginvite\variables\ViteVariableInterface;
 use nystudio107\pluginvite\variables\ViteVariableTrait;
-
-use craft\helpers\Template;
-
-use \Twig\Markup;
+use Twig\Markup;
 
 /**
  * Instant Analytics Variable
@@ -53,7 +50,7 @@ class InstantAnalyticsVariable implements ViteVariableInterface
      * @param string $eventCategory
      * @param string $eventAction
      * @param string $eventLabel
-     * @param int    $eventValue
+     * @param int $eventValue
      *
      * @return null|IAnalytics
      */
@@ -93,7 +90,7 @@ class InstantAnalyticsVariable implements ViteVariableInterface
      * @param string $eventCategory
      * @param string $eventAction
      * @param string $eventLabel
-     * @param int    $eventValue
+     * @param int $eventValue
      *
      * @return Markup
      * @throws \yii\base\Exception
@@ -104,7 +101,8 @@ class InstantAnalyticsVariable implements ViteVariableInterface
         $eventAction = '',
         $eventLabel = '',
         $eventValue = 0
-    ): Markup {
+    ): Markup
+    {
         return Template::raw(InstantAnalytics::$plugin->ia->eventTrackingUrl(
             $url,
             $eventCategory,
