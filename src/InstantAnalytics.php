@@ -1,6 +1,6 @@
 <?php
 /**
- * Instant Analytics plugin for Craft CMS 3.x
+ * Instant Analytics plugin for Craft CMS
  *
  * Instant Analytics brings full Google Analytics support to your Twig templates
  *
@@ -25,15 +25,12 @@ use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
 use craft\web\View;
 use Exception;
-use nystudio107\instantanalytics\assetbundles\instantanalytics\InstantAnalyticsAsset;
 use nystudio107\instantanalytics\helpers\Field as FieldHelper;
 use nystudio107\instantanalytics\helpers\IAnalytics;
 use nystudio107\instantanalytics\models\Settings;
-use nystudio107\instantanalytics\services\Commerce as CommerceService;
-use nystudio107\instantanalytics\services\IA as IAService;
+use nystudio107\instantanalytics\services\ServicesTrait;
 use nystudio107\instantanalytics\twigextensions\InstantAnalyticsTwigExtension;
 use nystudio107\instantanalytics\variables\InstantAnalyticsVariable;
-use nystudio107\pluginvite\services\VitePluginService;
 use nystudio107\seomatic\Seomatic;
 use yii\base\Event;
 use function array_merge;
@@ -44,15 +41,17 @@ use function array_merge;
  * @author    nystudio107
  * @package   InstantAnalytics
  * @since     1.0.0
- *
- * @property IAService $ia
- * @property CommerceService $commerce
- * @property VitePluginService $vite
  */
 class InstantAnalytics extends Plugin
 {
+    // Traits
+    // =========================================================================
+
+    use ServicesTrait;
+
     // Constants
     // =========================================================================
+
     /**
      * @var string
      */
@@ -113,33 +112,6 @@ class InstantAnalytics extends Plugin
      * @var bool
      */
     public bool $hasCpSettings = true;
-
-    // Public Static Methods
-    // =========================================================================
-
-    /**
-     * @inheritdoc
-     */
-    public static function config(): array
-    {
-        return [
-            'components' => [
-                'ia' => IAService::class,
-                'commerce' => CommerceService::class,
-                // Register the vite service
-                'vite' => [
-                    'class' => VitePluginService::class,
-                    'assetClass' => InstantAnalyticsAsset::class,
-                    'useDevServer' => true,
-                    'devServerPublic' => 'http://localhost:3001',
-                    'serverPublic' => 'http://localhost:8000',
-                    'errorEntry' => 'src/js/app.ts',
-                    'devServerInternal' => 'http://craft-instantanalytics-buildchain:3001',
-                    'checkDevServer' => true,
-                ],
-            ]
-        ];
-    }
 
     // Public Methods
     // =========================================================================
