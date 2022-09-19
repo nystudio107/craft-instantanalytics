@@ -1,5 +1,9 @@
 # Instant Analytics Changelog
 
+## 4.0.1 - UNRELEASED
+### Fixed
+* Fixed an exception that could be thrown if IA's settings in the CP were not filled in ([#73](https://github.com/nystudio107/craft-instantanalytics/issues/73))
+
 ## 4.0.0 - 2022.09.16
 ### Added
 * Initial Craft CMS 4 release
