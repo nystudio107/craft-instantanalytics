@@ -362,10 +362,10 @@ class InstantAnalytics extends Plugin
             self::$pageViewSent = true;
             $analytics = self::$plugin->ia->getGlobals(self::$currentTemplate);
 
-            // If SEOmatic is installed, set the page title from it
-            $this->setTitleFromSeomatic($analytics);
             // Send the page view
             if ($analytics) {
+                // If SEOmatic is installed, set the page title from it
+                $this->setTitleFromSeomatic($analytics);
                 $response = $analytics->sendPageview();
                 Craft::info(
                     Craft::t(
