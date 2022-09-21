@@ -1,6 +1,6 @@
 # Instant Analytics Changelog
 
-## 4.0.1 - UNRELEASED
+## 4.0.1 - 2022.09.21
 ### Fixed
 * Fixed an exception that could be thrown if IA's settings in the CP were not filled in ([#73](https://github.com/nystudio107/craft-instantanalytics/issues/73))
 
