@@ -361,31 +361,32 @@ class InstantAnalytics extends Plugin
         if ($request->getIsSiteRequest() && !$request->getIsConsoleRequest() && !self::$pageViewSent) {
             self::$pageViewSent = true;
             $analytics = self::$plugin->ia->getGlobals(self::$currentTemplate);
-
-            // Send the page view
-            if ($analytics) {
-                // If SEOmatic is installed, set the page title from it
-                $this->setTitleFromSeomatic($analytics);
-                $response = $analytics->sendPageview();
-                Craft::info(
-                    Craft::t(
-                        'instant-analytics',
-                        'pageView sent, response:: {response}',
-                        [
-                            'response' => print_r($response, true),
-                        ]
-                    ),
-                    __METHOD__
-                );
-            } else {
-                Craft::error(
-                    Craft::t(
-                        'instant-analytics',
-                        'Analytics not sent because googleAnalyticsTracking is not set'
-                    ),
-                    __METHOD__
-                );
+            // Bail if we have no analytics object
+            if ($analytics === null) {
+                return;
             }
+            // If SEOmatic is installed, set the page title from it
+            $this->setTitleFromSeomatic($analytics);
+            // Send the page view
+            $response = $analytics->sendPageview();
+            Craft::info(
+                Craft::t(
+                    'instant-analytics',
+                    'pageView sent, response:: {response}',
+                    [
+                        'response' => print_r($response, true),
+                    ]
+                ),
+                __METHOD__
+            );
+        } else {
+            Craft::error(
+                Craft::t(
+                    'instant-analytics',
+                    'Analytics not sent because googleAnalyticsTracking is not set'
+                ),
+                __METHOD__
+            );
         }
     }
 
