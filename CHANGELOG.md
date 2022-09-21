@@ -1,5 +1,9 @@
 # Instant Analytics Changelog
 
+## 1.1.17 - 2022.09.21
+### Fixed
+* Fixed an exception that could be thrown if IA's settings in the CP were not filled in ([#73](https://github.com/nystudio107/craft-instantanalytics/issues/73))
+
 ## 1.1.16 - 2022.09.16
 ### Changed
 * Updated how the Instant Analytics components are registered, to allow for overriding via plugin config ([#1989](https://github.com/craftcms/cms/issues/1989))

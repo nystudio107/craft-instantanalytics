@@ -369,27 +369,25 @@ class InstantAnalytics extends Plugin
             // If SEOmatic is installed, set the page title from it
             $this->setTitleFromSeomatic($analytics);
             // Send the page view
-            if ($analytics) {
-                $response = $analytics->sendPageview();
-                Craft::info(
-                    Craft::t(
-                        'instant-analytics',
-                        'pageView sent, response:: {response}',
-                        [
-                            'response' => print_r($response, true),
-                        ]
-                    ),
-                    __METHOD__
-                );
-            } else {
-                Craft::error(
-                    Craft::t(
-                        'instant-analytics',
-                        'Analytics not sent because googleAnalyticsTracking is not set'
-                    ),
-                    __METHOD__
-                );
-            }
+            $response = $analytics->sendPageview();
+            Craft::info(
+                Craft::t(
+                    'instant-analytics',
+                    'pageView sent, response:: {response}',
+                    [
+                        'response' => print_r($response, true),
+                    ]
+                ),
+                __METHOD__
+            );
+        } else {
+            Craft::error(
+                Craft::t(
+                    'instant-analytics',
+                    'Analytics not sent because googleAnalyticsTracking is not set'
+                ),
+                __METHOD__
+            );
         }
     }
 
