@@ -1,5 +1,9 @@
 # Instant Analytics Changelog
 
+## 1.1.18 - UNRELEASED
+### Fixed
+* Fixed an issue where eager loaded categories on Commerce products wouldn't appear in analytics ([#58](https://github.com/nystudio107/craft-instantanalytics/issues/58))
+
 ## 1.1.17 - 2022.09.21
 ### Fixed
 * Fixed an exception that could be thrown if IA's settings in the CP were not filled in ([#73](https://github.com/nystudio107/craft-instantanalytics/issues/73))
