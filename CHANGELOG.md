@@ -1,6 +1,6 @@
 # Instant Analytics Changelog
 
-## 4.0.2 - UNRELEASED
+## 4.0.2 - 2023.01.08
 ### Changed
 * Updated the docs to use Vitepress `^1.0.0-alpha.29`
 * Updated the buildchain to use Vite `^4.0.0`
