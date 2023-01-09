@@ -465,11 +465,15 @@ class Commerce extends Component
      *
      * @return string
      */
-    private function pullDataFromField($productVariant, $fieldHandle, $isBrand = false): string
+    protected function pullDataFromField($productVariant, $fieldHandle, $isBrand = false): string
     {
         $result = '';
         if ($productVariant && $fieldHandle) {
             $srcField = $productVariant[$fieldHandle] ?? $productVariant->product[$fieldHandle] ?? null;
+            // Handle eager loaded elements
+            if (is_array($srcField)) {
+                return $this->getDataFromElements($isBrand, $srcField);
+            }
             // If the source field isn't an object, return nothing
             if (!is_object($srcField)) {
                 return $result;
@@ -480,32 +484,7 @@ class Commerce extends Component
                 case TagQuery::class:
                     break;
                 case CategoryQuery::class:
-                    $cats = [];
-
-                    if ($isBrand) {
-                        // Because we can only have one brand, we'll get
-                        // the very last category. This means if our
-                        // brand is a sub-category, we'll get the child
-                        // not the parent.
-                        foreach ($srcField->all() as $cat) {
-                            $cats = [$cat->title];
-                        }
-                    } else {
-                        // For every category, show its ancestors
-                        // delimited by a slash.
-                        foreach ($srcField->all() as $cat) {
-                            $name = $cat->title;
-
-                            while ($cat = $cat->parent) {
-                                $name = $cat->title . '/' . $name;
-                            }
-
-                            $cats[] = $name;
-                        }
-                    }
-
-                    // Join separate categories with a pipe.
-                    $result = implode('|', $cats);
+                    $result = $this->getDataFromElements($isBrand, $srcField->all());
                     break;
 
 
@@ -516,5 +495,40 @@ class Commerce extends Component
         }
 
         return $result;
+    }
+
+    /**
+     * @param bool $isBrand
+     * @param array $elements
+     * @return string
+     */
+    protected function getDataFromElements(bool $isBrand, array $elements): string
+    {
+        $cats = [];
+
+        if ($isBrand) {
+            // Because we can only have one brand, we'll get
+            // the very last category. This means if our
+            // brand is a sub-category, we'll get the child
+            // not the parent.
+            foreach ($elements as $cat) {
+                $cats = [$cat->title];
+            }
+        } else {
+            // For every category, show its ancestors
+            // delimited by a slash.
+            foreach ($elements as $cat) {
+                $name = $cat->title;
+
+                while ($cat = $cat->parent) {
+                    $name = $cat->title . '/' . $name;
+                }
+
+                $cats[] = $name;
+            }
+        }
+
+        // Join separate categories with a pipe.
+        return implode('|', $cats);
     }
 }
