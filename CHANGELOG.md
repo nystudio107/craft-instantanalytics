@@ -1,5 +1,13 @@
 # Instant Analytics Changelog
 
+## 4.0.2 - 2023.01.08
+### Changed
+* Updated the docs to use Vitepress `^1.0.0-alpha.29`
+* Updated the buildchain to use Vite `^4.0.0`
+
+### Fixed
+* Fixed an issue where eager loaded categories on Commerce products wouldn't appear in analytics ([#58](https://github.com/nystudio107/craft-instantanalytics/issues/58))
+
 ## 4.0.1 - 2022.09.21
 ### Fixed
 * Fixed an exception that could be thrown if IA's settings in the CP were not filled in ([#73](https://github.com/nystudio107/craft-instantanalytics/issues/73))
