@@ -1,5 +1,9 @@
 # Instant Analytics Changelog
 
+## 4.0.3 - UNRELEASED
+### Changed
+* Use dynamic docker container name & port for the `buildchain`
+
 ## 4.0.2 - 2023.01.08
 ### Changed
 * Updated the docs to use Vitepress `^1.0.0-alpha.29`
