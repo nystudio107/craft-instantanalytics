@@ -4,6 +4,7 @@
 ### Changed
 * Updated the docs to use Vitepress `^1.0.0-alpha.29`
 * Updated the buildchain to use Vite `^4.0.0`
+* Use dynamic docker container name & port for the `buildchain`
 
 ### Fixed
 * Fixed an issue where eager loaded categories on Commerce products wouldn't appear in analytics ([#58](https://github.com/nystudio107/craft-instantanalytics/issues/58))
