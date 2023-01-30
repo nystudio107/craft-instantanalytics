@@ -1,9 +1,10 @@
 import {defineConfig} from 'vite';
-import vue from '@vitejs/plugin-vue'
-import ViteRestart from 'vite-plugin-restart';
-import viteCompression from 'vite-plugin-compression';
 import {visualizer} from 'rollup-plugin-visualizer';
-import {nodeResolve} from '@rollup/plugin-node-resolve';
+import viteEslintPlugin from 'vite-plugin-eslint';
+import viteCompressionPlugin from 'vite-plugin-compression';
+import viteRestartPlugin from 'vite-plugin-restart';
+import viteStylelintPlugin from 'vite-plugin-stylelint';
+import viteVuePlugin from '@vitejs/plugin-vue'
 import * as path from 'path';
 
 // https://vitejs.dev/config/
@@ -24,18 +25,13 @@ export default defineConfig(({command}) => ({
     }
   },
   plugins: [
-    nodeResolve({
-      moduleDirectories: [
-        path.resolve('./node_modules'),
-      ],
-    }),
-    ViteRestart({
+    viteRestartPlugin({
       reload: [
-        './src/templates/**/*',
+        '../src/templates/**/*',
       ],
     }),
-    vue(),
-    viteCompression({
+    viteVuePlugin(),
+    viteCompressionPlugin({
       filter: /\.(js|mjs|json|css|map)$/i
     }),
     visualizer({
@@ -43,12 +39,19 @@ export default defineConfig(({command}) => ({
       template: 'treemap',
       sourcemap: true,
     }),
+    viteEslintPlugin({
+      cache: false,
+      fix: true,
+    }),
+    viteStylelintPlugin({
+      fix: true,
+      lintInWorker: true
+    })
   ],
-  publicDir: '../src/web/assets/public',
   resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src')
-    },
+    alias: [
+      {find: '@', replacement: path.resolve(__dirname, './src')},
+    ],
     preserveSymlinks: true,
   },
   server: {
