@@ -1,6 +1,7 @@
 # Instant Analytics Changelog
 
 ## 1.1.19 - UNRELEASED
+### Changed
 * Use dynamic docker container name & port for the `buildchain`
 
 ## 1.1.18 - 2023.01.08
