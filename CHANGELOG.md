@@ -3,6 +3,7 @@
 ## 4.0.3 - UNRELEASED
 ### Changed
 * Use dynamic docker container name & port for the `buildchain`
+* Refactored the docs buildchain to use a dynamic docker container setup
 
 ## 4.0.2 - 2023.01.08
 ### Changed
