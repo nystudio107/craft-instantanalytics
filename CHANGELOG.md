@@ -5,6 +5,9 @@
 * Use dynamic docker container name & port for the `buildchain`
 * Refactored the docs buildchain to use a dynamic docker container setup
 
+### Fixed
+* Fix property types in the `addCommerceProductDetaIlView()` method ([#77](https://github.com/nystudio107/craft-instantanalytics/pull/77))
+
 ## 4.0.2 - 2023.01.08
 ### Changed
 * Updated the docs to use Vitepress `^1.0.0-alpha.29`
