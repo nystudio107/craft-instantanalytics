@@ -1,6 +1,6 @@
 # Instant Analytics Changelog
 
-## 4.0.3 - UNRELEASED
+## 4.0.3 - 2023.02.09
 ### Changed
 * Use dynamic docker container name & port for the `buildchain`
 * Refactored the docs buildchain to use a dynamic docker container setup
