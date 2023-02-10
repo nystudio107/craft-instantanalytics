@@ -2,7 +2,7 @@
   "name": "nystudio107/craft-instantanalytics",
   "description": "Instant Analytics brings full Google Analytics support to your Twig templates and automatic Craft Commerce integration with Google Enhanced Ecommerce",
   "type": "craft-plugin",
-  "version": "4.0.2",
+  "version": "4.0.3",
   "keywords": [
     "craft",
     "cms",

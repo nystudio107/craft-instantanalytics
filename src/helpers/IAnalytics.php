@@ -12,6 +12,8 @@
 namespace nystudio107\instantanalytics\helpers;
 
 use Craft;
+use craft\commerce\elements\Product;
+use craft\commerce\elements\Variant;
 use Exception;
 use nystudio107\instantanalytics\InstantAnalytics;
 use TheIconic\Tracking\GoogleAnalytics\Analytics;
@@ -88,9 +90,9 @@ class IAnalytics extends Analytics
     /**
      * Add a product detail view to the Analytics object
      *
-     * @param ?string $productVariant
+     * @param null|Product|Variant $productVariant
      */
-    public function addCommerceProductDetailView(?string $productVariant = null): void
+    public function addCommerceProductDetailView(null|Product|Variant $productVariant = null): void
     {
         if (InstantAnalytics::$commercePlugin) {
             if ($productVariant) {
