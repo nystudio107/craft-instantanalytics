@@ -1,4 +1,10 @@
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/nystudio107/craft-instantanalytics/badges/quality-score.png?b=v1)](https://scrutinizer-ci.com/g/nystudio107/craft-instantanalytics/?branch=v1) [![Code Coverage](https://scrutinizer-ci.com/g/nystudio107/craft-instantanalytics/badges/coverage.png?b=v1)](https://scrutinizer-ci.com/g/nystudio107/craft-instantanalytics/?branch=v1) [![Build Status](https://scrutinizer-ci.com/g/nystudio107/craft-instantanalytics/badges/build.png?b=v1)](https://scrutinizer-ci.com/g/nystudio107/craft-instantanalytics/build-status/v1) [![Code Intelligence Status](https://scrutinizer-ci.com/g/nystudio107/craft-instantanalytics/badges/code-intelligence.svg?b=v1)](https://scrutinizer-ci.com/code-intelligence)
+[![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
+
+# DEPRECATED
+
+This Craft CMS plugin is no longer supported or maintained, but it is fully functional, and you may continue to use it as you see fit. The license also allows you to fork it and make changes as needed for legacy support reasons.
+
+Google has deprecated the old Google Analytics APIs. Instead, use [Instant Analytics GA4](https://github.com/nystudio107/craft-instantanalytics-ga4) instead.
 
 # Instant Analytics plugin for Craft CMS 3.x
 
